@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lawrence-cfp.netlify.app/sitemap.xml
+Sitemap: https://lawrence-financial-site.pages.dev/sitemap.xml
