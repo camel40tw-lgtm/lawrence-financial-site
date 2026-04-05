@@ -19,6 +19,13 @@
   <meta name="twitter:title" content="文章｜駱潤生 Lawrence" />
   <meta name="twitter:description" content="閱讀駱潤生 Lawrence 的專業文章，主題涵蓋退休規劃、高齡金融、信託、資產保護與家族傳承。" />
   <meta name="twitter:image" content="https://lawrence-cfp.netlify.app/images/og-image.jpg" />
+  <script>
+    try {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
   <link rel="stylesheet" href="assets/styles.css" />
 
   <script>
@@ -178,6 +185,6 @@
       <div>(lawrence_financial_site_netlify_v2)</div>
     </div>
   </footer>
-  <script src="assets/main.js"></script>
+  <script src="assets/main.js" defer></script>
 </body>
 </html>

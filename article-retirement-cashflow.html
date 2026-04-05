@@ -19,6 +19,13 @@
   <meta name="twitter:title" content="退休不是只看存款：先看未來現金流是否能穩定運作｜駱潤生 Lawrence" />
   <meta name="twitter:description" content="從退休生活費、固定收入到醫療與長照風險，重新理解退休規劃的核心。" />
   <meta name="twitter:image" content="https://lawrence-cfp.netlify.app/images/og-image.jpg" />
+  <script>
+    try {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
   <link rel="stylesheet" href="assets/styles.css" />
 
   <script>
@@ -112,7 +119,7 @@
     <section class="page-hero article-hero">
       <div class="container article-shell">
         <div class="article-cover reveal show">
-          <img src="images/lawrence-portrait.jpg" alt="駱潤生 Lawrence 個人形象照" />
+          <img src="images/lawrence-portrait.jpg" alt="駱潤生 Lawrence 個人形象照" width="1677" height="2500" loading="lazy" decoding="async" />
         </div>
 
         <div class="article-body">
@@ -182,6 +189,6 @@
       <div>(lawrence_financial_site_netlify_v2)</div>
     </div>
   </footer>
-  <script src="assets/main.js"></script>
+  <script src="assets/main.js" defer></script>
 </body>
 </html>

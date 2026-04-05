@@ -19,6 +19,13 @@
   <meta name="twitter:title" content="服務項目｜駱潤生 Lawrence" />
   <meta name="twitter:description" content="駱潤生 Lawrence 的服務項目：CFP財務規劃顧問、高齡金融與資產保護、信託與家族傳承設計、保險與財務風險管理。" />
   <meta name="twitter:image" content="https://lawrence-cfp.netlify.app/images/og-image.jpg" />
+  <script>
+    try {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
   <link rel="stylesheet" href="assets/styles.css" />
 
   <script>
@@ -205,6 +212,6 @@
       <div>(lawrence_financial_site_netlify_v2)</div>
     </div>
   </footer>
-  <script src="assets/main.js"></script>
+  <script src="assets/main.js" defer></script>
 </body>
 </html>

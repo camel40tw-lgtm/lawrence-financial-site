@@ -1,16 +1,4 @@
 
-// Theme Initialization (Safe for all pages)
-(function() {
-  try {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    }
-  } catch (error) {
-    // Ignore storage access issues and keep the default theme.
-  }
-})();
-
 const header = document.getElementById('siteHeader');
 
 const menuToggle = document.getElementById('menuToggle');

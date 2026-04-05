@@ -19,6 +19,13 @@
   <meta name="twitter:title" content="找不到頁面｜駱潤生 Lawrence" />
   <meta name="twitter:description" content="找不到您要的頁面。" />
   <meta name="twitter:image" content="https://lawrence-cfp.netlify.app/images/og-image.jpg" />
+  <script>
+    try {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
   <link rel="stylesheet" href="assets/styles.css" />
 
   <script>
@@ -124,6 +131,6 @@
       <div>(lawrence_financial_site_netlify_v2)</div>
     </div>
   </footer>
-  <script src="assets/main.js"></script>
+  <script src="assets/main.js" defer></script>
 </body>
 </html>

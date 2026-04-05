@@ -19,6 +19,13 @@
   <meta name="twitter:title" content="關於我｜駱潤生 Lawrence" />
   <meta name="twitter:description" content="關於駱潤生 Lawrence，CFP財務規劃顧問，專注高齡金融、信託、資產傳承與退休規劃。" />
   <meta name="twitter:image" content="https://lawrence-cfp.netlify.app/images/og-image.jpg" />
+  <script>
+    try {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
   <link rel="stylesheet" href="assets/styles.css" />
 
   <script>
@@ -103,7 +110,7 @@
 
         <div class="grid-2-alt">
           <div class="profile-photo reveal">
-            <img src="images/lawrence-portrait.jpg" alt="駱潤生 Lawrence 形象照" />
+            <img src="images/lawrence-portrait.jpg" alt="駱潤生 Lawrence 形象照" width="1677" height="2500" loading="lazy" decoding="async" />
           </div>
           <div class="panel reveal">
             <p>我是駱潤生，CFP財務規劃顧問，從事金融保險與資產規劃超過20年，長期專注於高齡金融、退休規劃與家族資產傳承。</p>
@@ -180,6 +187,6 @@
       <div>(lawrence_financial_site_netlify_v2)</div>
     </div>
   </footer>
-  <script src="assets/main.js"></script>
+  <script src="assets/main.js" defer></script>
 </body>
 </html>
