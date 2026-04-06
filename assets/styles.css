@@ -249,18 +249,21 @@ button,input,textarea{font:inherit}
   background:rgba(15,33,57,.18);
 }
 [data-theme="dark"] .btn-primary,
+[data-theme="dark"] .nav-links a.active,
 [data-theme="dark"] .nav-links .nav-cta,
 [data-theme="dark"] .fab-book,
 [data-theme="dark"] .site-header .theme-toggle{
   color:#ffffff !important;
 }
 [data-theme="dark"] .btn-primary *,
+[data-theme="dark"] .nav-links a.active *,
 [data-theme="dark"] .nav-links .nav-cta *,
 [data-theme="dark"] .fab-book *,
 [data-theme="dark"] .site-header .theme-toggle *{
   color:#ffffff !important;
 }
 [data-theme="dark"] .btn-primary:hover,
+[data-theme="dark"] .nav-links a.active:hover,
 [data-theme="dark"] .nav-links .nav-cta:hover,
 [data-theme="dark"] .fab-book:hover{
   background:linear-gradient(135deg, #1a3b63, #2c5f95);
@@ -659,6 +662,40 @@ button,input,textarea{font:inherit}
   display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:12px;
 }
 .form-grid{display:grid; gap:14px; margin-top:14px}
+.contact-cta-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-top:22px;
+  padding:18px 20px;
+  border-radius:22px;
+  background:linear-gradient(135deg, rgba(16,41,71,.98), rgba(36,79,131,.96));
+  box-shadow:0 16px 34px rgba(16,41,71,.14);
+}
+.contact-cta-copy{
+  display:grid;
+  gap:4px;
+}
+.contact-cta-copy strong{
+  color:#fff;
+  font-size:1rem;
+}
+.contact-cta-copy span{
+  color:rgba(255,255,255,.84);
+  font-size:.94rem;
+}
+.contact-cta-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.contact-cta-bar .btn-secondary{
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.18);
+  color:#fff;
+}
 label{display:block; font-weight:800; color:var(--navy-900); margin-bottom:6px}
 input,textarea{
   width:100%; border:1px solid #d7e1eb; background:#fbfdff; border-radius:16px;
@@ -756,6 +793,15 @@ textarea{min-height:170px; resize:vertical}
 [data-theme="dark"] .nav-links{
   background:rgba(8,20,38,.94);
 }
+[data-theme="dark"] .contact-cta-bar{
+  background:linear-gradient(135deg, rgba(18,39,66,.96), rgba(12,28,49,.96));
+  box-shadow:0 18px 34px rgba(2,8,23,.28);
+}
+[data-theme="dark"] .contact-cta-bar .btn-secondary{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(148,163,184,.24);
+  color:#ffffff !important;
+}
 
 .floating-actions{
   position:fixed; right:18px; bottom:18px; z-index:1200;
@@ -805,7 +851,7 @@ footer{padding:30px 0 38px; color:var(--slate-500); font-size:.95rem}
 @media (max-width:760px){
   .container{width:min(var(--max), calc(100% - 28px))}
   .menu-toggle,.theme-toggle{display:flex}
-  .header-inner{min-height:auto; padding:14px 0; align-items:flex-start}
+  .header-inner{min-height:auto; padding:14px 0 10px; align-items:flex-start}
   .nav-links{
     position:absolute; top:74px; left:14px; right:14px;
     display:none; flex-direction:column; align-items:stretch;
@@ -814,14 +860,27 @@ footer{padding:30px 0 38px; color:var(--slate-500); font-size:.95rem}
   }
   .nav-links.open{display:flex}
   .feature-grid,.service-grid,.article-grid,.stat-grid{grid-template-columns:1fr}
-  .hero-card,.panel,.feature-card,.service-card,.article-card,.testimonial,.contact-card,.timeline-card,.article-block,.cta-band{padding:22px}
-  .hero-title{font-size:clamp(1.8rem, 10vw, 2.6rem)}
+  .hero-card,.panel,.feature-card,.service-card,.article-card,.testimonial,.contact-card,.timeline-card,.article-block,.cta-band{padding:20px}
+  .hero-title{font-size:clamp(1.8rem, 10vw, 2.5rem)}
   .hero-photo{max-height:460px}
   .hero-photo-full{
     max-height:420px;
     object-position:center 12%;
   }
-  .page-hero,.home-hero{padding-top:calc(var(--header-h) + 28px)}
+  .page-hero,.home-hero{padding-top:calc(var(--header-h) + 22px)}
+  .section{padding:68px 0}
+  .section-title{margin-bottom:22px}
+  .section-title p,
+  .section-title-balanced p,
+  .hero-subtitle{font-size:1rem; line-height:1.8}
+  .hero-actions,.inline-actions,.article-actions{margin-top:24px; gap:12px}
+  .btn{width:100%}
+  .home-grid{gap:42px}
+  .grid-2,.grid-2-alt,.about-hero-grid,.contact-grid,.article-shell{gap:22px}
+  .contact-item{padding:16px 0}
+  .contact-cta-bar{padding:16px}
+  .contact-cta-actions{width:100%}
+  .contact-cta-actions .btn{flex:1 1 100%}
   .floating-actions{right:12px; bottom:12px}
   .fab{width:54px; height:54px}
   .fab-label{display:none}
