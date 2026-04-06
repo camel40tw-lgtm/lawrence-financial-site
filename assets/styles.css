@@ -248,6 +248,29 @@ button,input,textarea{font:inherit}
   color:#e2e8f0 !important;
   background:rgba(15,33,57,.18);
 }
+[data-theme="dark"] .btn-primary,
+[data-theme="dark"] .nav-links .nav-cta,
+[data-theme="dark"] .fab-book,
+[data-theme="dark"] .site-header .theme-toggle{
+  color:#ffffff !important;
+}
+[data-theme="dark"] .btn-primary *,
+[data-theme="dark"] .nav-links .nav-cta *,
+[data-theme="dark"] .fab-book *,
+[data-theme="dark"] .site-header .theme-toggle *{
+  color:#ffffff !important;
+}
+[data-theme="dark"] .btn-primary:hover,
+[data-theme="dark"] .nav-links .nav-cta:hover,
+[data-theme="dark"] .fab-book:hover{
+  background:linear-gradient(135deg, #1a3b63, #2c5f95);
+  border-color:rgba(245,158,11,.38);
+  box-shadow:0 14px 30px rgba(2,8,23,.30);
+}
+[data-theme="dark"] .site-header .theme-toggle:hover{
+  background:linear-gradient(135deg, #f7b735, #e48a09);
+  color:#ffffff !important;
+}
 
 .hero-visual{position:relative}
 .hero-card{
