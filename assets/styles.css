@@ -195,6 +195,21 @@ button,input,textarea{font:inherit}
   font-size:clamp(2.15rem, 4.4vw, 3.45rem);
   line-height:1.02; letter-spacing:-.032em;
 }
+.home-hero .hero-title{
+  color:#c7a76b;
+  background:linear-gradient(180deg, #efe1bf 0%, #d9be8b 34%, #b88f56 70%, #ead8b1 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 1px 0 rgba(255,255,255,.08), 0 12px 24px rgba(9,20,38,.14);
+}
+[data-theme="dark"] .home-hero .hero-title{
+  background:linear-gradient(180deg, #fff1cb 0%, #ead1a0 30%, #cfa15f 64%, #f7dfae 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 1px 0 rgba(255,255,255,.05), 0 16px 28px rgba(2,8,23,.3);
+}
 .hero-subtitle{
   margin:0;
   color:var(--text-soft);
