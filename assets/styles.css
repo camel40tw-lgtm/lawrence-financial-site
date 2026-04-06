@@ -287,6 +287,10 @@ button,input,textarea{font:inherit}
   box-shadow:0 24px 54px rgba(16,41,71,.18);
   filter:none !important; opacity:1 !important; mix-blend-mode:normal;
 }
+.hero-photo-full{
+  object-position:center 10%;
+  max-height:560px;
+}
 .hero-mini{
   display:grid; gap:12px; margin-top:18px; position:relative; z-index:2;
 }
@@ -790,6 +794,10 @@ footer{padding:30px 0 38px; color:var(--slate-500); font-size:.95rem}
   .hero-card,.panel,.feature-card,.service-card,.article-card,.testimonial,.contact-card,.timeline-card,.article-block,.cta-band{padding:22px}
   .hero-title{font-size:clamp(1.8rem, 10vw, 2.6rem)}
   .hero-photo{max-height:460px}
+  .hero-photo-full{
+    max-height:420px;
+    object-position:center 12%;
+  }
   .page-hero,.home-hero{padding-top:calc(var(--header-h) + 28px)}
   .floating-actions{right:12px; bottom:12px}
   .fab{width:54px; height:54px}
