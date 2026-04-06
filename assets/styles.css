@@ -479,6 +479,12 @@ button,input,textarea{font:inherit}
   display:flex;
   align-self:stretch;
 }
+.about-photo-frame{
+  width:min(100%, 352px);
+  padding:14px;
+  border-radius:32px;
+  box-shadow:0 20px 42px rgba(16,41,71,.11);
+}
 .profile-photo img{
   width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center top;
 }
@@ -491,6 +497,9 @@ button,input,textarea{font:inherit}
   border:1px solid rgba(255,255,255,.96);
   box-shadow:0 12px 26px rgba(16,41,71,.12);
   object-position:center 12%;
+}
+.about-photo-frame img{
+  object-position:center 24%;
 }
 .about-intro-panel{
   padding:34px 38px 32px;
@@ -883,6 +892,7 @@ footer{padding:30px 0 38px; color:var(--slate-500); font-size:.95rem}
   .about-hero-grid{grid-template-columns:1fr}
   .profile-photo-golden{width:min(100%, 280px); align-self:center}
   .profile-photo-golden img{min-height:auto; height:auto; max-height:340px}
+  .about-photo-frame{width:min(100%, 300px)}
   .about-intro-panel{padding:30px 26px; height:auto}
 }
 @media (max-width:760px){
@@ -916,6 +926,8 @@ footer{padding:30px 0 38px; color:var(--slate-500); font-size:.95rem}
   .grid-2,.grid-2-alt,.about-hero-grid,.contact-grid,.article-shell{gap:22px}
   .profile-photo-golden{width:min(100%, 238px); padding:10px}
   .profile-photo-golden img{max-height:286px; object-position:center 10%}
+  .about-photo-frame{width:min(100%, 252px); padding:10px}
+  .about-photo-frame img{max-height:296px; object-position:center 22%}
   .about-intro-title{font-size:clamp(1.45rem, 7vw, 1.8rem)}
   .about-intro-lead{font-size:1rem; line-height:1.82; margin-bottom:18px}
   .panel p + p{margin-top:14px}
