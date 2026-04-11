@@ -1,16 +1,17 @@
 import os, glob
 
-for file in glob.glob(r'd:\AI\lawrence_financial_site\*.html'):
-    with open(file, 'r', encoding='utf-8') as f:
-        content = f.read()
-    
-    # Try to find exactly <a href="contact.html">聯絡諮詢</a> and replace it with calculator + contact
-    target = '<a href="contact.html">聯絡諮詢</a>'
-    replacement = '<a href="calculator.html" style="color:var(--amber-600); font-weight:bold; letter-spacing:0.05em;">📝免費試算</a>\n        <a href="contact.html">聯絡諮詢</a>'
-    
-    if '<a href="calculator.html"' not in content and target in content:
-        content = content.replace(target, replacement)
-        with open(file, 'w', encoding='utf-8') as f:
-            f.write(content)
+html_dir = r"d:\AI\lawrence_financial_site"
 
-print("Navigation completely updated with calculator linker")
+for fn in glob.glob(os.path.join(html_dir, "*.html")):
+    with open(fn, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    target = '<a href="contact.html">聯絡我</a>'
+    replacement = '<a href="calculator.html" style="color:var(--amber-600); font-weight:bold; letter-spacing:0.05em;">📝免費試算</a>\n        <a href="contact.html">聯絡我</a>'
+
+    if '<a href="calculator.html"' not in html and target in html:
+        html = html.replace(target, replacement)
+        with open(fn, "w", encoding="utf-8") as f:
+            f.write(html)
+            
+print("Nav menu successfully injected.")
