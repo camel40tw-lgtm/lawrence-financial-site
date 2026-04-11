@@ -601,15 +601,15 @@ canvas{width:100%;max-width:100%;background:var(--washi);border-radius:var(--rad
 /* Dark Mode Deep Consistency Fixes */
 [data-theme="dark"] .step-heading { color: rgba(255,255,255,0.95) !important; }
 [data-theme="dark"] .step-desc { color: rgba(255,255,255,0.65) !important; }
-[data-theme="dark"] .section-title { color: var(--amber-400) !important; }
-[data-theme="dark"] .finance-group-title { color: var(--amber-400) !important; }
+[data-theme="dark"] .section-title { color: var(--amber-500) !important; }
+[data-theme="dark"] .finance-group-title { color: var(--amber-500) !important; }
 [data-theme="dark"] .finance-group { background: rgba(16,30,45,0.4) !important; border-color: rgba(255,255,255,0.08) !important; }
 [data-theme="dark"] .field-note { color: rgba(255,255,255,0.5) !important; }
 [data-theme="dark"] .goal-box, [data-theme="dark"] .income-box { background: rgba(16,30,45,0.4) !important; border-color: rgba(255,255,255,0.08) !important; }
-[data-theme="dark"] .goal-title { color: var(--amber-400) !important; }
+[data-theme="dark"] .goal-title { color: var(--amber-500) !important; }
 [data-theme="dark"] .check-item, [data-theme="dark"] .checkbox-row { color: rgba(255,255,255,0.7) !important; }
 [data-theme="dark"] .summary-confirm { background: rgba(30,50,75,0.6) !important; color: rgba(255,255,255,0.85) !important; border-color: rgba(255,255,255,0.1) !important; }
-[data-theme="dark"] .summary-confirm strong { color: var(--amber-400) !important; }
+[data-theme="dark"] .summary-confirm strong { color: var(--amber-500) !important; }
 
 [data-theme="dark"] .report-summary,
 [data-theme="dark"] .rule4-block,
@@ -650,10 +650,10 @@ canvas{width:100%;max-width:100%;background:var(--washi);border-radius:var(--rad
 [data-theme="dark"] .cashflow-positive,
 [data-theme="dark"] .good,
 [data-theme="dark"] .step-heading span {
-    color: var(--amber-400) !important;
+    color: var(--amber-500) !important;
 }
 
-[data-theme="dark"] .report-advice { border-color: rgba(251,191,36,0.3) !important; border-left: 4px solid var(--amber-400) !important; }
+[data-theme="dark"] .report-advice { border-color: rgba(245,158,11,0.3) !important; border-left: 4px solid var(--amber-500) !important; }
 [data-theme="dark"] .medical-block { border-color: rgba(251,191,36,0.2) !important; }
 [data-theme="dark"] .rule4-badge.safe { color: var(--emerald-400) !important; border-color: rgba(52,211,153,0.3) !important; }
 [data-theme="dark"] .rule4-badge.caution { color: var(--amber-400) !important; border-color: rgba(251,191,36,0.3) !important; }
