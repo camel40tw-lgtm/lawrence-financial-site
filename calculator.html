@@ -129,25 +129,6 @@
       <p class="sub-title">ABC 融合版｜事件流整合・實質醫療溢價・Monte Carlo・圖表・列印匯出</p>
 
       <!-- 進度條 -->
-      <div class="wizard-progress" id="wizardProgress">
-        <div class="wp-step active" id="wpStep1" onclick="goToStep(1)">
-          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">1</span></span></div>
-          <div class="wp-label">基本資料</div>
-        </div>
-        <div class="wp-step" id="wpStep2" onclick="goToStep(2)">
-          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">2</span></span></div>
-          <div class="wp-label">財務數字</div>
-        </div>
-        <div class="wp-step" id="wpStep3" onclick="goToStep(3)">
-          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">3</span></span></div>
-          <div class="wp-label">事件規劃</div>
-        </div>
-        <div class="wp-step" id="wpStep4" onclick="goToStep(4)">
-          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">4</span></span></div>
-          <div class="wp-label">模擬設定</div>
-        </div>
-      </div>
-
       <!-- Step 1 -->
       <div class="wizard-panel active card form-card" id="panel1">
         <div class="step-heading">Step 1　基本資料</div>
@@ -185,13 +166,6 @@
             <textarea id="advisorNote" rows="4" placeholder="可輸入此客戶的特殊狀況、風險提醒、優先建議"></textarea>
           </div>
         </div>
-        <div class="wizard-nav">
-          <div class="nav-left">
-            <button type="button" class="ghost-btn small-btn" onclick="loadData()">載入資料</button>
-          </div>
-          <div class="nav-right">
-            <button type="button" onclick="nextStep(1)">下一步：財務數字 →</button>
-          </div>
         </div>
       </div>
 
@@ -279,13 +253,6 @@
           </details>
         </div>
 
-        <div class="wizard-nav">
-          <div class="nav-left">
-            <button type="button" class="ghost-btn small-btn" onclick="prevStep(2)">← 上一步</button>
-          </div>
-          <div class="nav-right">
-            <button type="button" onclick="nextStep(2)">下一步：事件規劃 →</button>
-          </div>
         </div>
       </div>
 
@@ -307,13 +274,6 @@
         </div>
         <div id="incomeContainer"></div>
 
-        <div class="wizard-nav">
-          <div class="nav-left">
-            <button type="button" class="ghost-btn small-btn" onclick="prevStep(3)">← 上一步</button>
-          </div>
-          <div class="nav-right">
-            <button type="button" onclick="nextStep(3)">下一步：模擬設定 →</button>
-          </div>
         </div>
       </div>
 
@@ -365,18 +325,18 @@
           <label class="check-item"><input id="showMonteCarloChart" type="checkbox" checked><span>Monte Carlo 曲線</span></label>
         </div>
 
-        <div class="wizard-nav">
-          <div class="nav-left">
-            <button type="button" class="ghost-btn small-btn" onclick="prevStep(4)">← 上一步</button>
-            <button type="button" class="ghost-btn small-btn" onclick="saveData()">儲存資料</button>
-          </div>
-          <div class="nav-right">
-            <button type="button" onclick="calculateRetirement()">產出退休規劃報告</button>
-          </div>
         </div>
       </div>
 
     </section>
+
+    
+        <div class="unified-action-bar" style="display:flex; justify-content:center; gap:16px; margin-top:40px; padding-top:30px; border-top:1px solid rgba(219,228,238,0.5);">
+          <button type="button" class="btn btn-outline" style="border-radius:6px; padding:10px 24px;" onclick="loadData()">載入上次儲存紀錄</button>
+          <button type="button" class="btn btn-outline" style="border-radius:6px; padding:10px 24px;" onclick="saveData()">儲存輸入內容</button>
+          <button type="button" class="btn btn-primary" style="border-radius:6px; padding:10px 48px; background:var(--navy-900); color:#fff; font-family:var(--font-serif);" onclick="calculateRetirement()">產出退休規劃報告</button>
+        </div>
+      </div>
 
     <!-- 報告頁 -->
     <section id="reportSection" class="hidden">

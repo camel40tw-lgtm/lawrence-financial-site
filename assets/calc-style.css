@@ -583,3 +583,15 @@ canvas{width:100%;max-width:100%;background:var(--washi);border-radius:var(--rad
 .wizard-panel{display:none;animation:fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);}
 .wizard-panel.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+
+
+
+/* One Pager overrides */
+.wizard-panel { display: block !important; opacity: 1 !important; transform: none !important; margin-bottom: 30px; border-radius: 12px; }
+.unified-action-bar { margin-bottom: 60px; }
+.card.form-card { padding: 40px; box-shadow: 0 12px 28px rgba(16,41,71,0.03); border: 1px solid rgba(219,228,238,0.6); }
+[data-theme="dark"] .card.form-card { background: rgba(28,42,60,0.4); border-color: rgba(255,255,255,0.05); }
+@media (max-width: 640px) {
+  .unified-action-bar { flex-direction: column; }
+  .unified-action-bar button { width: 100%; }
+}
