@@ -638,3 +638,23 @@ canvas{width:100%;max-width:100%;background:var(--washi);border-radius:var(--rad
 [data-theme="dark"] .house-diagnostics-metric { background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.1) !important; }
 
 [data-theme="dark"] canvas { background: rgba(16,30,45,0.5) !important; border-color: rgba(255,255,255,0.08) !important; }
+
+
+/* Force all orange/kaki text to amber in dark mode */
+[data-theme="dark"] .main-title span,
+[data-theme="dark"] .section-title::before,
+[data-theme="dark"] .medical-block strong,
+[data-theme="dark"] .rule4-block strong,
+[data-theme="dark"] .report-advice strong,
+[data-theme="dark"] .result strong,
+[data-theme="dark"] .cashflow-positive,
+[data-theme="dark"] .good,
+[data-theme="dark"] .step-heading span {
+    color: var(--amber-400) !important;
+}
+
+[data-theme="dark"] .report-advice { border-color: rgba(251,191,36,0.3) !important; border-left: 4px solid var(--amber-400) !important; }
+[data-theme="dark"] .medical-block { border-color: rgba(251,191,36,0.2) !important; }
+[data-theme="dark"] .rule4-badge.safe { color: var(--emerald-400) !important; border-color: rgba(52,211,153,0.3) !important; }
+[data-theme="dark"] .rule4-badge.caution { color: var(--amber-400) !important; border-color: rgba(251,191,36,0.3) !important; }
+[data-theme="dark"] .rule4-badge.danger { color: var(--rose-400) !important; border-color: rgba(244,63,94,0.3) !important; }
