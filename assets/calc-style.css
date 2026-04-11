@@ -641,6 +641,7 @@ canvas{width:100%;max-width:100%;background:var(--washi);border-radius:var(--rad
 
 
 /* Force all orange/kaki text to amber in dark mode */
+[data-theme="dark"] .main-title,
 [data-theme="dark"] .main-title span,
 [data-theme="dark"] .section-title::before,
 [data-theme="dark"] .medical-block strong,
