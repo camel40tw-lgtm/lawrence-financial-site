@@ -1,5 +1,6 @@
 
 :root{
+  color-scheme: light dark;
   --navy-950:#0b1d33;
   --navy-900:#102947;
   --navy-800:#173a63;
@@ -815,6 +816,14 @@ input:focus,textarea:focus{
   border-color:var(--navy-700); box-shadow:0 0 0 4px rgba(36,79,131,.10);
 }
 textarea{min-height:170px; resize:vertical}
+[data-theme="dark"] input,[data-theme="dark"] textarea{
+  background:rgba(10,25,50,.72); border-color:rgba(148,163,184,.28);
+  color:#e2e8f0;
+}
+[data-theme="dark"] input:focus,[data-theme="dark"] textarea:focus{
+  border-color:var(--navy-600); box-shadow:0 0 0 4px rgba(53,104,159,.20);
+}
+[data-theme="dark"] label{color:#d8e1ec}
 .sr-only{
   position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
   clip:rect(0,0,0,0); white-space:nowrap; border:0;
