@@ -587,7 +587,7 @@ canvas{width:100%;max-width:100%;background:var(--washi);border-radius:var(--rad
 
 
 /* One Pager overrides */
-.wizard-panel { display: block !important; opacity: 1 !important; transform: none !important; margin-bottom: 30px; border-radius: 12px; }
+.wizard-panel { display: block !important; opacity: 1 !important; transform: none !important; margin-bottom: 30px; border-radius: 12px; max-width: 800px; margin-left: auto; margin-right: auto; }
 .unified-action-bar { margin-bottom: 60px; }
 .card.form-card { padding: 40px; box-shadow: 0 12px 28px rgba(16,41,71,0.03); border: 1px solid rgba(219,228,238,0.6); }
 [data-theme="dark"] .card.form-card { background: rgba(28,42,60,0.4); border-color: rgba(255,255,255,0.05); }
