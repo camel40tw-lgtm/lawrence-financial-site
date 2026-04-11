@@ -25,12 +25,14 @@
   <meta name="twitter:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
   <script>
     try {
-      if (localStorage.getItem('theme') === 'dark') {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
         document.documentElement.setAttribute('data-theme', 'dark');
       }
     } catch (error) {}
   </script>
-  <link rel="preload" as="image" href="images/lawrence-home-hero-standing.jpg" imagesrcset="images/lawrence-home-hero-standing.jpg" />
+  <link rel="preload" as="image" href="images/lawrence-home-hero-standing.webp" type="image/webp" />
   <link rel="stylesheet" href="assets/styles.css?v=20260411e" />
 
   <script>
@@ -80,6 +82,9 @@
   }
   </script>
   
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -94,11 +99,11 @@
         <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
       </div>
       <nav class="nav-links" id="navLinks">
-        <a href="index.html" class="active">首頁</a>
-        <a href="about.html" class="">關於我</a>
-        <a href="services.html" class="">服務項目</a>
-        <a href="articles.html" class="">文章</a>
-        <a href="contact.html" class="">聯絡我</a>
+        <a href="index.html">首頁</a>
+        <a href="about.html">關於我</a>
+        <a href="services.html">服務項目</a>
+        <a href="articles.html">文章</a>
+        <a href="contact.html">聯絡我</a>
         <a href="contact.html#booking" class="nav-cta">預約諮詢</a>
       </nav>
     </div>
@@ -143,7 +148,10 @@
 
           <div class="hero-card">
             <div class="hero-photo-shell">
-              <img src="images/lawrence-home-hero-standing.jpg" alt="駱潤生 Lawrence 個人形象照" class="hero-photo hero-photo-full" width="1677" height="2500" fetchpriority="high" loading="eager" decoding="async" />
+              <picture>
+                <source srcset="images/lawrence-home-hero-standing.webp" type="image/webp" />
+                <img src="images/lawrence-home-hero-standing.jpg" alt="駱潤生 Lawrence 個人形象照" class="hero-photo hero-photo-full" width="1677" height="2500" fetchpriority="high" loading="eager" decoding="async" />
+              </picture>
             </div>
             <div class="hero-mini">
               <div>高齡金融與資產安全制度規劃</div>
@@ -273,6 +281,23 @@
 
   <footer>
     <div class="container footer-inner">
+      <div class="footer-brand">
+        <strong>駱潤生 Lawrence</strong>
+        <p>CFP®認證理財規劃顧問<br>高齡金融・信託・資產傳承</p>
+      </div>
+      <div class="footer-nav">
+        <strong>網站導覽</strong>
+        <a href="about.html">關於我</a>
+        <a href="services.html">服務項目</a>
+        <a href="articles.html">專業文章</a>
+      </div>
+      <div class="footer-contact">
+        <strong>聯絡方式</strong>
+        <a href="mailto:camel40tw@gmail.com">camel40tw@gmail.com</a>
+        <a href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">LINE 預約諮詢</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
       <div>© 2026 駱潤生 Lawrence. All Rights Reserved.</div>
     </div>
   </footer>

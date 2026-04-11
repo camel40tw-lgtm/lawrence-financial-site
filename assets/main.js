@@ -150,3 +150,32 @@ window.SITE_CONFIG = {
   bookingUrl : 'contact.html#booking',
   lineUrl    : 'https://line.me/ti/p/iaCU1C6Wbl',
 };
+
+// ─── Stat Counter Animation ──────────────────────────────────────────────────
+const statBoxes = document.querySelectorAll('.stat-box strong');
+if (statBoxes.length) {
+  const statIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const text = el.innerText;
+      const match = text.match(/(\d+)(.*)/);
+      if (match) {
+        let max = parseInt(match[1], 10);
+        let suffix = match[2] || '';
+        let current = 0;
+        let inc = Math.max(1, Math.ceil(max / 40));
+        let int = setInterval(() => {
+          current += inc;
+          if (current >= max) {
+            current = max;
+            clearInterval(int);
+          }
+          el.innerText = current + suffix;
+        }, 30);
+        statIo.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  statBoxes.forEach(el => statIo.observe(el));
+}
