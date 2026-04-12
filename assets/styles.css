@@ -1130,9 +1130,22 @@ body::before {
 }
 
 /* CTA band: white outline btn (used inside dark panels) */
-.btn-outline-white {
-  color: #fff !important;
-  border-color: rgba(255,255,255,.35) !important;
+.btn-outline-white,
+[data-theme="dark"] .btn-outline-white,
+.cta-band .btn-outline-white {
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.45) !important;
+}
+.btn-outline-white *,
+[data-theme="dark"] .btn-outline-white *,
+.cta-band .btn-outline-white * {
+  color: #ffffff !important;
+}
+.btn-outline-white:hover,
+[data-theme="dark"] .btn-outline-white:hover {
+  background: rgba(255,255,255,0.15) !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
 }
 
 /* Inner page hero title (non-home pages) */
