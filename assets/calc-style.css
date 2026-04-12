@@ -763,3 +763,7 @@ canvas{width:100%;max-width:100%;background:var(--washi);border-radius:var(--rad
   .unified-action-bar { flex-direction: column; }
   .unified-action-bar button { width: 100%; }
 }
+
+/* 確保與全站版面融合的覆寫 (從 HTML 遷移) */
+.page-bg { background: transparent !important; box-shadow: none !important; }
+.container { max-width: 1080px !important; margin: 0 auto; }
