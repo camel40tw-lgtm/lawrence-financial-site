@@ -34,30 +34,7 @@
   </script>
   <link rel="stylesheet" href="assets/styles.css?v=20260411e" />
 
-  <script>
-    /*
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-    */
-  </script>
 
-  <!-- Meta Pixel Code (Placeholder) -->
-  <script>
-    /*
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '123456789012345');
-    fbq('track', 'PageView');
-    */
-  </script>
 
   <script type="application/ld+json">
   {
@@ -85,10 +62,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/calc-style.css?v=darkmode_amber_fix_3">
-  <style>
-    .page-bg { background: transparent !important; box-shadow: none !important; }
-    .container { max-width: 1080px !important; margin: 0 auto; }
-  </style>
+
 </head>
 <body>
 
@@ -98,7 +72,7 @@
         <strong>駱潤生 Lawrence</strong>
         <span>CFP®認證理財規劃顧問｜高齡金融・信託・資產傳承</span>
       </a>
-      <div style="display:flex; align-items:center; gap:10px;">
+      <div class="header-controls">
         <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌓</button>
         <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
       </div>
@@ -107,7 +81,7 @@
         <a href="about.html">關於我</a>
         <a href="services.html">服務項目</a>
         <a href="articles.html">文章</a>
-        <a href="calculator.html" style="color:var(--amber-600); font-weight:bold; letter-spacing:0.05em;">📝免費試算</a>
+        <a href="calculator.html" class="calc-link">📝免費試算</a>
         <a href="contact.html">聯絡我</a>
         <a href="contact.html#booking" class="nav-cta">預約諮詢</a>
       </nav>
@@ -115,7 +89,7 @@
   </header>
 
   
-<main style="padding: 100px 0 60px;">
+<main class="calc-main">
 <div class="page-bg">
   <div class="container">
 
@@ -227,9 +201,9 @@
             </div>
           </div>
 
-          <details class="ltc-advanced-box" id="ltcAdvancedBox" style="margin-top:16px;">
-            <summary style="cursor:pointer;font-family:var(--font-serif);color:var(--kaki);font-weight:700;letter-spacing:0.08em;">預設值＋進階展開設定：LTC（長照）壓力測試</summary>
-            <div class="finance-grid" style="margin-top:12px;">
+          <details class="ltc-advanced-box" id="ltcAdvancedBox">
+            <summary class="ltc-summary-label">預設值＋進階展開設定：LTC（長照）壓力測試</summary>
+            <div class="finance-grid finance-grid-ltc-inner">
               <div>
                 <label for="ltcEnabled">是否啟用 LTC 壓力測試</label>
                 <select id="ltcEnabled">
@@ -263,13 +237,13 @@
         <div class="field-note">例如今天填入 15,000,000，若事件發生在未來且勾選「隨通膨調整」，報表會顯示換算後的發生年名目值。</div>
 
         <div class="goal-header">
-          <div class="section-title" style="margin-bottom:0;border:none;padding-bottom:0;">財務目標（支出事件）</div>
+          <div class="section-title section-title-inline">財務目標（支出事件）</div>
           <button type="button" class="small-btn" onclick="addGoal()">＋ 新增目標</button>
         </div>
         <div id="goalContainer"></div>
 
-        <div class="goal-header" style="margin-top:24px;">
-          <div class="section-title" style="margin-bottom:0;border:none;padding-bottom:0;">收入事件</div>
+        <div class="goal-header goal-header-income">
+          <div class="section-title section-title-inline">收入事件</div>
           <button type="button" class="small-btn" onclick="addIncome()">＋ 新增收入</button>
         </div>
         <div id="incomeContainer"></div>
@@ -285,7 +259,7 @@
         <div class="summary-confirm" id="step4Summary"></div>
 
         <div class="section-title">Monte Carlo 進階設定</div>
-        <div class="checkbox-grid" style="margin-bottom:14px;">
+        <div class="checkbox-grid mc-checkbox-grid">
           <label class="check-item"><input id="mcEnabled" type="checkbox" checked><span>啟用 Monte Carlo</span></label>
           <label class="check-item"><input id="mcRandomInflation" type="checkbox" checked><span>通膨隨機化</span></label>
           <label class="check-item"><input id="mcFlexibleSpending" type="checkbox" checked><span>退休後支出彈性</span></label>
@@ -313,7 +287,7 @@
           </div>
         </div>
 
-        <div class="section-title" style="margin-top:22px;">報表顯示項目</div>
+        <div class="section-title section-title-report">報表顯示項目</div>
         <div class="checkbox-grid">
           <label class="check-item"><input id="showInputSummary" type="checkbox" checked><span>顯示原始輸入參數</span></label>
           <label class="check-item"><input id="showAdvisorAdvice" type="checkbox" checked><span>顯示顧問解讀</span></label>
@@ -331,10 +305,10 @@
     </section>
 
     
-        <div class="unified-action-bar" style="display:flex; justify-content:center; gap:16px; margin-top:40px; padding-top:30px; border-top:1px solid rgba(219,228,238,0.5);">
-          <button type="button" class="btn btn-outline" style="border-radius:6px; padding:10px 24px;" onclick="loadData()">載入上次儲存紀錄</button>
-          <button type="button" class="btn btn-outline" style="border-radius:6px; padding:10px 24px;" onclick="saveData()">儲存輸入內容</button>
-          <button type="button" class="btn btn-primary" style="border-radius:6px; padding:10px 48px; background:var(--navy-900); color:#fff; font-family:var(--font-serif);" onclick="calculateRetirement()">產出退休規劃報告</button>
+        <div class="unified-action-bar">
+          <button type="button" class="btn btn-outline calc-btn-outline" onclick="loadData()">載入上次儲存紀錄</button>
+          <button type="button" class="btn btn-outline calc-btn-outline" onclick="saveData()">儲存輸入內容</button>
+          <button type="button" class="btn btn-primary calc-btn-primary" onclick="calculateRetirement()">產出退休規劃報告</button>
         </div>
       </div>
 
@@ -349,7 +323,7 @@
         <div class="report-head no-print">
           <h1 class="report-title">退休規劃報告</h1>
           <div class="button-group horizontal">
-            <button type="button" class="btn btn-primary" onclick="sendToLine()" style="background: linear-gradient(135deg, #06c755 0%, #02b34a 100%); border:none; border-radius: 8px; color: #fff; padding: 10px 20px; font-weight:bold; font-family:var(--font-serif); letter-spacing:0.05em;">✨ 一鍵傳送給 Lawrence 預約解析</button>
+            <button type="button" class="btn-send-line" onclick="sendToLine()">✨ 一鍵傳送給 Lawrence 預約解析</button>
             <button type="button" class="small-btn" onclick="exportCashflowCsv()">匯出 CSV</button>
             <button type="button" class="small-btn" onclick="shareData()">產生分享連結</button>
             <button type="button" class="small-btn" onclick="printReport()">列印 / 匯出 PDF</button>
@@ -428,7 +402,7 @@
         <div class="share-box no-print hidden" id="shareBox">
           <div class="share-title">分享連結</div>
           <input id="shareLink" type="text" readonly>
-          <div class="button-group horizontal" style="margin-top:10px;">
+          <div class="button-group horizontal share-btn-group">
             <button type="button" class="small-btn" onclick="copyShareLink()">複製連結</button>
             <button type="button" class="small-btn" onclick="printReport()">列印 / 匯出 PDF</button>
             <button type="button" class="ghost-btn small-btn" onclick="resetWizard()">重新試算</button>

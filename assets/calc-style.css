@@ -659,3 +659,107 @@ canvas{width:100%;max-width:100%;background:var(--washi);border-radius:var(--rad
 [data-theme="dark"] .rule4-badge.safe { color: var(--emerald-400) !important; border-color: rgba(52,211,153,0.3) !important; }
 [data-theme="dark"] .rule4-badge.caution { color: var(--amber-400) !important; border-color: rgba(251,191,36,0.3) !important; }
 [data-theme="dark"] .rule4-badge.danger { color: var(--rose-400) !important; border-color: rgba(244,63,94,0.3) !important; }
+
+
+/* ─── Styles extracted from calculator.html <style> block ─── */
+
+/* Override page-bg for calc page (transparent, no shadow) */
+.calc-page-bg {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Calc main wrapper: offset for fixed header */
+.calc-main {
+  padding: 100px 0 60px;
+}
+
+/* Calc container width override */
+.calc-container {
+  max-width: 1080px !important;
+  margin: 0 auto;
+}
+
+/* LTC advanced box spacing */
+.ltc-advanced-box { margin-top: 16px; }
+
+/* LTC summary label */
+.ltc-summary-label {
+  cursor: pointer;
+  font-family: var(--font-serif);
+  color: var(--kaki);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* Finance grid top spacing for LTC inner */
+.finance-grid-ltc-inner { margin-top: 12px; }
+
+/* Goal/Income section header: no bottom margin, no border */
+.section-title-inline {
+  margin-bottom: 0;
+  border: none;
+  padding-bottom: 0;
+}
+
+/* Income goal-header with top margin */
+.goal-header-income { margin-top: 24px; }
+
+/* Monte Carlo checkbox grid spacing */
+.mc-checkbox-grid { margin-bottom: 14px; }
+
+/* Report display section title top margin */
+.section-title-report { margin-top: 22px; }
+
+/* Send to LINE button */
+.btn-send-line {
+  background: linear-gradient(135deg, #06c755 0%, #02b34a 100%);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px 20px;
+  font-weight: bold;
+  font-family: var(--font-serif);
+  letter-spacing: 0.05em;
+}
+.btn-send-line:hover {
+  background: linear-gradient(135deg, #02b34a 0%, #02a044 100%);
+}
+
+/* Share box button group top margin */
+.share-btn-group { margin-top: 10px; }
+
+/* Unified action bar */
+.unified-action-bar {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(219,228,238,0.5);
+  margin-bottom: 60px;
+}
+
+/* Calc outline buttons */
+.calc-btn-outline {
+  border-radius: 6px;
+  padding: 10px 24px;
+}
+
+/* Calc primary button */
+.calc-btn-primary {
+  border-radius: 6px;
+  padding: 10px 48px;
+  background: var(--navy-900);
+  color: #fff;
+  font-family: var(--font-serif);
+}
+[data-theme="dark"] .calc-btn-primary {
+  background: var(--amber-500);
+  color: var(--navy-950);
+}
+
+@media (max-width: 640px) {
+  .unified-action-bar { flex-direction: column; }
+  .unified-action-bar button { width: 100%; }
+}

@@ -1109,3 +1109,56 @@ body::before {
 .btn-primary:hover::after {
   left: 150%;
 }
+
+/* ─── Global Utility Classes (extracted from inline styles) ─── */
+
+/* Header button group */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Nav: Calculator highlight link */
+.nav-links .calc-link {
+  color: var(--amber-600);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+[data-theme="dark"] .nav-links .calc-link {
+  color: var(--amber-500);
+}
+
+/* CTA band: white outline btn (used inside dark panels) */
+.btn-outline-white {
+  color: #fff !important;
+  border-color: rgba(255,255,255,.35) !important;
+}
+
+/* Inner page hero title (non-home pages) */
+.page-hero-title {
+  font-size: clamp(2.1rem, 4vw, 3.8rem);
+  margin-top: 0;
+}
+
+/* article-retirement page hero title (slightly smaller) */
+.article-hero-title {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  margin-top: 0;
+}
+
+/* Contact page: LINE button (compact size) */
+.contact-line-btn {
+  min-height: 42px;
+  font-size: 0.95rem;
+  padding: 0 16px;
+}
+
+/* 404 page layout helpers */
+.panel-centered {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+.eyebrow-center { justify-content: center; }
+.hero-actions-center { justify-content: center; }
