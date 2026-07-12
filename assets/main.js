@@ -81,6 +81,7 @@ if (themeToggle) {
 }
 
 // ─── Contact / booking form ───────────────────────────────────────────────────
+const TURNSTILE_WORKER_URL = 'https://turnstile-siteverify-lawrence.camel40tw.workers.dev';
 const bookingForm = document.querySelector('[data-booking-form]');
 if (bookingForm) {
   const submitButton = bookingForm.querySelector('.contact-submit');
@@ -111,6 +112,36 @@ if (bookingForm) {
     const action = bookingForm.getAttribute('action');
     if (!action) {
       showStatus('表單設定異常，請改用 LINE 或 Email 與我聯繫。', 'error');
+      return;
+    }
+
+    const turnstileToken = bookingForm.querySelector('[name="cf-turnstile-response"]')?.value;
+    if (!turnstileToken) {
+      showStatus('請完成驗證後再送出。', 'error');
+      return;
+    }
+
+    if (submitButton) {
+      submitButton.disabled    = true;
+      submitButton.textContent = '驗證中...';
+    }
+
+    try {
+      const verifyRes  = await fetch(TURNSTILE_WORKER_URL, {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify({ token: turnstileToken }),
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyData.success) {
+        showStatus('驗證失敗，請重新整理頁面後再試一次。', 'error');
+        resetButton();
+        if (window.turnstile) window.turnstile.reset();
+        return;
+      }
+    } catch (error) {
+      showStatus('驗證服務暫時無法使用，請稍後再試，或改用 LINE / Email 聯繫。', 'error');
+      resetButton();
       return;
     }
 
