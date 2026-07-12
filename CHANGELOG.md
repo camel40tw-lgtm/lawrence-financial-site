@@ -12,10 +12,36 @@
 | `v10` Tag | 2026-04-11 | 網站 v10 基準線：完成 SEO、暗模式、退休試算器整合 |
 | `6bcc8a6` | 2026-04-12 | 樣式重構：行內 CSS 遷移、移除追蹤代碼佔位符 |
 | `7afb3ab` | 2026-04-12 | 新增 5 篇文章頁面、修正全站內鏈 |
+| `382edd2` | 2026-07-12 | 修正 calculator.html SEO 標籤、新增 Turnstile 防護、資產載入強化 |
 
 ---
 
 ## 詳細記錄
+
+---
+
+### [Bugfix/Feature] 修正 calculator.html SEO 標籤、新增 Turnstile 防護、資產載入強化 (Commit: `382edd2`) — 2026-07-12
+
+**類型**：Bugfix / Feature / Security / Performance
+**Commit**：`382edd2`
+
+**問題根源 / 背景**：
+- 全站掃描發現 `calculator.html` 的整個 `<head>`（meta description、og/twitter 標籤、JSON-LD 的 url/description）是從 `services.html` 複製過來的，只有 `<title>` 改對，導致試算器頁面的 SEO 索引與社群分享預覽都錯誤指向服務頁面。
+- `contact.html` 預約表單直接明碼 POST 到公開的 Google Apps Script，僅靠一個蜜罐欄位防護，無驗證碼機制，長期有被灌垃圾表單的風險。
+- `calculator.html` 的 `chart.js` 從 CDN 載入未鎖版本、無 SRI，且三支 script（chart.js、calc-core.js、calc-ui.js）皆同步阻塞載入。
+- 全站 `assets/main.js` 沒有快取版本號，`_headers` 對 `/assets/*` 設定 24 小時快取＋7 天 stale-while-revalidate，若修改 main.js 行為（如本次加驗證邏輯），舊訪客可能吃到舊版本。
+
+**執行內容**：
+- 修正 `calculator.html` 的 canonical、og:*、twitter:*、JSON-LD 全部改為指向自己（試算器頁面），文案改寫成試算器專屬描述
+- 新增 Cloudflare Turnstile 防護：建立 managed widget（sitekey `0x4AAAAAAD0MokIVGy1j2OPt`）＋ 部署 siteverify Worker（`turnstile-siteverify-lawrence.camel40tw.workers.dev`），`contact.html`/`assets/main.js` 在原有送出邏輯前加驗證閘門，端到端驗證（health check、dummy token、widget 網域）全通過
+- `calculator.html`：`chart.js` 鎖定版本 `4.5.1` 並加上 SRI hash；三支 calculator script 全部加 `defer`
+- 全站 15 個頁面的 `assets/main.js` 補上 `?v=20260712a` 快取版本號
+
+**驗證**：
+- Turnstile widget/Worker 三項驗證（`/health`、dummy siteverify、widget domains）皆通過
+- `git diff --stat` 確認只有預期的 16 個檔案異動，已 commit 並 push 到 `origin/main`
+
+**後續待辦（見下方「待辦」表）**：Web Analytics 尚未開通、Token 權限待收斂、CSS/JS 尚未 minify、hero 圖片尚無 responsive srcset。
 
 ---
 
@@ -186,9 +212,13 @@
 
 | 優先級 | 項目 | 說明 |
 |---|---|---|
+| **高** | 開通 Cloudflare Web Analytics | API Token 權限不足無法自動開通，需人工到 Pages 專案後台「Analytics」分頁點擊啟用 |
 | **高** | 名單磁鐵 (Lead Magnet) 系統 | 於試算報告「匯出 PDF」功能加入閘口（Email 表單或 Google 授權登入），獲取潛在用戶名單供後續自動化行銷 |
+| **中** | 收斂 Cloudflare API Token 權限 | 2026-07-12 設定 Turnstile 時用的是一組權限過廣的通用 Token，建議另建一組僅 `Turnstile:Edit` + `Workers Scripts:Edit` 的窄權限 Token 並撤銷舊的 |
 | **中** | 更多文章頁面 | 可繼續新增「稅務規劃」、「財產信託 Q&A」等主題文章 |
 | **中** | GA / Meta Pixel 正式埋碼 | 準備追蹤時，在各 HTML `<head>` 埋入正式版代碼（已移除佔位符） |
+| **低** | CSS/JS 壓縮 | `assets/styles.css`（1177 行）、`assets/calc-ui.js`（1970 行）等皆為未壓縮原始檔，目前無建置流程，可評估加入簡單 minify 步驟 |
+| **低** | Hero 圖片 responsive srcset | 目前僅有 WebP/JPG 格式切換，無依裝置寬度縮小的多尺寸版本，行動裝置仍下載原尺寸圖 |
 | **低** | 計算機 PDF 輸出優化 | 美化 print 版 CSS，讓報告匯出更精緻 |
 | **低** | 文章交叉內鏈 | 在各篇文章末尾加入「延伸閱讀」推薦相關文章 |
 | **低** | 意見回饋機制 | 文章底部加入簡易回饋功能 |
@@ -217,4 +247,4 @@
 
 ---
 
-*最後更新：2026-04-12 | 紀錄版本 v1.0*
+*最後更新：2026-07-12 | 紀錄版本 v1.1*
