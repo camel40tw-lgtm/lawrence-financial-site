@@ -19,6 +19,23 @@
 
 ---
 
+### [功能] 新增文章：家族辦公室不是有錢人的專利 — 2026-07-12
+
+**類型**：Feature / Content
+**Commit**：（尚未提交）
+
+**問題根源 / 背景**：
+- 內容產線（idea-capture → deep-researcher → article-writer → content-refiner）產出新主題「普惠家族辦公室」，需上站發布。
+
+**執行內容**：
+- 新增 `article-inclusive-family-office.html`，標配 OG/Twitter meta、Article JSON-LD、CTA Band、浮動 FAB
+- `articles.html`：新增「家族傳承」分類卡片，置頂於文章網格
+- `sitemap.xml`：新增 1 個 URL
+
+**驗證**：尚待人工檢視內容與版面後，再 commit 並推送觸發 Cloudflare Pages 部署。
+
+---
+
 ### [v10 基準線] 2026-04-11
 
 **目標**：建立網站的生產就緒基準版本，確保 SEO、UI 與技術架構達到頂級水準。
