@@ -26,7 +26,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: #e0f2e9;
+  background: rgba(13, 139, 103, .12);
   color: var(--success);
   margin-bottom: 24px;
 }
@@ -61,21 +61,17 @@
 }
 
 .thanks-btn-outline {
-  background: #fff;
+  background: var(--bg-card);
 }
 
 [data-theme="dark"] .thanks-title {
-  color: #f8fbff;
+  color: var(--text-main);
 }
 [data-theme="dark"] .thanks-desc {
-  color: #d8e1ec;
+  color: var(--text-soft);
 }
 [data-theme="dark"] .thanks-icon-wrap {
-  background: rgba(13,139,103,.14);
-  color: #3fd8a8;
-}
-[data-theme="dark"] .thanks-btn-outline {
-  background: rgba(255,255,255,.06);
+  color: #34d399; /* success 的深色亮階，與 calc 深色 badge 一致 */
 }
 
 @media (max-width: 760px) {

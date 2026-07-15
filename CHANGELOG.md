@@ -16,12 +16,24 @@
 | — | 2026-07-16 | 新增 tools.html 免費試算工具總覽頁（卡片式、可擴充），整合遺囑撰寫站 |
 | — | 2026-07-16 | 統一美術規格：DESIGN.md ＋ design-tokens.css ＋ styleguide.html |
 | — | 2026-07-16 | 美術規格落地：試算器改 navy/amber token、圖表改語意色；遺囑站同步歸隊 |
+| — | 2026-07-16 | thanks.css 併入 token（DESIGN.md §9 全數完成） |
 
 ---
 
 ## 詳細記錄
 
 ---
+
+### [收尾] thanks.css 併入 design token — 2026-07-16
+
+**類型**：Design System
+
+**執行內容**：
+- `thanks.css` 寫死色碼換 token：成功圖示底 `#e0f2e9`→`rgba(13,139,103,.12)`、外框鈕 `#fff`→`var(--bg-card)`、深色標題/內文改 `var(--text-main)`/`var(--text-soft)`、深色成功色統一 `#34d399`；深色外框鈕覆寫因 `--bg-card` 自動翻轉而移除
+- `thanks.html` 補快取版本號 `?v=20260716a`
+- DESIGN.md §9 落地待辦至此全數完成
+
+**驗證**：本機 Playwright 淺／深色截圖通過
 
 ### [改版] 美術規格落地：退休試算器＋遺囑撰寫站歸隊 — 2026-07-16
 
