@@ -203,9 +203,9 @@
 
 | # | 項目 | 影響 | 狀態 |
 |---|---|---|---|
-| 1 | 建立 `assets/design-tokens.css` 並在 styleguide.html 展示 | 建立單一真相來源 | ✅ 本次完成 |
-| 2 | `calc-style.css` 歸隊：和紙色系→navy/amber、Shippori→display 字族、移除 CSS 內 `@import`、補深色模式 | 試算器視覺統一 | ⬜ 待做（工程量大，建議獨立一次改版） |
-| 3 | 遺囑撰寫站套用 token（複製 design-tokens.css、改 `--blue`→navy 系、補品牌識別列） | 外部工具統一 | ⬜ 待做 |
+| 1 | 建立 `assets/design-tokens.css` 並在 styleguide.html 展示 | 建立單一真相來源 | ✅ 2026-07-16 完成 |
+| 2 | `calc-style.css` 歸隊：本地變數（--washi/--kaki 等）改對映 design token、Shippori→display 字族、移除 CSS 內 `@import`、圖表色改語意色（calc-ui.js） | 試算器視覺統一 | ✅ 2026-07-16 完成 |
+| 3 | 遺囑撰寫站套用 token（:root 改 navy 系、標題改 Noto Serif TC、側欄加品牌識別列連回 tools.html） | 外部工具統一 | ✅ 2026-07-16 完成 |
 | 4 | `thanks.css` 檢查併入 token | 小 | ⬜ 待做 |
 
 > 規格有異動時：先改本文件與 `design-tokens.css`，再改各頁面；並在 CHANGELOG 記錄。

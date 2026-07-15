@@ -15,12 +15,29 @@
 | `382edd2` | 2026-07-12 | 修正 calculator.html SEO 標籤、新增 Turnstile 防護、資產載入強化 |
 | — | 2026-07-16 | 新增 tools.html 免費試算工具總覽頁（卡片式、可擴充），整合遺囑撰寫站 |
 | — | 2026-07-16 | 統一美術規格：DESIGN.md ＋ design-tokens.css ＋ styleguide.html |
+| — | 2026-07-16 | 美術規格落地：試算器改 navy/amber token、圖表改語意色；遺囑站同步歸隊 |
 
 ---
 
 ## 詳細記錄
 
 ---
+
+### [改版] 美術規格落地：退休試算器＋遺囑撰寫站歸隊 — 2026-07-16
+
+**類型**：Design System / Refactor
+
+**問題根源 / 背景**：
+- 依 DESIGN.md §9 待辦 #2、#3 執行：試算器仍是和紙色系＋Shippori Mincho，遺囑站是獨立藍色系。
+
+**執行內容**：
+- `calc-style.css`：移除 CSS 內 `@import` 字體；`:root` 本地變數（--washi/--sumi/--kaki/--matcha 等 22 個）全數改對映 design token，因此淺／深色自動由 token 驅動；散落的和紙寫死色（表格斑馬紋、診斷卡、print 樣式、badge 邊框等 40+ 處）換成 token 或 navy/amber 系；圓角/陰影對齊規格（卡片 24、陰影大位移低不透明）；修正深色模式引用了不存在的 --emerald-400/--amber-400/--rose-400
+- `calc-ui.js`：圖表色改語意色——樂觀/P90 綠 `#0d8b67`、基準/P50 藍 `#35689f`、保守/P10 紅 `#dc2626`、選取強調改 amber `#F59E0B`
+- `calculator.html`：calc-style.css 與 calc-ui.js 快取版本號 bump 至 `?v=20260716a`
+- 遺囑撰寫站（外部 repo）：`:root` 色票改 navy 系（--navy #102947、--blue→#244f83、語意色同官網）、h1/h2 改 Noto Serif TC、favicon 改品牌色、側欄新增「駱潤生 Lawrence 免費工具」識別列連回 tools.html；已重建並部署 production
+
+**驗證**：
+- 本機 Playwright：試算器表單、產出報告、圖表（綠柱＋amber 選取）、深色模式截圖全數通過；遺囑站新視覺與品牌列確認
 
 ### [規範] 統一美術規格：DESIGN.md ＋ design-tokens.css ＋ styleguide.html — 2026-07-16
 

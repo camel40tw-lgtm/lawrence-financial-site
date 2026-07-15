@@ -1245,7 +1245,7 @@ function renderCharts(data, mcResults) {
           {
             label: '累積資產（現值）',
             data: preRetireData.map((point) => point.value),
-            backgroundColor: '#5a7a4a',
+            backgroundColor: '#0d8b67',
             borderRadius: 4
           }
         ]
@@ -1267,8 +1267,8 @@ function renderCharts(data, mcResults) {
           {
             label: '退休金水位（現值）',
             data: postRetireData.map((point) => point.value),
-            borderColor: '#b85c38',
-            backgroundColor: 'rgba(184,92,56,0.1)',
+            borderColor: '#244f83',
+            backgroundColor: 'rgba(36,79,131,0.10)',
             fill: true,
             tension: 0.3
           }
@@ -1288,9 +1288,9 @@ function renderCharts(data, mcResults) {
       data: {
         labels: fullLabels,
         datasets: [
-          { label: '樂觀 (+2%報酬)', data: pathOpt.map((point) => point.value), borderColor: '#5a7a4a', borderDash: [5, 5], fill: false, tension: 0.3 },
-          { label: '基準設定', data: pathBase.map((point) => point.value), borderColor: '#c8841a', fill: false, tension: 0.3, borderWidth: 3 },
-          { label: '保守 (-2%報酬)', data: pathPess.map((point) => point.value), borderColor: '#b03a3a', borderDash: [5, 5], fill: false, tension: 0.3 }
+          { label: '樂觀 (+2%報酬)', data: pathOpt.map((point) => point.value), borderColor: '#0d8b67', borderDash: [5, 5], fill: false, tension: 0.3 },
+          { label: '基準設定', data: pathBase.map((point) => point.value), borderColor: '#35689f', fill: false, tension: 0.3, borderWidth: 3 },
+          { label: '保守 (-2%報酬)', data: pathPess.map((point) => point.value), borderColor: '#dc2626', borderDash: [5, 5], fill: false, tension: 0.3 }
         ]
       },
       options: commonOptions
@@ -1309,9 +1309,9 @@ function renderCharts(data, mcResults) {
       data: {
         labels: mcLabels,
         datasets: [
-          { label: 'P90 (前 10% 表現)', data: mcResults.percentileSeries.map((point) => point.p90), borderColor: '#5a7a4a', backgroundColor: 'rgba(90,122,74,0.1)', fill: false, tension: 0.4 },
-          { label: 'P50 (中位數路徑)', data: mcResults.percentileSeries.map((point) => point.p50), borderColor: '#c8841a', backgroundColor: 'rgba(200,132,26,0.1)', fill: false, tension: 0.4 },
-          { label: 'P10 (後 10% 風險)', data: mcResults.percentileSeries.map((point) => point.p10), borderColor: '#b03a3a', backgroundColor: 'rgba(176,58,58,0.1)', fill: '+1', tension: 0.4 }
+          { label: 'P90 (前 10% 表現)', data: mcResults.percentileSeries.map((point) => point.p90), borderColor: '#0d8b67', backgroundColor: 'rgba(13,139,103,0.10)', fill: false, tension: 0.4 },
+          { label: 'P50 (中位數路徑)', data: mcResults.percentileSeries.map((point) => point.p50), borderColor: '#35689f', backgroundColor: 'rgba(53,104,159,0.10)', fill: false, tension: 0.4 },
+          { label: 'P10 (後 10% 風險)', data: mcResults.percentileSeries.map((point) => point.p10), borderColor: '#dc2626', backgroundColor: 'rgba(220,38,38,0.08)', fill: '+1', tension: 0.4 }
         ]
       },
       options: commonOptions
@@ -1726,21 +1726,21 @@ function applyChartSelectionState() {
 
     chart.data.datasets.forEach((dataset) => {
       if (isBar) {
-        const baseColor = dataset.__baseBackgroundColor ?? dataset.backgroundColor ?? '#5a7a4a';
+        const baseColor = dataset.__baseBackgroundColor ?? dataset.backgroundColor ?? '#0d8b67';
         dataset.__baseBackgroundColor = baseColor;
         dataset.backgroundColor = ageValues.map((age, index) => {
           if (Array.isArray(baseColor)) {
-            return age === selectedReportAge ? '#b85c38' : (baseColor[index] || '#5a7a4a');
+            return age === selectedReportAge ? '#F59E0B' : (baseColor[index] || '#0d8b67');
           }
-          return age === selectedReportAge ? '#b85c38' : baseColor;
+          return age === selectedReportAge ? '#F59E0B' : baseColor;
         });
         return;
       }
 
-      const lineColor = dataset.borderColor || '#c8841a';
+      const lineColor = dataset.borderColor || '#35689f';
       dataset.pointRadius = ageValues.map((age) => (age === selectedReportAge ? 5 : 0));
       dataset.pointHoverRadius = ageValues.map((age) => (age === selectedReportAge ? 7 : 3));
-      dataset.pointBackgroundColor = ageValues.map((age) => (age === selectedReportAge ? '#b85c38' : lineColor));
+      dataset.pointBackgroundColor = ageValues.map((age) => (age === selectedReportAge ? '#F59E0B' : lineColor));
       dataset.pointBorderColor = ageValues.map((age) => (age === selectedReportAge ? '#fff' : lineColor));
       dataset.pointBorderWidth = ageValues.map((age) => (age === selectedReportAge ? 2 : 0));
     });
