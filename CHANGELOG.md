@@ -13,12 +13,29 @@
 | `6bcc8a6` | 2026-04-12 | 樣式重構：行內 CSS 遷移、移除追蹤代碼佔位符 |
 | `7afb3ab` | 2026-04-12 | 新增 5 篇文章頁面、修正全站內鏈 |
 | `382edd2` | 2026-07-12 | 修正 calculator.html SEO 標籤、新增 Turnstile 防護、資產載入強化 |
+| — | 2026-07-16 | 新增 tools.html 免費試算工具總覽頁（卡片式、可擴充），整合遺囑撰寫站 |
 
 ---
 
 ## 詳細記錄
 
 ---
+
+### [功能] 新增免費試算工具總覽頁 tools.html，整合遺囑撰寫站 — 2026-07-16
+
+**類型**：Feature
+
+**問題根源 / 背景**：
+- 導覽列「📝免費試算」原本直接連到 `calculator.html`（退休試算器本體），但工具會陸續增加（本次新增外部工具「遺囑撰寫站」），需要一個可擴充的工具入口頁。
+
+**執行內容**：
+- 新增 `tools.html`：沿用 `article-grid`/`article-card` 卡片樣式加 `.tool-card` 微調（圖示、CTA、「更多工具開發中」虛線佔位卡），三欄 RWD（960px 兩欄、640px 單欄），支援深色模式；檔內有註解說明如何複製卡片新增工具
+- 現有兩張工具卡：退休規劃顧問版試算器（站內 `calculator.html`）、遺囑撰寫站（外部 https://will-writing-station.pages.dev ，`target="_blank" rel="noopener"`）
+- 全站 15 個頁面導覽列「📝免費試算」改指向 `tools.html`；`tools.html` footer 網站導覽加入「免費試算工具」
+- `sitemap.xml` 新增 tools.html（priority 0.8）
+
+**驗證**：
+- 本機 serve + Playwright 實測：淺色／深色模式截圖正常、index 與 calculator 導覽指向 tools.html、兩張卡片連結正確、無殘留舊導覽連結
 
 ### [Bugfix/Feature] 修正 calculator.html SEO 標籤、新增 Turnstile 防護、資產載入強化 (Commit: `382edd2`) — 2026-07-12
 
