@@ -1,0 +1,96 @@
+/* ═══════════════════════════════════════════════════════════════
+   Lawrence Financial — Design Tokens（單一真相來源）
+   規格說明見 DESIGN.md；視覺展示見 styleguide.html
+   使用方式：
+   - 站內頁面：styles.css 已含同值 token，可直接用變數
+   - 站內工具／外部工具：引入（或複製）本檔後以變數取色
+   禁止在頁面 CSS 寫死品牌色 hex。
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  color-scheme: light dark;
+
+  /* ── 品牌主色 ─────────────────────────────── */
+  --navy-950:#0b1d33;
+  --navy-900:#102947;   /* 品牌主色：標題、主按鈕 */
+  --navy-800:#173a63;
+  --navy-700:#244f83;
+  --navy-600:#35689f;
+  --amber-500:#F59E0B;  /* 品牌強調色：CTA、重點 */
+  --amber-600:#D97706;
+  --amber-100:#FEF3C7;
+
+  /* ── 中性色 ──────────────────────────────── */
+  --slate-900:#1a2433;  /* 主文字 */
+  --slate-700:#4a586e;  /* 次要文字 */
+  --slate-500:#748196;  /* 弱化文字 */
+  --line:#dbe4ee;
+  --line-strong:#c9d6e3;
+  --bg:#f4f7fb;
+  --bg-soft:#edf3f9;
+  --bg-card-alt:#edf3f9;
+  --white:#ffffff;
+
+  /* ── 語意色 ──────────────────────────────── */
+  --success:#0d8b67;
+  --danger:#dc2626;
+  --warning:#b45309;
+
+  /* ── 主題表面（元件請用這組，勿直接用原色） ── */
+  --bg-body: var(--white);
+  --bg-header: rgba(255,255,255,.78);
+  --bg-card: rgba(255,255,255,.96);
+  --bg-card-grad-start: rgba(255,255,255,.98);
+  --bg-card-grad-end: rgba(244,247,251,.96);
+  --text-main: var(--slate-900);
+  --text-soft: var(--slate-700);
+  --text-muted: var(--slate-500);
+  --surface-accent: rgba(23,58,99,.08);
+  --surface-accent-border: rgba(23,58,99,.10);
+
+  /* ── 字體 ────────────────────────────────── */
+  --font-display:"Playfair Display","Noto Serif TC",serif;             /* H1/H2/大標 */
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --font-mono:"DM Mono",ui-monospace,monospace;                        /* 數字、表格 */
+
+  /* ── 圓角 ────────────────────────────────── */
+  --radius-sm:16px;   /* 輸入框、小元件 */
+  --radius-md:24px;   /* 卡片 */
+  --radius-lg:32px;   /* 大面板 */
+  --radius-pill:999px;/* 按鈕、膠囊 */
+
+  /* ── 陰影（大位移、低不透明、柔和） ───────── */
+  --shadow-sm:0 12px 28px rgba(16,41,71,.08);
+  --shadow-md:0 22px 48px rgba(16,41,71,.12);
+  --shadow-lg:0 30px 72px rgba(16,41,71,.16);
+
+  /* ── 版面 ────────────────────────────────── */
+  --max:1180px;       /* 版心 */
+  --header-h:84px;
+
+  /* ── 動效 ────────────────────────────────── */
+  --ease-ui:.24s ease;      /* hover／點按 */
+  --ease-theme:.4s ease;    /* 主題切換 */
+}
+
+/* ── 深色模式：一律覆寫 token，元件層不得另寫深色 hex ── */
+[data-theme="dark"]{
+  --bg:#0A192F;
+  --bg-soft:#10233d;
+  --white:#112240;
+  --bg-body:#0A192F;
+  --bg-header:rgba(8,20,38,.72);
+  --bg-card:rgba(12,29,51,.88);
+  --bg-card-grad-start:rgba(15,33,57,.92);
+  --bg-card-grad-end:rgba(10,24,47,.88);
+  --text-main:#F1F5F9;
+  --text-soft:#D8E1EC;
+  --text-muted:#9BAFC7;
+  --slate-900:#F1F5F9;
+  --slate-700:#CBD5E1;
+  --slate-500:#94A3B8;
+  --line:rgba(148,163,184,.18);
+  --line-strong:rgba(148,163,184,.28);
+  --surface-accent:rgba(53,104,159,.16);
+  --surface-accent-border:rgba(148,163,184,.16);
+}

@@ -14,12 +14,32 @@
 | `7afb3ab` | 2026-04-12 | 新增 5 篇文章頁面、修正全站內鏈 |
 | `382edd2` | 2026-07-12 | 修正 calculator.html SEO 標籤、新增 Turnstile 防護、資產載入強化 |
 | — | 2026-07-16 | 新增 tools.html 免費試算工具總覽頁（卡片式、可擴充），整合遺囑撰寫站 |
+| — | 2026-07-16 | 統一美術規格：DESIGN.md ＋ design-tokens.css ＋ styleguide.html |
 
 ---
 
 ## 詳細記錄
 
 ---
+
+### [規範] 統一美術規格：DESIGN.md ＋ design-tokens.css ＋ styleguide.html — 2026-07-16
+
+**類型**：Design System / Docs
+
+**問題根源 / 背景**：
+- 盤點發現三套互不相容的視覺系統：官網（navy＋amber、Playfair/Noto Serif）、退休試算器（和紙米色＋柿橙、Shippori Mincho、CSS 內 @import 字體）、遺囑撰寫站（藍色 SaaS 風）。圓角、陰影、深色模式支援也各自為政。
+
+**執行內容**：
+- 新增 `DESIGN.md`：以官網為基準的完整美術規格（色彩 60-30-10、字體階梯、間距 4 倍數、圓角/陰影、按鈕/卡片/表單元件規格、工具頁規範、新頁面 checklist、落地待辦優先序）
+- 新增 `assets/design-tokens.css`：token 單一真相來源（含深色模式覆寫、新增 --font-* / --radius-pill / --danger / --warning / --ease-* token），供站內工具引用、外部工具複製
+- 新增 `styleguide.html`：活的樣式指南頁（noindex、不進 sitemap/導覽），展示色票、字體階梯、按鈕、卡片、表單、圓角陰影與使用守則
+
+**驗證**：
+- 本機 Playwright 全頁截圖：淺色／深色模式逐區檢查通過
+
+**後續待辦**：
+- calc-style.css 歸隊（和紙→navy/amber、移除 @import、補深色模式）— 工程量大，建議獨立改版
+- 遺囑撰寫站套用 token ＋ 品牌識別列
 
 ### [功能] 新增免費試算工具總覽頁 tools.html，整合遺囑撰寫站 — 2026-07-16
 
