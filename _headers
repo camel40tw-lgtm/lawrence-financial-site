@@ -3,29 +3,13 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://turnstile-siteverify-lawrence.camel40tw.workers.dev https://script.google.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self' https://script.google.com; frame-ancestors 'self'
 
-/index.html
+# Cloudflare Pages 會把 .html 轉為無副檔名網址，HTML 快取規則用根路徑＋單段萬用字元涵蓋
+/
   Cache-Control: public, max-age=0, must-revalidate
 
-/about.html
-  Cache-Control: public, max-age=0, must-revalidate
-
-/services.html
-  Cache-Control: public, max-age=0, must-revalidate
-
-/articles.html
-  Cache-Control: public, max-age=0, must-revalidate
-
-/article-retirement-cashflow.html
-  Cache-Control: public, max-age=0, must-revalidate
-
-/contact.html
-  Cache-Control: public, max-age=0, must-revalidate
-
-/404.html
-  Cache-Control: public, max-age=0, must-revalidate
-
-/thanks.html
+/:page
   Cache-Control: public, max-age=0, must-revalidate
 
 /assets/*

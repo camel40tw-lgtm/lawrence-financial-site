@@ -17,12 +17,34 @@
 | — | 2026-07-16 | 統一美術規格：DESIGN.md ＋ design-tokens.css ＋ styleguide.html |
 | — | 2026-07-16 | 美術規格落地：試算器改 navy/amber token、圖表改語意色；遺囑站同步歸隊 |
 | — | 2026-07-16 | thanks.css 併入 token（DESIGN.md §9 全數完成） |
+| — | 2026-07-16 | 全站優化：CSP 安全標頭、字型修剪、responsive srcset、_headers 重寫、sitemap 更新；遺囑站搬遷至 D:\AI＋git 化 |
 
 ---
 
 ## 詳細記錄
 
 ---
+
+### [優化] 全站體檢落地：安全標頭、字型、圖片、快取、遺囑站搬遷 — 2026-07-16
+
+**類型**：Security / Performance / Infra
+
+**執行內容（官網）**：
+- `_headers` 重寫：新增 Content-Security-Policy（白名單：cdn.jsdelivr.net、challenges.cloudflare.com、fonts.googleapis/gstatic、siteverify worker、script.google.com）；HTML 快取規則改用 `/` ＋ `/:page`（Pages 會把 .html 轉為無副檔名網址，舊的逐頁 .html 規則實際上從未命中）
+- Google Fonts 修剪：17 個頁面從 10 個字型變體減到 6 個（移除未使用的 400 與斜體）
+- Responsive srcset：sharp 產生 480/800/1200w WebP 變體（首頁 hero 480w 僅 10KB，原 111KB），9 個頁面的 `<picture>` 與 index preload 改多尺寸＋sizes
+- `sitemap.xml` 14 個 lastmod 全部更新為 2026-07-16
+
+**執行內容（遺囑站）**：
+- 專案自 OneDrive 桌面搬遷至 `D:\AI\will-writing-station`（避開 node_modules 同步風暴），git init（master，commit 8226e62）；69 張無關照片（10.3MB）移至桌面「遺囑生成器照片」；舊資料夾留搬遷說明檔待刪
+- `index.html` 補齊 SEO/OG/canonical meta；新增 `public/_headers` 安全標頭＋assets immutable 快取；package.json 依賴分類修正＋新增 `npm run deploy` 腳本；已重新部署 production
+
+**明確跳過／需人工（含原因）**：
+- CSS/JS minify：手改型靜態 repo，minify 損維護性；Cloudflare 已 gzip，增益約 10-20KB — 不做
+- Cloudflare Web Analytics 開通：需 Dashboard 一鍵操作（Analytics → Web Analytics → Add site），API token 無此權限
+- API Token 權限收斂：需在 Dashboard 重發 token（現有 token 含 email/containers 等未用權限）
+
+**驗證**：本機 srcset 選圖正確（800w/2x）；部署後線上驗證 CSP（fonts/chart.js/Turnstile widget）、安全標頭、快取標頭
 
 ### [收尾] thanks.css 併入 design token — 2026-07-16
 
