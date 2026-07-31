@@ -9,6 +9,7 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| — | 2026-07-31 | 新增 MBTI 職場性格測驗工具（mbti-quiz.html），套用統一美術規格並整合進 tools.html |
 | `v10` Tag | 2026-04-11 | 網站 v10 基準線：完成 SEO、暗模式、退休試算器整合 |
 | `6bcc8a6` | 2026-04-12 | 樣式重構：行內 CSS 遷移、移除追蹤代碼佔位符 |
 | `7afb3ab` | 2026-04-12 | 新增 5 篇文章頁面、修正全站內鏈 |
@@ -22,6 +23,25 @@
 ---
 
 ## 詳細記錄
+
+---
+
+### [新增] MBTI 職場性格測驗工具上線 — 2026-07-31
+
+**類型**：Feature / Design System
+
+**來源**：使用者提供 `gemini-code-1785467401604.html.zip`（AI 產出的 20 題 MBTI 職場性格測驗，含結果分析與職涯建議），要求整合進 tools.html 並統一美術規格。
+
+**執行內容**：
+- 新增 `mbti-quiz.html`：套用官網標準頁面樣板（head meta/OG/canonical/JSON-LD、header/footer、FAB、深色模式初始化腳本），並將原始工具的內嵌樣式全面改寫為 DESIGN.md 規格 — 色彩改用 `design-tokens.css` 變數（navy/amber，不再寫死 hex）、標題改 `--font-display`（Playfair Display/Noto Serif TC）、圓角改 `--radius-sm/md/lg`、陰影改 `--shadow-sm`、按鈕改用全站 `.btn/.btn-primary/.btn-outline` 元件、深色模式下的 navy 裝飾文字（MBTI 標題、職業標籤）比照 `.eyebrow` 慣例另加 `[data-theme="dark"]` 覆寫
+- 題目與計分邏輯（20 題、EI/SN/TF/JP 四維度、16 型人格說明）維持原始內容不變，僅將 class 命名加上 `quiz-` 前綴避免與全站樣式衝突
+- 在文末結果頁加入導回 `contact.html#booking` 的諮詢引導文字，呼應網站定位
+- `tools.html`：在工具卡網格新增「MBTI 職場性格測驗」卡片（🧭 圖示、職涯探索分類），置於既有兩張卡片與「更多工具開發中」佔位卡之間
+- `sitemap.xml`：新增 `mbti-quiz.html`（priority 0.7），並將 `tools.html` 的 `lastmod` 更新為 2026-07-31
+
+**備份**：原始 `gemini-code-1785467401604.html.zip` 與解壓縮後的原始 html，另存於部署目錄之外的 `D:\AI\_uploads-backup\lawrence_financial_site\`（不隨站台部署，避免未整理的原始檔案被公開存取）；程式碼版本歷史則由本次 git commit 留存。
+
+**驗證**：本機起 `python -m http.server` 以 Playwright 實測 — 淺色／深色模式截圖比對均符合 DESIGN.md 規格；自動化跑完 20 題（全選 a）驗證計分邏輯正確產出 ESTJ 並正確渲染優勢／盲點／職業標籤；`tools.html` 卡片網格版面（3 欄）正常換行。
 
 ---
 

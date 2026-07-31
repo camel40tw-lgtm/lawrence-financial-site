@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBTI 職場性格測驗｜20題快速測出你的職涯優勢與方向 | 駱潤生 Lawrence</title>
+  <meta name="description" content="免費線上 MBTI 職場性格測驗，20 題快速測出你的職場人格類型，提供優勢盲點分析與職涯方向建議，作為財務與職涯規劃前的自我探索工具。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="author" content="駱潤生 Lawrence" />
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0A192F" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" href="https://lawrence-financial-site.pages.dev/mbti-quiz.html" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="MBTI 職場性格測驗｜駱潤生 Lawrence" />
+  <meta property="og:description" content="免費線上 MBTI 職場性格測驗，20 題快速測出你的職場人格類型，提供優勢盲點分析與職涯方向建議。" />
+  <meta property="og:url" content="https://lawrence-financial-site.pages.dev/mbti-quiz.html" />
+  <meta property="og:site_name" content="駱潤生 Lawrence" />
+  <meta property="og:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MBTI 職場性格測驗｜駱潤生 Lawrence" />
+  <meta name="twitter:description" content="免費線上 MBTI 職場性格測驗，20 題快速測出你的職場人格類型，提供優勢盲點分析與職涯方向建議。" />
+  <meta name="twitter:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
+  <script>
+    try {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
+  <link rel="stylesheet" href="assets/styles.css?v=20260412b" />
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "@id":"https://lawrence-financial-site.pages.dev/#professional-service",
+    "name":"駱潤生 Lawrence",
+    "url":"https://lawrence-financial-site.pages.dev/mbti-quiz.html",
+    "image":"https://lawrence-financial-site.pages.dev/images/lawrence-profile-standing.jpg",
+    "description":"免費線上 MBTI 職場性格測驗，20 題快速測出你的職場人格類型，提供優勢盲點分析與職涯方向建議。",
+    "email":"camel40tw@gmail.com",
+    "areaServed":"Taiwan",
+    "inLanguage":"zh-Hant",
+    "sameAs":["https://line.me/ti/p/iaCU1C6Wbl"],
+    "knowsAbout":["CFP®認證理財規劃","高齡金融","信託","資產傳承","保險","財稅整合"],
+    "founder": {
+      "@type":"Person",
+      "name":"駱潤生 Lawrence",
+      "jobTitle":"CFP®認證理財規劃顧問"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    .quiz-wrap{ max-width:720px; margin:0 auto; }
+    .quiz-card{
+      background:var(--bg-card); border:1px solid var(--line);
+      border-radius:var(--radius-lg); box-shadow:var(--shadow-sm);
+      padding:40px;
+    }
+    .quiz-intro{
+      background:var(--surface-accent); border-left:4px solid var(--amber-600);
+      padding:14px 16px; border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom:24px; font-size:.95rem; color:var(--text-soft);
+    }
+    .quiz-progress-container{
+      width:100%; background:var(--bg-soft); height:8px;
+      border-radius:var(--radius-pill); margin-bottom:24px; overflow:hidden;
+    }
+    .quiz-progress-bar{
+      height:100%; background:linear-gradient(90deg,var(--navy-700),var(--amber-500));
+      width:0%; border-radius:var(--radius-pill); transition:width .3s ease;
+    }
+    .quiz-question-block{ display:none; }
+    .quiz-question-block.active{ display:block; animation:quizFadeIn .3s ease-in-out; }
+    @keyframes quizFadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+    .quiz-question-text{
+      font-size:1.15rem; font-weight:700; margin-bottom:18px; color:var(--text-main);
+    }
+    .quiz-options label{
+      display:flex; align-items:center; background:var(--bg-card); padding:14px 16px;
+      margin-bottom:12px; border:2px solid var(--line); border-radius:var(--radius-sm);
+      cursor:pointer; transition:var(--ease-ui); font-size:1rem; color:var(--text-main);
+    }
+    .quiz-options label:hover{ border-color:var(--navy-700); background:var(--surface-accent); }
+    .quiz-options input[type="radio"]{ margin-right:12px; width:18px; height:18px; accent-color:var(--navy-700); }
+    .quiz-nav-btns{ display:flex; justify-content:space-between; margin-top:28px; gap:12px; }
+    .quiz-nav-btns .btn{ min-height:44px; padding:0 22px; flex:1; }
+    .quiz-btn-prev{ flex:0 0 auto !important; }
+    .quiz-btn-result{ display:none; }
+    #quiz-result-area{ display:none; }
+    .quiz-result-header{ text-align:center; margin-bottom:24px; }
+    .quiz-mbti-code{
+      font-family:var(--font-display); font-size:3.2rem; color:var(--amber-600);
+      font-weight:700; letter-spacing:2px; margin:8px 0;
+    }
+    .quiz-mbti-title{ font-family:var(--font-display); font-size:1.3rem; color:var(--navy-800); font-weight:600; }
+    [data-theme="dark"] .quiz-mbti-title{ color:#dbe7f4; }
+    .quiz-career-card{
+      background:var(--bg-soft); padding:20px; border-radius:var(--radius-md);
+      border:1px solid var(--line); margin-bottom:16px;
+    }
+    .quiz-career-card h3{
+      font-size:1.1rem; color:var(--text-main); margin-bottom:8px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .quiz-career-card p, .quiz-career-card ul{ font-size:.95rem; color:var(--text-soft); padding-left:20px; }
+    .quiz-career-card li{ margin-bottom:6px; }
+    .quiz-tag-container{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .quiz-tag{
+      background:var(--surface-accent); color:var(--navy-800);
+      padding:4px 10px; border-radius:8px; font-size:.85rem; font-weight:700;
+    }
+    [data-theme="dark"] .quiz-tag{ color:#dbe7f4; }
+    .quiz-note{ margin-top:20px; font-size:.85rem; color:var(--text-muted); text-align:center; }
+    .quiz-restart-btn{ margin-top:24px; width:100%; }
+    @media (max-width: 640px){ .quiz-card{ padding:28px 20px; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <strong>駱潤生 Lawrence</strong>
+        <span>CFP®認證理財規劃顧問｜高齡金融・信託・資產傳承</span>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌓</button>
+        <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html">首頁</a>
+        <a href="about.html">關於我</a>
+        <a href="services.html">服務項目</a>
+        <a href="articles.html">文章</a>
+        <a href="tools.html" class="calc-link">📝免費試算</a>
+        <a href="contact.html">聯絡我</a>
+        <a href="contact.html#booking" class="nav-cta">預約諮詢</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero section article-hero">
+      <div class="container">
+        <div class="section-title reveal show">
+          <small>FREE TOOLS</small>
+          <h1 class="hero-title page-hero-title">MBTI 職場性格測驗</h1>
+          <p>20 題快速測驗，了解你在職場上的性格傾向、核心優勢與潛在盲點，並取得適合的職涯方向建議。測驗結果僅保留在你的瀏覽器中，不會上傳伺服器。</p>
+        </div>
+
+        <div class="quiz-wrap">
+          <div class="quiz-card reveal">
+
+            <div id="quiz-part">
+              <div class="quiz-intro">
+                請憑直覺快速填答，不要過度糾結與思考。想像你在沒有社會角色壓力的狀態下，你最直覺、不費力的偏好是什麼。
+              </div>
+
+              <div class="quiz-progress-container">
+                <div class="quiz-progress-bar" id="progress-bar"></div>
+              </div>
+
+              <div id="questions-container">
+                <!-- JS 會在此插入題目 -->
+              </div>
+
+              <div class="quiz-nav-btns">
+                <button type="button" class="btn btn-outline quiz-btn-prev" id="btn-prev" onclick="changeQuestion(-1)" style="visibility: hidden;">上一題</button>
+                <button type="button" class="btn btn-primary" id="btn-next" onclick="changeQuestion(1)">下一題</button>
+                <button type="button" class="btn btn-primary quiz-btn-result" id="btn-result" onclick="showResult()">查看結果</button>
+              </div>
+            </div>
+
+            <div id="quiz-result-area">
+              <div class="quiz-result-header">
+                <h2>你的職場性格類型是</h2>
+                <div class="quiz-mbti-code" id="mbti-result"></div>
+                <div class="quiz-mbti-title" id="mbti-title"></div>
+              </div>
+
+              <div class="quiz-career-card">
+                <h3>🚀 職場核心優勢</h3>
+                <ul id="mbti-strengths"></ul>
+              </div>
+
+              <div class="quiz-career-card">
+                <h3>⚠️ 潛在盲點與建議</h3>
+                <ul id="mbti-weaknesses"></ul>
+              </div>
+
+              <div class="quiz-career-card">
+                <h3>💼 適合方向與職業建議</h3>
+                <div class="quiz-tag-container" id="mbti-jobs"></div>
+              </div>
+
+              <button type="button" class="btn btn-primary quiz-restart-btn" onclick="location.reload()">重新測驗</button>
+              <p class="quiz-note">註：性格類型僅供職涯發展參考，每個人均可透過後天學習發展出全面性的能力；如需搭配財務或職涯規劃建議，歡迎<a href="contact.html#booking">預約諮詢</a>。</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact-top">
+      <div class="container">
+        <div class="cta-band reveal">
+          <div>
+            <h3>想把性格優勢轉化為具體的財務與職涯規劃嗎？</h3>
+            <p>了解自己的性格傾向只是第一步，歡迎預約諮詢，我會協助你把職涯方向與財務規劃結合成可執行的計畫。</p>
+          </div>
+          <div class="article-actions">
+            <a href="contact.html#booking" class="btn btn-secondary">立即預約諮詢</a>
+            <a href="https://line.me/ti/p/iaCU1C6Wbl" class="btn btn-outline btn-outline-white" target="_blank" rel="noopener">加入 LINE 聯繫</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="floating-actions">
+    <a class="fab fab-line" href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">
+      <span class="fab-label">加入 LINE</span>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.9 10.6c0-4.4-4-8-8.9-8S3 6.2 3 10.6c0 4 3.1 7.3 7.2 7.9.3.1.8.2.9.5.1.2.1.7 0 .9l-.1.8c0 .2-.2.9.8.5 1-.4 5.2-3.1 7.1-5.3 1.3-1.4 2-3 2-5.3Zm-12.8 2h-1.7V8.7h1.7v3.9Zm3.1 0H9.5V8.7h1.7v2.3l1.8-2.3h1.8l-2 2.5 2.1 1.4h-2l-1.7-1.2v1.2Zm4 .1c-1.4 0-2.5-.8-2.5-2V8.7h1.7v1.8c0 .4.4.8.9.8s.9-.3.9-.8V8.7H18v2c0 1.2-1.1 2-2.8 2Zm5.1-.1h-3.8V8.7h1.7v2.5h2.1v1.4Z"/></svg>
+    </a>
+    <a class="fab fab-book" href="contact.html#booking">
+      <span class="fab-label">立即預約</span>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v13a3 3 0 0 0 3 3h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H6a1 1 0 0 1-1-1V10h14v10Zm0-12H5V6h14v2Zm-9 5h2v2h-2v-2Zm4 0h2v2h-2v-2Z"/></svg>
+    </a>
+  </div>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <strong>駱潤生 Lawrence</strong>
+        <p>CFP®認證理財規劃顧問<br>高齡金融・信託・資產傳承</p>
+      </div>
+      <div class="footer-nav">
+        <strong>網站導覽</strong>
+        <a href="about.html">關於我</a>
+        <a href="services.html">服務項目</a>
+        <a href="articles.html">專業文章</a>
+        <a href="tools.html">免費試算工具</a>
+      </div>
+      <div class="footer-contact">
+        <strong>聯絡方式</strong>
+        <a href="mailto:camel40tw@gmail.com">camel40tw@gmail.com</a>
+        <a href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">LINE 預約諮詢</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div>© 2026 駱潤生 Lawrence. All Rights Reserved.</div>
+    </div>
+  </footer>
+  <script src="assets/main.js?v=20260712a" defer></script>
+
+  <script>
+    const questions = [
+        { id: 1, group: 'EI', q: "1. 面對跨部門的協作需求時，你通常會：", a: "敲定時間開個簡短會議，透過口頭溝通與討論來對齊目標。", b: "先打好完整的企劃或訊息，再傳送給對方確認。" },
+        { id: 2, group: 'TF', q: "2. 在團隊討論中，如果你的意見跟大眾不同，你通常會：", a: "堅持立場，直到有人能提出更有力的邏輯或證據說服我。", b: "評估現場氣氛，如果堅持會傷感情，可能會先保留意見。" },
+        { id: 3, group: 'JP', q: "3. 如果今天的工作計畫臨時取消，多出了1小時的空檔，你會：", a: "立刻尋找下一件待辦事項，確保時間被有效地組織與利用。", b: "隨性處理一些感興趣的小事，享受這種自由感。" },
+        { id: 4, group: 'SN', q: "4. 學習一個新工作或新技能，你比較喜歡：", a: "跟著步驟一步步操作，從實作中學習。", b: "先了解整體邏輯架構，並嘗試發掘不同的用法。" },
+        { id: 5, group: 'EI', q: "5. 臨時被主管拉進一個完全沒準備的討論，你表現最自然的方式是：", a: "邊聽邊發言，透過對話來激發自己的觀點。", b: "先記錄大家的重點，等腦袋消化完後再簡短表達。" },
+        { id: 6, group: 'SN', q: "6. 當老板交辦一個從未做過的新專案時，你首先關注：", a: "過去是否有類似案例或相關SOP可以參考。", b: "這個專案背後的長期意義，以及它可能帶來的各種可能性。" },
+        { id: 7, group: 'JP', q: "7. 面對週末突如其來的加班通知，你覺得最困擾的地方是：", a: "已經規畫好的私人行程被硬生生打亂，整體的掌控感消失了。", b: "雖然可以配合，但覺得毫無預警的變動讓工作變得很沉重。" },
+        { id: 8, group: 'EI', q: "8. 面對一整天連續、密集的主管會議，你的體感通常是：", a: "覺得大腦轉動很快，甚至會因此感到更有精神。", b: "即便會議內容順利，結束後仍會感到疲憊。" },
+        { id: 9, group: 'TF', q: "9. 當團隊中有同事因為價值觀不同而產生僵局時，你通常會：", a: "站在中立角度，根據公司的目標與邏輯分析出的方案更有效率。", b: "關注雙方的互動情緒，試著尋找能讓大家在和諧氣氛下共事的折衷點。" },
+        { id: 10, group: 'SN', q: "10. 對於辦公室的「潛規則」，你的態度是：", a: "這是職場現實的一部分，我會觀察現狀並務實應對。", b: "我更在乎這背後的權力架構與各種可能造成的長期影響。" },
+        { id: 11, group: 'EI', q: "11. 剛換到一個新的環境工作，你通常會如何認識新同事？", a: "趁午餐或茶水間碰面時，主動開啟話題自我介紹。", b: "先觀察大家的互動與職責，等待合適的公事契機再交談。" },
+        { id: 12, group: 'JP', q: "12. 你傾向如何管理你的待辦清單？", a: "看到清單被劃掉才安心。", b: "保持清單的開放性，隨時調整優先順序。" },
+        { id: 13, group: 'TF', q: "13. 看到同事在工作上出了明顯的低級錯誤，你的第一直覺反應是：", a: "思考這個錯誤會對專案造成什麼後果，以及如何修正。", b: "擔心同事現在的心情，以及他是否正承受著巨大的壓力。" },
+        { id: 14, group: 'TF', q: "14. 當主管對你的表現給予負面回饋時，你內心最先產生的念頭是：", a: "「他說的內容合乎邏輯嗎？具體的事實依據是什麼？」", b: "「他對我的印象變差了嗎？這會影響我們之後的合作關係嗎？」" },
+        { id: 15, group: 'EI', q: "15. 在一個忙碌的下午，主管突然走過來問：「大家現在有空聊一下新想法嗎？」你的內心反應是：", a: "覺得正好可以換個節奏工作，很樂意參與討論並拋出想法。", b: "感到被打斷，希望能趕快結束討論、回到原本的工作。" },
+        { id: 16, group: 'SN', q: "16. 在會議中討論問題時，你最不能忍受的是：", a: "討論太過空泛、沒有重點，卻不談具體如何解決問題。", b: "太糾結於細節，卻忽略了整件事的大方向。" },
+        { id: 17, group: 'JP', q: "17. 當你正在進行一項工作，主管突然衝進來說有另一件急事，你的反應是：", a: "感到被打斷的焦躁，會想趕快把手邊的事做完再換。", b: "覺得沒關係，隨時切換工作節奏對我來說並不困難。" },
+        { id: 18, group: 'SN', q: "18. 同事通常會用哪種形容詞形容你？", a: "「你做事非常穩重，細節都注意到了。」", b: "「你很有遠見和創意，常有令人驚喜的想法。」" },
+        { id: 19, group: 'TF', q: "19. 當你必須拒絕一個合作夥伴的不合理要求時，你傾向：", a: "清楚列出合約條款與邏輯理由，專業且客觀地說明原因。", b: "委婉地表達困難，並強調雙方關係的重要性，尋求諒解。" },
+        { id: 20, group: 'JP', q: "20. 如果可以選擇自己的工作任務，你會比較喜歡哪種性質的工作任務？", a: "目標明確、流程清晰，可以按計畫有條理地推進到結束。", b: "充滿變數與新鮮感，可以隨時根據新狀況調整做法。" }
+    ];
+
+    const mbtiDetails = {
+        'INTJ': { title: '戰略家 / 系統構建者', strengths: ['具備強大的長遠戰略思維與全局觀', '重視邏輯與高效率，擅長簡化複雜決策', '高度獨立，追求卓越的專業標準'], weaknesses: ['容易對效率低下或缺乏邏輯的同事展現缺乏耐性', '忽視人際軟實力與團隊情緒過度專注目標'], jobs: ['企業戰略顧問', '系統架構師', '金融分析師', '數據科學家', '專案營運總監'] },
+        'INTP': { title: '思想家 / 問題解決者', strengths: ['極強的抽象思考與分析能力，擅長解開複雜謎團', '對於新技術與新概念具備無窮好奇心', '決策不受情面影響，保持客觀'], weaknesses: ['容易停留在理論階段，缺乏臨門一腳的執行力', '對例行性行政事務容易感到厭倦'], jobs: ['軟體工程師', '研發學者', '演算法工程師', '系統分析師', '經濟學研究員'] },
+        'ENTJ': { title: '指揮官 / 組織領航員', strengths: ['果斷且有天生的領導力，擅長資源整合', '目標導向，能在高壓環境下快速推動成果', '極佳的組織構造與流程優化能力'], weaknesses: ['給人過於強勢或控制欲強的印象', '容易忽視團隊成員的個人情感與承受力'], jobs: ['高階經理人', '創業家', '管理顧問', '專案總監', '投資銀行家'] },
+        'ENTP': { title: '遠見者 / 創新破局者', strengths: ['思維靈敏，擅長打破常規提出創新提案', '口條極佳，善於談判與說服他人', '彈性高，面對不確定性游刃有餘'], weaknesses: ['容易虎頭蛇尾，對執行細節缺乏耐心', '有時過度喜歡辯論而引發無謂衝突'], jobs: ['產品經理 (PM)', '市場行銷總監', '創業家', '公關策略師', '商業開發 (BD)'] },
+        'INFJ': { title: '諮商師 / 願景推進者', strengths: ['洞察力極強，能敏銳察覺潛在的人際與組織問題', '富有理想主義，致力於創造有深遠價值的成果', '溝通溫和但富有感染力'], weaknesses: ['過度追求完美，容易累積精神壓力導致倦怠', '不擅長應對直面的職場衝突'], jobs: ['人力資源專家', '心理諮商師', '品牌策略師', '使用者體驗 (UX) 研究員', '非營利組織負責人'] },
+        'INFP': { title: '調停者 / 價值守護者', strengths: ['具備極高同理心與獨特的創造力', '堅守核心價值，工作具備極高忠誠度', '善於透過文字或視覺精準傳達情感'], weaknesses: ['容易將工作批評過度個人化（太敏感）', '對嚴格的規章與死板的時間表適應不良'], jobs: ['文案撰寫/編輯', '內容創作者', 'UX/UI 設計師', '組織文化顧問', '輔導老師'] },
+        'ENFJ': { title: '導師 / 團隊凝聚者', strengths: ['極佳的感染力與溝通技巧，善於激發他人潛能', '擅長營造和諧且有向心力的團隊氣氛', '責任感強，重視承諾'], weaknesses: ['容易過度干預他人發展或承擔過多責任', '太在乎評價而難以做出討人厭但正確的決定'], jobs: ['人力資源總監', '培訓講師', '客戶成功總監 (CSM)', '公關經理', '教育機構主管'] },
+        'ENFP': { title: '發明家 / 靈感驅動者', strengths: ['極具創意與熱情，能快速感染整個團隊', '擁有優異的跨領域思考與聯想力', '善於建立廣泛的人脈連結'], weaknesses: ['同時展開太多計畫而容易分散精力', '對重複性高的細節處理感到無趣'], jobs: ['活動策劃師', '創意總監', '市場行銷專員', '媒體公關', '社群營運經理'] },
+        'ISTJ': { title: '檢查員 / 秩序維護者', strengths: ['極高度的責任感，細心且遵守標準作業流程', '注重事實與數據，做事穩重可靠', '組織與時間管理能力極佳'], weaknesses: ['排斥缺乏根據的變革，適應新制度較慢', '容易過度專注細節而忽略大方向'], jobs: ['審計師/會計師', '營運流程專家', '法務合規專員', '數據分析師', '品質管理 (QA) 工程師'] },
+        'ISFJ': { title: '守護者 / 後勤核心', strengths: ['極具耐性與服務精神，關注夥伴的需求', '執行力高且務實，是團隊中最穩定的後盾', '注重細節與歷史經驗'], weaknesses: ['不擅長拒絕不合理的要求，容易過勞', '害怕改變現狀，傾向默默承受問題'], jobs: ['行政營運經理', '客戶服務專家', '醫療護理專業', '人力資源專員', '專案協調員'] },
+        'ESTJ': { title: '總管 / 執行指揮官', strengths: ['極強的執行力與目標達成率', '善於建立制度、規律與清楚的KPI', '講求實效，決策迅速毫不猶豫'], weaknesses: ['做事較固執，有時顯得過於嚴厲或缺乏彈性', '容易忽視團隊成員的個體差異與情緒'], jobs: ['營運長 (COO)', '供應鏈經理', '專案主管', '財務經理', '廠長/營運主管'] },
+        'ESFJ': { title: '東道主 / 關係維繫者', strengths: ['社交能力極強，擅長維繫團隊與客戶關係', '熱心助人，能創造充滿支持感的工作環境', '執行日常職責精準到位'], weaknesses: ['極度依賴外界評價，害怕被忽視或批評', '面對變革時容易感到不安與抗拒'], jobs: ['客戶關係經理 (CRM)', '活動籌備專員', '行政總監', '公共關係 (PR) 專員', '業務經理'] },
+        'ISTP': { title: '工匠 / 危機處理者', strengths: ['冷靜理性，在危機時刻能做出精準判斷', '動手解決實質問題的能力極強', '注重實際效果，討厭繁文縟節'], weaknesses: ['不擅長表達內心想法，顯得較為冷漠', '缺乏長期計畫性，傾向走一步算一步'], jobs: ['系統維運工程師', '資安工程師', '現場工程師', '緊急事件應變專家', '數據分析專家'] },
+        'ISFP': { title: '藝術家 / 美學實踐者', strengths: ['具備高度審美與靈敏的感知力', '作風隨和低調，適應力強', '專注於當下，能將創意落實於作品中'], weaknesses: ['不喜歡競爭與衝突，容易退縮', '對長期規劃較欠缺方向感'], jobs: ['視覺設計師', '攝影師/剪輯師', '產品外觀設計師', '花藝/空間設計師', '前端開發者'] },
+        'ESTP': { title: '挑戰者 / 現場破局者', strengths: ['行動力極強，善於把握當下出現的商業機會', '極佳的應變能力，能直面風險進行談判', '觀察力敏銳，能快速掌握現場局勢'], weaknesses: ['缺乏耐心進行長期計畫與理論分析', '容易因為衝動決策而承擔不必要的風險'], jobs: ['頂尖銷售/業務', '企業重整顧問', '創業家', '現場指揮官', '風險投資分析師'] },
+        'ESFP': { title: '表演者 / 氛圍製造機', strengths: ['充滿熱情，能瞬間活絡工作現場氣氛', '極具親和力，擅長與各類型的人打交道', '注重實作經驗，能快速從行動中學習'], weaknesses: ['容易因追求即時滿足而忽視長遠影響', '對理論、數據與繁重文書感到挫折'], jobs: ['品牌代言/公關', '旅遊/娛樂專案策劃', '活動主持人', '時尚買手', '客戶體驗專員'] }
+    };
+
+    let currentIdx = 0;
+    const answers = {};
+
+    function initQuiz() {
+        const container = document.getElementById('questions-container');
+        questions.forEach((q, index) => {
+            const div = document.createElement('div');
+            div.className = `quiz-question-block ${index === 0 ? 'active' : ''}`;
+            div.id = `qblock-${index}`;
+            div.innerHTML = `
+                <div class="quiz-question-text">${q.q}</div>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q${index}" value="a" onchange="saveAnswer(${index}, 'a')"> ${q.a}</label>
+                    <label><input type="radio" name="q${index}" value="b" onchange="saveAnswer(${index}, 'b')"> ${q.b}</label>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        updateProgress();
+    }
+
+    function saveAnswer(idx, val) {
+        answers[idx] = val;
+    }
+
+    function changeQuestion(step) {
+        if (step === 1 && !answers[currentIdx]) {
+            alert("請選擇一個選項後再繼續。");
+            return;
+        }
+
+        document.getElementById(`qblock-${currentIdx}`).classList.remove('active');
+        currentIdx += step;
+        document.getElementById(`qblock-${currentIdx}`).classList.add('active');
+
+        document.getElementById('btn-prev').style.visibility = currentIdx === 0 ? 'hidden' : 'visible';
+
+        if (currentIdx === questions.length - 1) {
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('btn-result').style.display = 'inline-flex';
+        } else {
+            document.getElementById('btn-next').style.display = 'inline-flex';
+            document.getElementById('btn-result').style.display = 'none';
+        }
+
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const percent = ((currentIdx + 1) / questions.length) * 100;
+        document.getElementById('progress-bar').style.width = percent + '%';
+    }
+
+    function showResult() {
+        if (!answers[currentIdx]) {
+            alert("請完成最後一題。");
+            return;
+        }
+
+        let scores = { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 };
+
+        questions.forEach((q, index) => {
+            const choice = answers[index];
+            const group = q.group;
+            if (choice === 'a') {
+                scores[group[0]]++;
+            } else {
+                scores[group[1]]++;
+            }
+        });
+
+        const mbti =
+            (scores.E >= scores.I ? 'E' : 'I') +
+            (scores.S >= scores.N ? 'S' : 'N') +
+            (scores.T >= scores.F ? 'T' : 'F') +
+            (scores.J >= scores.P ? 'J' : 'P');
+
+        const details = mbtiDetails[mbti] || {
+            title: '職場探索者',
+            strengths: ['具備彈性調適能力', '能在不同情境中發揮個人特質'],
+            weaknesses: ['需要更多自我探索以確認職涯方向'],
+            jobs: ['多元職涯發展']
+        };
+
+        document.getElementById('quiz-part').style.display = 'none';
+        document.getElementById('quiz-result-area').style.display = 'block';
+
+        document.getElementById('mbti-result').innerText = mbti;
+        document.getElementById('mbti-title').innerText = details.title;
+
+        const strengthsEl = document.getElementById('mbti-strengths');
+        strengthsEl.innerHTML = details.strengths.map(s => `<li>${s}</li>`).join('');
+
+        const weaknessesEl = document.getElementById('mbti-weaknesses');
+        weaknessesEl.innerHTML = details.weaknesses.map(w => `<li>${w}</li>`).join('');
+
+        const jobsEl = document.getElementById('mbti-jobs');
+        jobsEl.innerHTML = details.jobs.map(j => `<span class="quiz-tag">${j}</span>`).join('');
+    }
+
+    window.addEventListener('DOMContentLoaded', initQuiz);
+  </script>
+</body>
+</html>
