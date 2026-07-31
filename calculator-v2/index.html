@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>退休規劃顧問版試算器V2｜駱潤生 Lawrence</title>
+  <meta name="description" content="退休規劃顧問版試算器 V2：客戶填寫、顧問版精算、客戶版報表三段式流程，支援固定提領率（Bengen 4% 法則）、Guardrail（Guyton-Klinger 護欄策略）、三桶金（Bucket Portfolios）等多種提領策略與 Monte Carlo 壓力測試。">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="author" content="駱潤生 Lawrence">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="theme-color" content="#f8f4ec">
+  <link rel="canonical" href="https://lawrence-financial-site.pages.dev/calculator-v2/index.html">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="退休規劃顧問版試算器V2｜駱潤生 Lawrence">
+  <meta property="og:description" content="客戶填寫、顧問版精算、客戶版報表三段式流程，支援 Bengen 4% 法則、Guyton-Klinger 護欄策略、三桶金 Bucket Portfolios 等提領策略與 Monte Carlo 壓力測試。">
+  <meta property="og:url" content="https://lawrence-financial-site.pages.dev/calculator-v2/index.html">
+  <meta property="og:site_name" content="駱潤生 Lawrence">
+  <link rel="stylesheet" href="style_v3_abc_fusion.css">
+  <style>
+    .back-to-site{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--sumi-light);margin-bottom:14px;}
+    .back-to-site a{color:var(--kaki);font-weight:700;text-decoration:none;}
+    .back-to-site a:hover{text-decoration:underline;}
+    body{min-height:100vh;}
+    .entry-shell{min-height:calc(100vh - 40px);display:flex;align-items:center;justify-content:center;padding:24px 0;}
+    .entry-panel{max-width:920px;width:100%;padding:34px 36px;border:1px solid var(--parchment);border-radius:var(--radius-lg);background:linear-gradient(180deg,rgba(249,244,236,.98),rgba(242,235,223,.96));box-shadow:var(--shadow-md);}
+    .entry-kicker{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:var(--kaki-pale);color:var(--kaki);font-size:12px;font-weight:700;letter-spacing:.08em;margin-bottom:16px;}
+    .entry-copy{max-width:720px;color:var(--sumi-light);font-size:15px;line-height:1.9;margin-top:14px;}
+    .entry-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+    .entry-actions a{display:inline-flex;align-items:center;justify-content:center;min-width:160px;padding:14px 18px;border-radius:14px;text-decoration:none;font-weight:700;letter-spacing:.04em;}
+    .entry-primary{background:var(--kaki);color:var(--washi);box-shadow:0 10px 24px rgba(184,92,56,.18);}
+    .entry-secondary{background:rgba(255,255,255,.5);color:var(--sumi);border:1px solid var(--parchment);}
+    .entry-meta{margin-top:22px;color:var(--sumi-light);font-size:12px;line-height:1.8;}
+    .entry-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px;}
+    .entry-step{padding:16px 18px;border:1px solid var(--parchment);border-radius:var(--radius-md);background:rgba(250,246,239,.9);}
+    .entry-step h2{font-family:var(--font-serif);font-size:15px;color:var(--sumi);letter-spacing:.08em;margin-bottom:6px;}
+    .entry-step p{font-size:13px;line-height:1.8;color:var(--sumi-light);}
+    @media (max-width: 860px){
+      .entry-panel{padding:24px 18px;}
+      .entry-grid{grid-template-columns:1fr;}
+      .entry-actions a{width:100%;}
+    }
+  </style>
+</head>
+<body>
+  <div class="page-bg">
+    <div class="container">
+      <main class="entry-shell">
+        <section class="entry-panel">
+          <div class="back-to-site">駱潤生 Lawrence 免費工具 · <a href="../tools.html">回官網工具頁 →</a></div>
+          <div class="entry-kicker">正式入口・V2</div>
+          <h1 class="main-title">退休規劃顧問版試算器 V2</h1>
+          <p style="text-align:center;color:var(--sumi-light);font-size:13px;letter-spacing:.08em;margin:6px 0 0;">先從客戶填寫頁開始</p>
+          <p class="sub-title">先填家庭基本資料、資產負債表、收入支出表，送交顧問版後由同一套數學引擎產出報表，再切到客戶版檢視結果。</p>
+
+          <div class="entry-actions">
+            <a class="entry-primary" href="client_intake.html">開始填寫資料</a>
+            <a class="entry-secondary" href="advisor.html">直接進顧問版</a>
+            <a class="entry-secondary" href="client.html">查看客戶版</a>
+          </div>
+
+          <div class="entry-grid" aria-label="流程說明">
+            <div class="entry-step">
+              <h2>1. 客戶填寫</h2>
+              <p>先輸入家庭基本資料、資產負債與收入支出，讓資料完整而一致。</p>
+            </div>
+            <div class="entry-step">
+              <h2>2. 顧問產出</h2>
+              <p>顧問版先依同一份資料計算現況、方案比較與年度模擬結果。</p>
+            </div>
+            <div class="entry-step">
+              <h2>3. 客戶呈現</h2>
+              <p>再從顧問版快照切出客戶版，保留最容易理解的結論與建議。</p>
+            </div>
+          </div>
+
+          <div class="entry-meta">
+            建議流程：先填資料，再送交顧問版產出報表，最後切到客戶版檢視與列印。
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

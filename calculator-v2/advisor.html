@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>退休規劃顧問版試算器V2｜顧問版</title>
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style_v3_abc_fusion.css">
+  <style>
+    .back-to-site-bar{font-size:12px;color:var(--sumi-light);}
+    .back-to-site-bar a{color:var(--kaki);font-weight:700;text-decoration:none;}
+    .back-to-site-bar a:hover{text-decoration:underline;}
+    .wizard-progress{display:flex;align-items:flex-start;justify-content:center;gap:0;margin:0 auto 32px;max-width:640px;position:relative;}
+    .wp-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;cursor:pointer;}
+    .wp-step:not(:last-child)::after{content:"";position:absolute;top:17px;left:55%;right:-45%;height:2px;background:var(--parchment);z-index:0;transition:background .4s;}
+    .wp-step.done:not(:last-child)::after{background:var(--kaki);}
+    .wp-circle{width:34px;height:34px;border-radius:50%;border:2px solid var(--parchment);background:var(--cream);color:var(--sumi-light);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:13px;font-weight:700;z-index:1;transition:all .3s ease;position:relative;}
+    .wp-step.active .wp-circle{border-color:var(--kaki);background:var(--kaki);color:var(--washi);box-shadow:0 0 0 4px var(--kaki-dim);}
+    .wp-step.done .wp-circle{border-color:var(--kaki);background:var(--kaki-pale);color:var(--kaki);}
+    .wp-step.done .wp-num::before{content:"✓";}
+    .wp-step.done .wp-num-text{display:none;}
+    .wp-label{margin-top:8px;font-size:11px;font-family:var(--font-serif);color:var(--sumi-ghost);letter-spacing:.06em;text-align:center;white-space:nowrap;transition:color .3s;}
+    .wp-step.active .wp-label{color:var(--kaki);font-weight:700;}
+    .wp-step.done .wp-label{color:var(--sumi-mid);}
+    .wizard-panel{display:none;animation:fadeIn .3s ease;}
+    .wizard-panel.active{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+    .wizard-nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px;}
+    .nav-left,.nav-right{display:flex;gap:10px;flex-wrap:wrap;}
+    .step-heading{font-family:var(--font-serif);font-size:22px;font-weight:700;color:var(--sumi);letter-spacing:.08em;margin-bottom:6px;}
+    .step-desc{font-size:13px;color:var(--sumi-light);margin-bottom:22px;letter-spacing:.04em;}
+    .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;}
+    .field-full{grid-column:1/-1;}
+    .finance-group{border:1px solid var(--parchment);border-radius:var(--radius-md);padding:16px 20px;margin-bottom:14px;background:var(--washi);}
+    .finance-group-title{font-family:var(--font-serif);font-size:12px;font-weight:700;color:var(--kaki);letter-spacing:.12em;margin-bottom:2px;text-transform:uppercase;}
+    .finance-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;}
+    .summary-confirm{background:var(--kaki-pale);border:1px solid rgba(184,92,56,.2);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:16px;font-size:14px;line-height:2;color:var(--sumi-mid);}
+    .summary-confirm strong{color:var(--kaki);font-family:var(--font-serif);}
+    .field-error{font-size:12px;color:var(--beni);margin-top:4px;letter-spacing:.03em;display:none;}
+    .field-error.show{display:block;}
+    input.invalid,select.invalid,textarea.invalid{border-color:var(--beni)!important;}
+    .subsection-note{margin-top:6px;color:var(--sumi-light);font-size:12px;line-height:1.8;}
+    .person-card{border:1px solid var(--parchment);border-radius:var(--radius-md);padding:14px 16px;background:rgba(247,242,234,.72);}
+    .person-card + .person-card{margin-top:14px;}
+    .person-title{font-family:var(--font-serif);font-size:14px;font-weight:700;color:var(--sumi);letter-spacing:.08em;margin-bottom:4px;}
+    .mode-hint{margin:10px 0 0;color:var(--sumi-light);font-size:12px;line-height:1.8;}
+    .inline-switch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;}
+    .inline-help{font-size:12px;color:var(--sumi-light);}
+    .dynamic-wrap{display:grid;gap:14px;}
+    .scenario-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px;}
+    .scenario-card{padding:18px;border:1px solid var(--parchment);border-radius:var(--radius-md);background:var(--washi);box-shadow:var(--shadow-xs);}
+    .scenario-card h3{font-family:var(--font-serif);font-size:15px;color:var(--sumi);margin-bottom:6px;letter-spacing:.08em;}
+    .scenario-card p{font-size:13px;color:var(--sumi-light);margin-bottom:12px;line-height:1.7;}
+    .scenario-card .metric-line{font-size:13px;color:var(--sumi-mid);line-height:1.9;}
+    .metric-value{font-family:var(--font-serif);color:var(--kaki);}
+    .strategy-panel{padding:12px 14px;border:1px dashed var(--parchment);border-radius:var(--radius-sm);background:rgba(240,233,220,.55);margin-top:12px;}
+    .mini-note{font-size:12px;color:var(--sumi-light);line-height:1.8;margin-top:8px;}
+    .logic-details{margin-top:12px;border:1px dashed var(--parchment);border-radius:var(--radius-sm);background:rgba(240,233,220,.4);padding:10px 12px;}
+    .logic-details summary{cursor:pointer;font-family:var(--font-serif);font-size:13px;font-weight:700;color:var(--sumi);}
+    .logic-body{margin-top:10px;font-size:12px;line-height:1.9;color:var(--sumi-light);}
+    .logic-body strong{color:var(--kaki);}
+    .math-audit{font-size:12px;line-height:1.9;color:var(--sumi-light);}
+    .math-audit div + div{margin-top:4px;}
+    .report-inline-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+    .report-chip{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;background:var(--kaki-pale);color:var(--kaki);font-size:12px;font-weight:700;letter-spacing:.04em;}
+    .status-good{color:var(--matcha);}
+    .status-warn{color:var(--yamabuki);}
+    .status-bad{color:var(--beni);}
+    @media(max-width:640px){
+      .field-grid,.finance-grid,.report-inline-grid{grid-template-columns:1fr;}
+      .wp-label{font-size:10px;}
+      .wizard-nav{flex-direction:column;align-items:stretch;}
+      .nav-left,.nav-right{justify-content:stretch;}
+    }
+  </style>
+</head>
+<body>
+<div class="page-bg">
+  <div class="container">
+    <div class="top-bar no-print">
+      <button type="button" class="ghost-btn small-btn" onclick="resetWizard()">返回編輯</button>
+      <button type="button" class="danger-btn small-btn" onclick="clearStoredData()">清除已存資料</button>
+      <button type="button" class="ghost-btn small-btn" onclick="window.location.href='client_intake.html'" title="前往客戶填寫頁">客戶填寫頁</button>
+      <button type="button" class="ghost-btn small-btn" onclick="window.location.href='client.html'" title="切到客戶版報表頁">切到客戶版報表</button>
+      <span class="back-to-site-bar">駱潤生 Lawrence 免費工具 · <a href="../tools.html">回官網工具頁 →</a></span>
+    </div>
+
+    <section id="homeSection">
+      <h1 class="main-title" id="pageMainTitle"><span>退休規劃</span> 顧問版系統 V2</h1>
+      <p class="sub-title">第一階段改版：案件主檔、家庭模式、制度型收入、資產桶、支出分類、提領策略、方案比較與版本快照；提領主軸先以固定提領率與 Guardrail 為主，並預設每年重估。</p>
+      <div id="annualReviewStatusBadge" class="mini-note">年度重估：預設啟用</div>
+
+      <div class="wizard-progress" id="wizardProgress">
+        <div class="wp-step active" id="wpStep1" onclick="goToStep(1)">
+          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">0</span></span></div>
+          <div class="wp-label">現況健檢</div>
+        </div>
+        <div class="wp-step" id="wpStep2" onclick="goToStep(2)">
+          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">1</span></span></div>
+          <div class="wp-label">案件主檔</div>
+        </div>
+        <div class="wp-step" id="wpStep3" onclick="goToStep(3)">
+          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">2</span></span></div>
+          <div class="wp-label">家庭財務</div>
+        </div>
+        <div class="wp-step" id="wpStep4" onclick="goToStep(4)">
+          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">3</span></span></div>
+          <div class="wp-label">現金流設定</div>
+        </div>
+        <div class="wp-step" id="wpStep5" onclick="goToStep(5)">
+          <div class="wp-circle"><span class="wp-num"><span class="wp-num-text">4</span></span></div>
+          <div class="wp-label">報表與模擬</div>
+        </div>
+      </div>
+
+      <div class="wizard-panel active card form-card" id="panel1">
+        <div class="step-heading">Step 0. 現況健檢</div>
+        <div class="step-desc">這一頁會依照你目前填寫的資料，即時整理家庭收支、儲蓄與資產負債快照，先確認現況是否健康，再往退休模擬走。</div>
+
+        <div class="finance-group" id="reportOptionsBlock">
+          <div class="finance-group-title">案件快照</div>
+          <div class="finance-grid">
+            <div><label>案件名稱</label><div class="report-summary" id="step0CaseName">-</div></div>
+            <div><label>版本名稱</label><div class="report-summary" id="step0VersionName">-</div></div>
+            <div><label>基準版本</label><div class="report-summary" id="step0BaselineVersion">-</div></div>
+            <div><label>家庭模式</label><div class="report-summary" id="step0HouseholdMode">-</div></div>
+          </div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">收支與儲蓄</div>
+          <div class="finance-grid">
+            <div><label>年收入合計</label><div class="report-summary" id="step0AnnualIncomeTotal">-</div></div>
+            <div><label>年支出合計</label><div class="report-summary" id="step0AnnualExpenseTotal">-</div></div>
+            <div><label>年儲蓄 / 可投資現金流</label><div class="report-summary" id="step0AnnualSavingTotal">-</div></div>
+            <div><label>儲蓄率</label><div class="report-summary" id="step0SavingRate">-</div></div>
+            <div><label>被動收入合計</label><div class="report-summary" id="step0PassiveIncomeTotal">-</div></div>
+            <div><label>被動收入占比</label><div class="report-summary" id="step0PassiveIncomeRatio">-</div></div>
+            <div><label>被動收入覆蓋率</label><div class="report-summary" id="step0PassiveIncomeCoverRatio">-</div></div>
+            <div><label>債務服務比</label><div class="report-summary" id="step0DebtServiceRatio">-</div></div>
+          </div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">資產與流動性</div>
+          <div class="finance-grid">
+            <div><label>流動性月數</label><div class="report-summary" id="step0LiquidityMonths">-</div></div>
+            <div><label>退休可提領資產</label><div class="report-summary" id="step0LiquidRetirementPool">-</div></div>
+            <div><label>可納入退休的房產淨值</label><div class="report-summary" id="step0FundingEligibleEquity">-</div></div>
+            <div><label>家庭淨值</label><div class="report-summary" id="step0HouseholdNetWorth">-</div></div>
+          </div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">健康指標</div>
+          <div id="step0HealthCards" class="scenario-grid"></div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">年度淨現金流拆解</div>
+          <div class="finance-grid">
+            <div><label>年稅額</label><div class="report-summary" id="step0AnnualTaxTotal">-</div></div>
+            <div><label>年保費</label><div class="report-summary" id="step0AnnualPremiumTotal">-</div></div>
+            <div><label>年債務付款</label><div class="report-summary" id="step0AnnualDebtServiceTotal">-</div></div>
+            <div><label>自然年度淨餘</label><div class="report-summary" id="step0AnnualSurplusBeforeOverride">-</div></div>
+            <div><label>年度可投資金額</label><div class="report-summary" id="step0AnnualInvestableSurplus">-</div></div>
+            <div><label>override 差額</label><div class="report-summary" id="step0ManualOverrideGap">-</div></div>
+            <div><label>投入口徑</label><div class="report-summary" id="step0OverrideStatus">-</div></div>
+          </div>
+          <div id="step0CashflowLogic" class="cashflow-audit" style="margin-top:10px;">-</div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">系統提醒</div>
+          <div id="step0WarningsList" class="cashflow-audit">目前尚無提醒。</div>
+        </div>
+
+        <div class="wizard-nav">
+          <div class="nav-left">
+            <button type="button" class="ghost-btn small-btn" onclick="loadData()">載入儲存資料</button>
+            <button type="button" class="ghost-btn small-btn" onclick="loadSampleData()" title="一鍵填入可測試的範例資料，先產出顧問版報表，再手動切換到客戶版查看">載入範例資料</button>
+          </div>
+          <div class="nav-right">
+            <button type="button" onclick="nextStep(1)">下一步：案件主檔</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-panel card form-card" id="panel2">
+        <div class="step-heading">Step 1. 案件主檔與家庭模式</div>
+        <div class="step-desc">先把案件版本、家庭結構與成員基本條件建好，後續所有年齡與方案比較都會以這裡為基準。</div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">案件主檔</div>
+          <div class="field-grid">
+            <div>
+              <label for="caseName">案件名稱</label>
+              <input id="caseName" type="text" placeholder="例：王家退休規劃 2026Q2">
+            </div>
+            <div>
+              <label for="clientName">客戶名稱 / 家庭識別</label>
+              <input id="clientName" type="text" placeholder="例：王先生 / 王家">
+            </div>
+            <div>
+              <label for="versionName">版本名稱</label>
+              <input id="versionName" type="text" placeholder="例：v4-first-wave">
+            </div>
+            <div>
+              <label for="baselineVersion">基準版本</label>
+              <input id="baselineVersion" type="text" placeholder="例：baseline-2026-04-11">
+            </div>
+            <div>
+              <label for="advisorName">顧問名稱</label>
+              <input id="advisorName" type="text" placeholder="例：Lawrence">
+            </div>
+            <div>
+              <label for="reportDate">報告日期</label>
+              <input id="reportDate" type="date">
+            </div>
+            <div class="field-full">
+              <label for="householdMode">家庭模式</label>
+              <select id="householdMode" onchange="handleHouseholdModeChange()">
+                <option value="single">單人模式</option>
+                <option value="couple">夫妻模式</option>
+              </select>
+              <div class="mode-hint">時間軸以「本人」年齡為主；若有配偶，系統會自動把配偶的退休與壽命換算到同一條家庭時間軸。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">家庭成員</div>
+          <div class="dynamic-wrap">
+            <div class="person-card">
+              <div class="person-title">本人</div>
+              <div class="field-grid">
+                <div>
+                  <label for="selfName">姓名</label>
+                  <input id="selfName" type="text" placeholder="例：王先生">
+                </div>
+                <div>
+                  <label for="selfHealthStatus">健康狀態</label>
+                  <select id="selfHealthStatus">
+                    <option value="good">良好</option>
+                    <option value="normal" selected>一般</option>
+                    <option value="watch">需留意</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="currentAge">目前年齡</label>
+                  <input id="currentAge" type="number" value="40">
+                  <div class="field-error" id="err-currentAge">本人目前年齡需為正整數。</div>
+                </div>
+                <div>
+                  <label for="retireAge">預計退休年齡</label>
+                  <input id="retireAge" type="number" value="65">
+                  <div class="field-error" id="err-retireAge">本人退休年齡必須大於目前年齡。</div>
+                </div>
+                <div>
+                  <label for="lifeExpectancy">預期壽命</label>
+                  <input id="lifeExpectancy" type="number" value="90">
+                  <div class="field-error" id="err-lifeExpectancy">本人預期壽命必須大於退休年齡。</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="person-card hidden" id="spouseFields">
+              <div class="person-title">配偶</div>
+              <div class="field-grid">
+                <div>
+                  <label for="spouseName">姓名</label>
+                  <input id="spouseName" type="text" placeholder="例：王太太">
+                </div>
+                <div>
+                  <label for="spouseHealthStatus">健康狀態</label>
+                  <select id="spouseHealthStatus">
+                    <option value="good">良好</option>
+                    <option value="normal" selected>一般</option>
+                    <option value="watch">需留意</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="spouseCurrentAge">目前年齡</label>
+                  <input id="spouseCurrentAge" type="number" value="38">
+                  <div class="field-error" id="err-spouseCurrentAge">配偶目前年齡需為正整數。</div>
+                </div>
+                <div>
+                  <label for="spouseRetireAge">預計退休年齡</label>
+                  <input id="spouseRetireAge" type="number" value="63">
+                  <div class="field-error" id="err-spouseRetireAge">配偶退休年齡必須大於目前年齡。</div>
+                </div>
+                <div>
+                  <label for="spouseLifeExpectancy">預期壽命</label>
+                  <input id="spouseLifeExpectancy" type="number" value="92">
+                  <div class="field-error" id="err-spouseLifeExpectancy">配偶預期壽命必須大於退休年齡。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="subsection-note">若選擇夫妻模式，後續收入事件可分別指定屬於本人、配偶或家庭共同現金流。</div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">顧問備註</div>
+          <label for="advisorNote">顧問觀點 / 本次假設說明</label>
+          <textarea id="advisorNote" rows="4" placeholder="例：本版先納入家庭模式、資產桶與制度型收入，暫不處理遺產稅與保單精算。"></textarea>
+        </div>
+
+        <div class="wizard-nav">
+          <div class="nav-left">
+            <button type="button" class="ghost-btn small-btn" onclick="loadData()">載入已存資料</button>
+            <button type="button" class="ghost-btn small-btn" onclick="loadSampleData()" title="一鍵填入可測試的範例資料，先產出顧問版報表，再手動切換到客戶版查看">載入範例資料</button>
+          </div>
+          <div class="nav-right">
+            <button type="button" onclick="nextStep(2)">下一步：家庭財務</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-panel card form-card" id="panel3">
+        <div class="step-heading">Step 2. 資產桶、負債與支出分類</div>
+        <div class="step-desc">把單一資產池拆成資產桶，把生活費拆成支出分類，並先加入固定提領率、Guardrails 與年度重估的提領預設。</div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">資產桶</div>
+          <div class="section-head">
+            <div class="subsection-note">帳戶明細優先採用。若有填下方帳戶列，系統會依每筆帳戶的配息、成長與賣單位規則計算；舊版 bucket 僅保留相容 fallback。</div>
+            <button type="button" class="small-btn" onclick="addAccount()">新增帳戶</button>
+          </div>
+          <div id="accountContainer"></div>
+          <div class="finance-grid">
+            <div>
+              <label for="cashAssets">現金與活存</label>
+              <input id="cashAssets" type="number" value="500000">
+            </div>
+            <div>
+              <label for="investmentAssets">投資帳戶</label>
+              <input id="investmentAssets" type="number" value="1000000">
+            </div>
+            <div>
+              <label for="retirementAssets">退休帳戶 / 保單帳戶</label>
+              <input id="retirementAssets" type="number" value="500000">
+            </div>
+            <div>
+              <label for="propertyAssets">房產估值</label>
+              <input id="propertyAssets" type="number" value="0">
+            </div>
+            <div>
+              <label for="propertyName">房產名稱</label>
+              <input id="propertyName" type="text" value="" placeholder="例如：自住房 / 內湖公寓">
+            </div>
+            <div>
+              <label for="propertyOwner">所有權人</label>
+              <select id="propertyOwner">
+                <option value="joint">共同</option>
+                <option value="self">本人</option>
+                <option value="spouse">配偶</option>
+              </select>
+            </div>
+            <div>
+              <label for="propertyType">房產類型</label>
+              <select id="propertyType">
+                <option value="residence">自住房</option>
+                <option value="rental">出租房</option>
+                <option value="other">其他房產</option>
+              </select>
+            </div>
+            <div>
+              <label for="propertyGrowthRate">房價年增值率 %</label>
+              <input id="propertyGrowthRate" type="number" value="0" step="0.1">
+            </div>
+            <div>
+              <label for="propertyFundingMode">房產模式</label>
+              <select id="propertyFundingMode" onchange="handlePropertyFundingModeChange()">
+                <option value="excluded">只算家庭淨值</option>
+                <option value="net_equity">退休資金池算淨值</option>
+                <option value="sale_event">指定年齡出售</option>
+              </select>
+            </div>
+            <div id="propertySaleAgeWrap">
+              <label for="propertySaleAge">出售年齡</label>
+              <input id="propertySaleAge" type="number" value="65">
+            </div>
+            <div id="propertySaleCostWrap">
+              <label for="propertySaleCostRate">出售成本率 %</label>
+              <input id="propertySaleCostRate" type="number" value="5" step="0.1">
+            </div>
+            <details class="logic-details" open style="grid-column:1 / -1;">
+              <summary>房產白話運算邏輯</summary>
+              <div class="logic-body" id="propertyLogicText"></div>
+            </details>
+            <div>
+              <label for="monthlyContribution">每月持續投入</label>
+              <input id="monthlyContribution" type="number" value="15000">
+            </div>
+            <div style="display:flex;align-items:flex-end;padding-bottom:10px;">
+              <label class="check-item"><input id="useManualContributionOverride" type="checkbox"><span>改用手動校正投入覆蓋系統推導值</span></label>
+            </div>
+            <div id="legacyPropertyFundingWrap" style="display:none;align-items:flex-end;padding-bottom:10px;">
+              <label class="check-item"><input id="includePropertyInFunding" type="checkbox"><span>將房產列入退休資金池</span></label>
+            </div>
+          </div>
+          <div class="subsection-note">預設只把現金、投資帳戶與退休帳戶列入退休資金池；若要把房產一起計入，請勾選上方選項。</div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">負債表</div>
+          <div class="section-head">
+            <div class="subsection-note">至少可登錄房貸、信貸或車貸，系統會把每月還款視為退休期必要支出的一部分。</div>
+            <button type="button" class="small-btn" onclick="addLiability()">新增負債</button>
+          </div>
+          <div id="liabilityContainer"></div>
+          <details class="logic-details" open>
+            <summary>Step 3 數學檢核與白話摘要</summary>
+            <div class="logic-body math-audit" id="step3MathChecks"></div>
+          </details>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">支出分類</div>
+          <div class="finance-grid">
+            <div>
+              <label for="essentialExpense">必要生活支出 / 月</label>
+              <input id="essentialExpense" type="number" value="35000">
+            </div>
+            <div>
+              <label for="discretionaryExpense">彈性生活支出 / 月</label>
+              <input id="discretionaryExpense" type="number" value="15000">
+            </div>
+            <div>
+              <label for="monthlyMedicalExpense">醫療支出 / 月</label>
+              <input id="monthlyMedicalExpense" type="number" value="8000">
+            </div>
+            <div>
+              <label for="monthlyCareExpense">照護支出 / 月</label>
+              <input id="monthlyCareExpense" type="number" value="5000">
+            </div>
+            <div>
+              <label for="monthlyPremiumExpense">每月保費 / 月</label>
+              <input id="monthlyPremiumExpense" type="number" value="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">提領策略與假設</div>
+          <div class="finance-grid">
+            <div>
+              <label for="withdrawalStrategy">提領策略預設</label>
+              <select id="withdrawalStrategy" onchange="handleWithdrawalStrategyChange()">
+                <option value="fixed_spending">固定支出</option>
+                <option value="fixed_rate">固定提領率（Bengen 4% 法則）</option>
+                <option value="guardrail">Guardrail（Guyton-Klinger 護欄策略）</option>
+                <option value="bucket">三桶金（Bucket Portfolios）</option>
+              </select>
+            </div>
+            <div>
+              <label for="referenceWithdrawalRate">參考提領率 %</label>
+              <input id="referenceWithdrawalRate" type="number" value="4" step="0.1">
+              <div class="mini-note">這是比較基準，不是硬性答案。</div>
+              <div class="mini-note">年度重估預設啟用，固定提領率與 Guardrail 都會以每年檢視為前提。</div>
+              <div class="checkbox-row">
+                <label class="check-item" for="annualReviewEnabled">
+                  <input id="annualReviewEnabled" type="checkbox" checked>
+                  <span>年度重估（預設啟用）</span>
+                </label>
+                <span class="help-trigger" tabindex="0" role="button" aria-label="年度重估說明">
+                  i
+                  <span class="help-bubble">每年都會重新檢視提領基準與資產水位；若關閉，系統會改用固定比較線說明。</span>
+                </span>
+              </div>
+              <div class="mini-note">顧問版可直接勾選與確認；客戶版只會看到白話說明，不另外操作。</div>
+            </div>
+            <div>
+              <label for="returnRate">退休前年報酬率 %</label>
+              <input id="returnRate" type="number" value="5" step="0.1">
+            </div>
+            <div>
+              <label for="postReturnRate">退休後年報酬率 %</label>
+              <input id="postReturnRate" type="number" value="2" step="0.1">
+            </div>
+            <div>
+              <label for="inflationRate">一般通膨率 %</label>
+              <input id="inflationRate" type="number" value="2" step="0.1">
+            </div>
+            <div>
+              <label for="medicalInflationRate">醫療通膨率 %</label>
+              <input id="medicalInflationRate" type="number" value="5" step="0.1">
+            </div>
+            <div>
+              <label for="earnedIncomeTaxRate">勞務收入有效稅率 %</label>
+              <input id="earnedIncomeTaxRate" type="number" value="0" step="0.1">
+            </div>
+            <div>
+              <label for="passiveIncomeTaxRate">被動收入有效稅率 %</label>
+              <input id="passiveIncomeTaxRate" type="number" value="0" step="0.1">
+            </div>
+            <div>
+              <label for="benefitIncomeTaxRate">給付收入有效稅率 %</label>
+              <input id="benefitIncomeTaxRate" type="number" value="0" step="0.1">
+            </div>
+          </div>
+
+          <div id="fixedRatePanel" class="strategy-panel hidden">
+            <label for="fixedWithdrawalRate">固定提領率 %</label>
+            <input id="fixedWithdrawalRate" type="number" value="4" step="0.1">
+            <div class="mini-note">Bengen 4% 法則：退休當年依此比例提領起始資產金額，之後每年只跟通膨調整，不因資產漲跌重算比例。4% 是最廣泛引用的保守起點；後續研究顯示資產配置更分散時安全提領率有機會略高於 4%，但仍受起始市場評價與通膨環境影響，非保證值。</div>
+          </div>
+
+          <div id="guardrailPanel" class="strategy-panel hidden">
+            <div class="finance-grid">
+              <div>
+                <label for="strategyGuardrailFloor">觸發下限（相對初始提領率）%</label>
+                <input id="strategyGuardrailFloor" type="number" value="80" step="1">
+              </div>
+              <div>
+                <label for="strategyGuardrailCeiling">觸發上限（相對初始提領率）%</label>
+                <input id="strategyGuardrailCeiling" type="number" value="120" step="1">
+              </div>
+              <div>
+                <label for="strategyGuardrailAdjustStep">調整幅度 %</label>
+                <input id="strategyGuardrailAdjustStep" type="number" value="10" step="1">
+              </div>
+            </div>
+            <div class="mini-note">Guyton-Klinger 護欄策略三規則：①通膨規則——提領跟通膨調整，但前一年投資虧損時凍結本年度調整；②資本保全規則——當年提領率超過初始提領率的上限倍數，且距預期壽命還有 15 年以上時，本年度彈性支出下修；③繁榮規則——當年提領率低於初始提領率的下限倍數時，本年度彈性支出上修。為維持必要生活費永遠全額滿足的原則，以上調整只套用在彈性支出。</div>
+          </div>
+
+          <div id="bucketPanel" class="strategy-panel hidden">
+            <div class="finance-grid">
+              <div>
+                <label for="bucketCashMonths">現金桶目標月數</label>
+                <input id="bucketCashMonths" type="number" value="24" step="1" min="0">
+              </div>
+              <div>
+                <label for="bucketBondYears">債券桶建議年數</label>
+                <input id="bucketBondYears" type="number" value="8" step="1" min="0">
+              </div>
+              <div style="display:flex;align-items:flex-end;padding-bottom:10px;">
+                <label class="check-item"><input id="bucketAvoidSellingGrowthAfterLoss" type="checkbox" checked><span>成長桶前一年虧損時避免賣出</span></label>
+              </div>
+            </div>
+            <div class="mini-note">三桶金（Bucket Portfolios）策略取材自 Christine Benz（Morningstar）：把退休資產依提領時間長短分成現金桶、債券桶、成長桶。每年優先動用現金桶支應生活費；現金桶低於目標水位時先從債券桶回補，債券桶不足才動用成長桶——但成長桶前一年虧損時原則上暫緩賣出，避免在下跌年份實現虧損。以上數字為常見引用區間的中位數，可依實際資產配置調整；帳戶列可個別指定所屬桶別。</div>
+          </div>
+
+          <details class="ltc-advanced-box" id="ltcAdvancedBox" style="margin-top:16px;">
+            <summary style="cursor:pointer;font-family:var(--font-serif);color:var(--kaki);font-weight:700;letter-spacing:.08em;">長照 / LTC 假設</summary>
+            <div class="finance-grid" style="margin-top:12px;">
+              <div>
+                <label for="ltcEnabled">是否啟用 LTC 溢價假設</label>
+                <select id="ltcEnabled">
+                  <option value="true" selected>啟用</option>
+                  <option value="false">停用</option>
+                </select>
+              </div>
+              <div>
+                <label for="ltcStartAge">LTC 起始年齡</label>
+                <input id="ltcStartAge" type="number" value="80">
+              </div>
+              <div>
+                <label for="ltcDurationYears">LTC 持續年數</label>
+                <input id="ltcDurationYears" type="number" value="8">
+              </div>
+              <div>
+                <label for="ltcExtraCostFactor">LTC 溢價倍數</label>
+                <input id="ltcExtraCostFactor" type="number" value="1.2" step="0.1">
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="wizard-nav">
+          <div class="nav-left">
+            <button type="button" class="ghost-btn small-btn" onclick="prevStep(3)">上一步</button>
+          </div>
+          <div class="nav-right">
+            <button type="button" onclick="nextStep(3)">下一步：現金流設定</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-panel card form-card" id="panel4">
+        <div class="step-heading">Step 3. 制度型退休收入與目標事件</div>
+        <div class="step-desc">把收入事件改成制度型預設，並保留自訂事件彈性。所有年齡都填在「該事件所有人」自己的年齡欄位。</div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">制度型退休收入</div>
+          <div class="section-head">
+            <div class="subsection-note">預設類型包含勞保、勞退、私人年金、租金與股利；仍可切到自訂類型。</div>
+            <button type="button" class="small-btn" onclick="addIncome()">新增收入</button>
+          </div>
+          <div id="incomeContainer"></div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">目標與一次性事件</div>
+          <div class="section-head">
+            <div class="subsection-note">可用於房產交易、旅遊、照護支出、教育支援、贈與等一次性或多年期安排。</div>
+            <button type="button" class="small-btn" onclick="addGoal()">新增事件</button>
+          </div>
+          <div id="goalContainer"></div>
+        </div>
+
+        <div class="wizard-nav">
+          <div class="nav-left">
+            <button type="button" class="ghost-btn small-btn" onclick="prevStep(4)">上一步</button>
+          </div>
+          <div class="nav-right">
+            <button type="button" onclick="nextStep(4)">下一步：報表與模擬</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-panel card form-card" id="panel5">
+        <div class="step-heading">Step 4. 報表設定與 Monte Carlo</div>
+        <div class="step-desc">先確認本次方案版本與輸出內容，再執行 A/B/C 方案比較與 Monte Carlo 壓力測試。</div>
+
+        <div class="summary-confirm" id="step4Summary"></div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">Monte Carlo 設定</div>
+          <div class="checkbox-grid" style="margin-bottom:14px;">
+            <label class="check-item"><input id="mcEnabled" type="checkbox" checked><span>啟用 Monte Carlo</span></label>
+            <label class="check-item"><input id="mcRandomInflation" type="checkbox" checked><span>加入通膨波動</span></label>
+            <label class="check-item"><input id="mcFlexibleSpending" type="checkbox" checked><span>啟用彈性支出調整</span></label>
+          </div>
+          <div class="finance-grid">
+            <div>
+              <label for="mcRuns">模擬次數</label>
+              <input id="mcRuns" type="number" value="500" step="100" min="100">
+            </div>
+            <div>
+              <label for="mcVolatility">年化波動度 %</label>
+              <input id="mcVolatility" type="number" value="12" step="0.1" min="0">
+            </div>
+            <div>
+              <label for="mcInflationVolatility">通膨波動度 %</label>
+              <input id="mcInflationVolatility" type="number" value="1.2" step="0.1" min="0">
+            </div>
+            <div>
+              <label for="mcSpendingVolatility">支出彈性波動度 %</label>
+              <input id="mcSpendingVolatility" type="number" value="6" step="0.1" min="0">
+            </div>
+            <div>
+              <label for="mcSpendingFloor">最低支出比例 %</label>
+              <input id="mcSpendingFloor" type="number" value="85" step="1" min="1" max="100">
+            </div>
+            <div>
+              <label for="mcSpendingCeiling">最高支出比例 %</label>
+              <input id="mcSpendingCeiling" type="number" value="110" step="1" min="100" max="300">
+            </div>
+          </div>
+        </div>
+
+        <div class="finance-group">
+          <div class="finance-group-title">報表輸出內容</div>
+          <div class="checkbox-grid">
+            <label class="check-item"><input id="showInputSummary" type="checkbox" checked><span>顯示原始輸入摘要</span></label>
+            <label class="check-item"><input id="showAdvisorAdvice" type="checkbox" checked><span>顯示顧問備註</span></label>
+            <label class="check-item"><input id="showMonteCarloSummary" type="checkbox" checked><span>Monte Carlo 摘要</span></label>
+            <label class="check-item"><input id="showLogicSteps" type="checkbox" checked><span>顯示運算邏輯</span></label>
+            <label class="check-item"><input id="showPreChart" type="checkbox" checked><span>退休前資產圖</span></label>
+            <label class="check-item"><input id="showPostChart" type="checkbox" checked><span>退休後資產圖</span></label>
+            <label class="check-item"><input id="showScenarioChart" type="checkbox" checked><span>A/B/C 方案比較圖</span></label>
+            <label class="check-item"><input id="showMonteCarloChart" type="checkbox" checked><span>Monte Carlo 路徑圖</span></label>
+          </div>
+        </div>
+
+
+
+        <div class="finance-group">
+          <div class="finance-group-title">方案 C（可調式優化）</div>
+          <div class="finance-grid">
+            <div>
+              <label for="scenarioCMode">優化模式</label>
+              <select id="scenarioCMode">
+                <option value="mixed">綜合優化</option>
+                <option value="return_rate">報酬率優化</option>
+                <option value="retire_delay">延後退休優化</option>
+                <option value="contribution">提高提撥優化</option>
+              </select>
+            </div>
+            <div>
+              <label for="scenarioCReturnBoostPct">報酬率加幅 %</label>
+              <input id="scenarioCReturnBoostPct" type="number" value="1" step="0.1" min="0" max="20">
+            </div>
+            <div>
+              <label for="scenarioCRetireDelayYears">延後退休年數</label>
+              <input id="scenarioCRetireDelayYears" type="number" value="2" step="1" min="0" max="20">
+            </div>
+            <div>
+              <label for="scenarioCContributionBoostPct">提撥加幅 %</label>
+              <input id="scenarioCContributionBoostPct" type="number" value="15" step="1" min="0" max="100">
+            </div>
+          </div>
+          <div class="mini-note">不同模式只會套用對應的優化槓桿，方便客戶看懂每種改善措施的效果。</div>
+        </div>
+        <div class="wizard-nav">
+          <div class="nav-left">
+            <button type="button" class="ghost-btn small-btn" onclick="prevStep(5)">上一步</button>
+            <button type="button" class="ghost-btn small-btn" onclick="saveData()">儲存目前設定</button>
+          </div>
+          <div class="nav-right">
+            <button type="button" onclick="calculateRetirement()">產出第一階段報表</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reportSection" class="hidden">
+      <div class="print-header print-only">
+        <div class="print-title" id="printPageTitle">退休規劃顧問報告 V2</div>
+        <div id="printMeta"></div>
+      </div>
+
+      <div class="card report-card">
+        <div class="report-head no-print">
+          <h1 class="report-title" id="reportPageTitle">退休規劃顧問報告 V2</h1>
+          <div class="button-group horizontal">
+            <button type="button" class="small-btn" onclick="exportCashflowCsv()">匯出 CSV</button>
+            <button type="button" class="small-btn" onclick="shareData()">產生分享連結</button>
+            <button type="button" class="small-btn" onclick="printReport()">列印 / 匯出 PDF</button>
+            <button type="button" class="ghost-btn small-btn" onclick="resetWizard()">返回編輯</button>
+          </div>
+        </div>
+
+        <div id="reportSummary" class="report-summary"></div>
+        <div id="snapshotBlock" class="report-summary"></div>
+        <div id="cashflowSummaryBlock" class="report-summary"></div>
+        <div id="result" class="result"></div>
+        <div id="scenarioComparisonBlock" class="card break-inside-avoid">
+          <div class="chart-title">方案 A / B / C 比較</div>
+          <div id="scenarioComparisonSummary" class="cashflow-audit"></div>
+          <div id="scenarioComparisonGrid" class="scenario-grid"></div>
+        </div>
+        <div id="strategyBlock" class="report-summary"></div>
+        <div id="accountBlock" class="report-summary"></div>
+        <div id="propertyBlock" class="report-summary"></div>
+        <div id="liabilityBlock" class="report-summary"></div>
+        <div id="rule4Block" class="rule4-block" style="display:none"></div>
+        <div id="medicalBlock" class="medical-block" style="display:none"></div>
+        <div id="inputSummaryBlock"><div id="inputSummary" class="report-summary"></div></div>
+        <div id="advisorAdviceBlock"><div id="reportAdvice" class="report-advice"></div></div>
+
+        <div class="accordion-wrap" id="logicStepsWrap">
+          <button class="accordion-btn" type="button" onclick="toggleAccordion('logicExplainBox')">運算邏輯詳細說明</button>
+          <div id="logicExplainBox" class="accordion-panel">
+            <div id="logicExplainContent" class="accordion-content"></div>
+          </div>
+        </div>
+
+        <div id="monteCarloSummaryBlock"><div id="monteCarloSummary" class="report-summary"></div></div>
+
+        <div id="cashflowBlock" class="card cashflow-card break-inside-avoid">
+          <div class="chart-title">年度現金流明細表（基準方案）</div>
+          <div id="cashflowAudit" class="cashflow-audit"></div>
+          <div id="cashflowTableWrap" class="cashflow-table-wrap"></div>
+        </div>
+
+        <div id="preChartBlock" class="card chart-card break-inside-avoid">
+          <div class="chart-title">退休前資產累積圖（基準方案）</div>
+          <canvas id="preRetireChart" width="760" height="340"></canvas>
+        </div>
+        <div id="postChartBlock" class="card chart-card break-inside-avoid">
+          <div class="chart-title">退休後資產存續圖（基準方案）</div>
+          <canvas id="postRetireChart" width="760" height="340"></canvas>
+        </div>
+        <div id="scenarioChartBlock" class="card chart-card break-inside-avoid">
+          <div class="chart-title">方案 A / B / C 比較圖</div>
+          <canvas id="scenarioChart" width="760" height="340"></canvas>
+          <div class="accordion-wrap">
+            <button class="accordion-btn" type="button" onclick="toggleAccordion('scenarioChartExplainBox')">方案比較說明</button>
+            <div id="scenarioChartExplainBox" class="accordion-panel">
+              <div id="scenarioChartExplainContent" class="accordion-content"></div>
+            </div>
+          </div>
+        </div>
+        <div id="monteCarloChartBlock" class="card chart-card break-inside-avoid">
+          <div class="chart-title">Monte Carlo P10 / P50 / P90 路徑</div>
+          <canvas id="monteCarloChart" width="760" height="340"></canvas>
+          <div class="accordion-wrap">
+            <button class="accordion-btn" type="button" onclick="toggleAccordion('monteCarloChartExplainBox')">Monte Carlo 解讀</button>
+            <div id="monteCarloChartExplainBox" class="accordion-panel">
+              <div id="monteCarloChartExplainContent" class="accordion-content"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="share-box no-print hidden" id="shareBox">
+          <div class="share-title">分享連結</div>
+          <input id="shareLink" type="text" readonly>
+          <div class="button-group horizontal" style="margin-top:10px;">
+            <button type="button" class="small-btn" onclick="copyShareLink()">複製連結</button>
+            <button type="button" class="small-btn" onclick="printReport()">列印 / 匯出 PDF</button>
+            <button type="button" class="ghost-btn small-btn" onclick="resetWizard()">返回編輯</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="shared_finance_utils.js"></script>
+<script src="plan_normalizer_v1.js"></script>
+<script src="projection_engine_v1.js"></script>
+<script src="report_mapper_v1.js"></script>
+<script src="script_v3_abc_fusion.js"></script>
+<script src="ui_controller_v3.js"></script>
+</body>
+</html>

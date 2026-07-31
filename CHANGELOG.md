@@ -9,6 +9,7 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| — | 2026-07-31 | 部署退休規劃顧問版試算器V2（calculator-v2/，多頁面 App，新增 Bengen/Guyton-Klinger/三桶金提領策略），整合進 tools.html |
 | — | 2026-07-31 | 新增 MBTI 職場性格測驗工具（mbti-quiz.html），套用統一美術規格並整合進 tools.html |
 | `v10` Tag | 2026-04-11 | 網站 v10 基準線：完成 SEO、暗模式、退休試算器整合 |
 | `6bcc8a6` | 2026-04-12 | 樣式重構：行內 CSS 遷移、移除追蹤代碼佔位符 |
@@ -25,6 +26,24 @@
 ## 詳細記錄
 
 ---
+
+### [新增] 退休規劃顧問版試算器V2 部署上線 — 2026-07-31
+
+**類型**：Feature / Deployment
+
+**來源**：`D:\AI\ABC版搶修\2_gemini_ABC補全版`（獨立 git repo，分支 `codex/retirement-v4`）。這是一套比現有 `calculator.html` 更完整的多頁面退休規劃 App：客戶填寫（`client_intake.html`）→ 顧問版精算（`advisor.html`，五步驟精算精靈，逐帳戶配息/成長/賣單位規則）→ 客戶版報表（`client.html`），並剛完成三種提領策略的完整精算邏輯（固定提領率＝Bengen 4% 法則、Guardrail＝Guyton-Klinger 護欄策略、三桶金＝Bucket Portfolios）。
+
+**執行內容**：
+- 新增 `calculator-v2/` 目錄，複製最小部署檔案集（13 個檔案：4 個 HTML 入口＋8 個共用 JS＋1 個共用 CSS＋favicon；不含 `tests/`、`VERSION_HISTORY.md`、稽核腳本、PDF 等開發用檔案）。
+- 品牌重命名為「退休規劃顧問版試算器V2」：4 個頁面的 `<title>`／H1／報表標題（含 `ui_controller_v3.js` 內動態設定 `document.title`／`pageMainTitle`／`reportPageTitle`／`printPageTitle` 的字串）、`client_intake.js` 內 `document.title` 皆同步加上 V2 標識。
+- 4 個頁面頂部加一列「駱潤生 Lawrence 免費工具 · 回官網工具頁 →」連回 `tools.html`（比照 DESIGN.md §7 外部工具最低整合規格）；`index.html` 補上完整 SEO meta（description/canonical/OG，`robots: index,follow`），`client_intake.html`／`advisor.html`／`client.html` 標記 `robots: noindex,follow`（功能性子頁面，避免薄內容被索引）。
+- **美術規格說明**：V2 App 本身沿用自己既有的和紙／柿橘色（kaki/washi）視覺系統，**未**改套官網 navy/amber 規格——與使用者確認過，多頁面 App 完整重製視覺是另一項較大工程，本次先以「保留原設計＋加回官網連結」的最低整合規格上線，待後續視需要另開工作階段處理。
+- `tools.html` 新增「退休規劃顧問版試算器V2」卡片（🧮 圖示，標記「站內工具・V2」），置於既有 V1 試算器卡片下方；`sitemap.xml` 新增 `calculator-v2/index.html`；`_headers` 新增 `/calculator-v2/*` 快取規則（`max-age=0, must-revalidate`，比照頁面規則，非靜態資產長快取）。CSP 已預先允許 `cdn.jsdelivr.net`（V2 用 Chart.js CDN），無需調整。
+- **備份**：部署當下的完整檔案快照另存於部署目錄之外的 `D:\AI\_uploads-backup\lawrence_financial_site\calculator-v2-deploy-2026-07-31\`；來源專案本身在 `D:\AI\ABC版搶修\2_gemini_ABC補全版` 另有自己的 git 版本控制，不受本次官網部署影響。
+
+**驗證**：`node --check` 全部複製並改動過的 `.js` 檔案通過；本機起 `python -m http.server` 以 Playwright 實測 — `tools.html` 新卡片顯示正常、點入 `calculator-v2/index.html` 標題與品牌正確、「直接進顧問版」載入範例資料後報表標題顯示「退休規劃顧問報告 V2」、頂部回官網連結可正確導回 `tools.html`；過程中發現並修正一個重複裝飾線的視覺瑕疵（新增的副標題誤用 `.sub-title` class 導致 `::after` 裝飾線重複出現）。
+
+**明確跳過／待辦**：V2 App 尚未套用官網 navy/amber 統一美術規格（見上）；`calculator-v2/*` 各頁面目前只有 `index.html` 有完整 SEO meta，其餘 3 頁刻意 `noindex`。
 
 ### [新增] MBTI 職場性格測驗工具上線 — 2026-07-31
 

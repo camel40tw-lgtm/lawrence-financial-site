@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>退休規劃顧問版試算器V2｜客戶填寫頁</title>
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style_v3_abc_fusion.css">
+  <style>
+    .back-to-site-bar{font-size:12px;color:var(--sumi-light);}
+    .back-to-site-bar a{color:var(--kaki);font-weight:700;text-decoration:none;}
+    .back-to-site-bar a:hover{text-decoration:underline;}
+    .intake-hero{padding:20px 22px;border:1px solid var(--parchment);border-radius:var(--radius-md);background:linear-gradient(180deg,rgba(247,242,234,.96),rgba(244,237,224,.9));box-shadow:var(--shadow-xs);}
+    .intake-kicker{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:var(--kaki-pale);color:var(--kaki);font-size:12px;font-weight:700;letter-spacing:.06em;margin-bottom:10px;}
+    .intake-notice{margin-top:14px;padding:12px 14px;border-radius:var(--radius-sm);background:rgba(184,92,56,.08);border:1px solid rgba(184,92,56,.16);color:var(--sumi-mid);font-size:13px;line-height:1.8;}
+    .intake-status{margin-top:10px;color:var(--sumi-light);font-size:12px;line-height:1.8;}
+    .intake-section{margin-top:18px;padding:20px 22px;border:1px solid var(--parchment);border-radius:var(--radius-md);background:rgba(247,242,234,.94);box-shadow:var(--shadow-xs);}
+    .section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+    .section-title{font-family:var(--font-serif);font-size:22px;font-weight:700;color:var(--sumi);letter-spacing:.08em;}
+    .section-subtitle{margin-top:6px;font-size:13px;line-height:1.8;color:var(--sumi-light);}
+    .section-tag{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:var(--kaki-pale);color:var(--kaki);font-size:12px;font-weight:700;white-space:nowrap;}
+    .sub-card{padding:16px 18px;border:1px solid var(--parchment);border-radius:var(--radius-md);background:rgba(250,246,239,.92);}
+    .sub-card + .sub-card{margin-top:14px;}
+    .section-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:16px 0 10px;flex-wrap:wrap;}
+    .section-toolbar h3{font-family:var(--font-serif);font-size:16px;font-weight:700;color:var(--sumi);letter-spacing:.06em;}
+    .section-note{font-size:12px;line-height:1.7;color:var(--sumi-light);}
+    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px;}
+    .field{display:flex;flex-direction:column;gap:6px;}
+    .field-full{grid-column:1/-1;}
+    .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+    .summary-card{padding:14px 16px;border:1px solid var(--parchment);border-radius:var(--radius-sm);background:rgba(247,242,234,.72);}
+    .summary-card input,.summary-card select,.summary-card textarea{width:100%;}
+    .row-list{display:grid;gap:14px;}
+    .row-card{padding:16px 18px;border:1px solid var(--parchment);border-radius:var(--radius-md);background:rgba(250,246,239,.96);}
+    .row-card-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+    .row-card-title{font-family:var(--font-serif);font-size:15px;font-weight:700;color:var(--sumi);letter-spacing:.06em;}
+    .row-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 20px;}
+    .field-label{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--sumi);}
+    .help-trigger{position:relative;display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--kaki-pale);color:var(--kaki);font-size:11px;font-weight:700;cursor:help;line-height:1;flex:0 0 auto;}
+    .help-bubble{position:absolute;left:50%;top:calc(100% + 8px);transform:translate(-50%,4px);min-width:220px;max-width:300px;padding:10px 12px;border-radius:10px;background:var(--sumi);color:var(--washi);font-size:12px;line-height:1.7;box-shadow:0 12px 28px rgba(0,0,0,.18);opacity:0;visibility:hidden;transition:all .15s ease;z-index:20;pointer-events:none;text-align:left;}
+    .help-trigger:hover .help-bubble,.help-trigger:focus-visible .help-bubble{opacity:1;visibility:visible;transform:translate(-50%,0);}
+    .intake-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+    .intake-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;}
+    .intake-footnote{font-size:12px;line-height:1.8;color:var(--sumi-light);}
+    .hidden{display:none !important;}
+    textarea{min-height:92px;resize:vertical;}
+    @media (max-width: 900px){
+      .summary-grid,.field-grid,.row-card-grid{grid-template-columns:1fr;}
+      .intake-actions,.intake-footer{justify-content:stretch;}
+      .intake-actions button,.intake-footer button{width:100%;}
+    }
+  </style>
+</head>
+<body>
+<div class="page-bg">
+  <div class="container">
+    <div class="top-bar no-print">
+      <button type="button" class="ghost-btn small-btn" onclick="window.ClientIntakeApp.saveDraft()">儲存草稿</button>
+      <button type="button" class="ghost-btn small-btn" onclick="window.ClientIntakeApp.submitToAdvisor()">送交顧問版</button>
+      <button type="button" class="ghost-btn small-btn" onclick="window.ClientIntakeApp.loadSampleData()">載入範例資料</button>
+      <button type="button" class="danger-btn small-btn" onclick="window.ClientIntakeApp.clearDraft()">清除草稿</button>
+      <span class="back-to-site-bar">駱潤生 Lawrence 免費工具 · <a href="../tools.html">回官網工具頁 →</a></span>
+    </div>
+
+    <section class="intake-hero card">
+      <div class="intake-kicker">客戶填寫頁・退休規劃顧問版試算器 V2</div>
+      <h1 class="main-title"><span>財務安全需求分析</span> 前置資料蒐集</h1>
+      <p class="sub-title">先填家庭基本資料、資產負債表與收入支出表。填完後送交顧問版，系統會先產出正式報表，再切到客戶版閱讀。</p>
+      <div id="intakeNotice" class="intake-notice">尚未載入資料，請先從上方開始填寫；每個欄位右側都會有小 i 說明。</div>
+      <div id="intakeStatus" class="intake-status">目前已填資料：0 筆資產、0 筆負債、0 筆收入。</div>
+    </section>
+
+    <section class="intake-section card" id="basicSection">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">1. 家庭基本資料</h2>
+          <div class="section-subtitle">先把案件與家庭角色確認好，後面的資產、收入和退休年齡才會接得準。</div>
+        </div>
+        <span class="section-tag">必填</span>
+      </div>
+
+      <div class="sub-card">
+        <div class="section-toolbar">
+          <h3>案件資訊</h3>
+          <div class="section-note">這些欄位會變成顧問版報表的標頭。</div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="caseName" data-help-key="案件名稱">案件名稱</label>
+            <input id="caseName" type="text" placeholder="例如：王家退休規劃 2026Q2">
+          </div>
+          <div class="field">
+            <label for="clientName" data-help-key="客戶名稱 / 家庭識別">客戶名稱 / 家庭識別</label>
+            <input id="clientName" type="text" placeholder="例如：王先生 / 王太太">
+          </div>
+          <div class="field">
+            <label for="versionName" data-help-key="版本名稱">版本名稱</label>
+            <input id="versionName" type="text" placeholder="例如：Intake v1">
+          </div>
+          <div class="field">
+            <label for="baselineVersion" data-help-key="基準版本">基準版本</label>
+            <input id="baselineVersion" type="text" placeholder="例如：Baseline-2026-04-20">
+          </div>
+          <div class="field">
+            <label for="advisorName" data-help-key="顧問名稱">顧問名稱</label>
+            <input id="advisorName" type="text" placeholder="例如：Lawrence">
+          </div>
+          <div class="field">
+            <label for="reportDate" data-help-key="報告日期">報告日期</label>
+            <input id="reportDate" type="date">
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-card">
+        <div class="section-toolbar">
+          <h3>家庭成員</h3>
+          <div class="section-note">若是夫妻模式，配偶也請一併填上。</div>
+        </div>
+        <div class="field-grid">
+          <div class="field field-full">
+            <label for="householdMode" data-help-key="家庭模式">家庭模式</label>
+            <select id="householdMode">
+              <option value="single">單人家庭</option>
+              <option value="couple">夫妻家庭</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-grid" style="margin-top:14px;">
+          <div class="sub-card">
+            <div class="section-toolbar" style="margin-top:0;">
+              <h3>本人</h3>
+              <div class="section-note">這個人會當作時間軸主體。</div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="selfName" data-help-key="姓名">姓名</label>
+                <input id="selfName" type="text" placeholder="例如：王先生">
+              </div>
+              <div class="field">
+                <label for="selfHealthStatus" data-help-key="健康狀態">健康狀態</label>
+                <select id="selfHealthStatus">
+                  <option value="good">良好</option>
+                  <option value="normal" selected>一般</option>
+                  <option value="watch">留意</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="currentAge" data-help-key="目前年齡">目前年齡</label>
+                <input id="currentAge" type="number" min="1" step="1" value="40">
+              </div>
+              <div class="field">
+                <label for="retireAge" data-help-key="預計退休年齡">預計退休年齡</label>
+                <input id="retireAge" type="number" min="1" step="1" value="65">
+              </div>
+              <div class="field">
+                <label for="lifeExpectancy" data-help-key="預期壽命">預期壽命</label>
+                <input id="lifeExpectancy" type="number" min="1" step="1" value="90">
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-card" id="spouseCard">
+            <div class="section-toolbar" style="margin-top:0;">
+              <h3>配偶</h3>
+              <div class="section-note">夫妻模式時才需要填寫。</div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="spouseName" data-help-key="姓名">姓名</label>
+                <input id="spouseName" type="text" placeholder="例如：王太太">
+              </div>
+              <div class="field">
+                <label for="spouseHealthStatus" data-help-key="健康狀態">健康狀態</label>
+                <select id="spouseHealthStatus">
+                  <option value="good">良好</option>
+                  <option value="normal" selected>一般</option>
+                  <option value="watch">留意</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="spouseCurrentAge" data-help-key="目前年齡">目前年齡</label>
+                <input id="spouseCurrentAge" type="number" min="1" step="1" value="38">
+              </div>
+              <div class="field">
+                <label for="spouseRetireAge" data-help-key="預計退休年齡">預計退休年齡</label>
+                <input id="spouseRetireAge" type="number" min="1" step="1" value="63">
+              </div>
+              <div class="field">
+                <label for="spouseLifeExpectancy" data-help-key="預期壽命">預期壽命</label>
+                <input id="spouseLifeExpectancy" type="number" min="1" step="1" value="92">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-grid" style="margin-top:14px;">
+          <div class="field field-full">
+            <label for="advisorNote" data-help-key="顧問觀點 / 本次假設說明">顧問觀點 / 本次假設說明</label>
+            <textarea id="advisorNote" placeholder="例如：首次會談先以家庭主要收入與主要資產為主，細項之後再補。"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="intake-section card" id="balanceSection">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">2. 資產負債表</h2>
+          <div class="section-subtitle">先填總額，再補明細。若今天時間有限，先把上方四個總額填好也可以。</div>
+        </div>
+        <span class="section-tag">核心</span>
+      </div>
+
+      <div class="sub-card">
+        <div class="section-toolbar">
+          <h3>快速總額</h3>
+          <div class="section-note">這一區是顧問第一次看案最常先抓的數字。</div>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <label for="cashAssets" data-help-key="現金與活存">現金與活存</label>
+            <input id="cashAssets" type="number" min="0" step="1" value="0">
+          </div>
+          <div class="summary-card">
+            <label for="investmentAssets" data-help-key="投資帳戶">投資帳戶</label>
+            <input id="investmentAssets" type="number" min="0" step="1" value="0">
+          </div>
+          <div class="summary-card">
+            <label for="retirementAssets" data-help-key="退休帳戶 / 保單帳戶">退休帳戶 / 保單帳戶</label>
+            <input id="retirementAssets" type="number" min="0" step="1" value="0">
+          </div>
+          <div class="summary-card">
+            <label for="propertyAssets" data-help-key="房產估值">房產估值</label>
+            <input id="propertyAssets" type="number" min="0" step="1" value="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-card" style="margin-top:14px;">
+        <div class="section-toolbar">
+          <h3>房產資訊</h3>
+          <div class="section-note">如果有房子，這裡再補房產性質與退休處理方式。房產估值請先填在上方快速總額。</div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="propertyName" data-help-key="房產名稱">房產名稱</label>
+            <input id="propertyName" type="text" placeholder="例如：新北自住房">
+          </div>
+          <div class="field">
+            <label for="propertyOwner" data-help-key="所有權人">所有權人</label>
+            <select id="propertyOwner">
+              <option value="joint">共同</option>
+              <option value="self">本人</option>
+              <option value="spouse">配偶</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="propertyType" data-help-key="房產類型">房產類型</label>
+            <select id="propertyType">
+              <option value="residence">自住房</option>
+              <option value="rental">出租房</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="propertyGrowthRate" data-help-key="房價年增值率 %">房價年增值率 %</label>
+            <input id="propertyGrowthRate" type="number" step="0.1" value="0">
+          </div>
+          <div class="field">
+            <label for="propertyFundingMode" data-help-key="房產模式">房產模式</label>
+            <select id="propertyFundingMode">
+              <option value="excluded">只列家庭淨值</option>
+              <option value="net_equity">退休起點動用淨值</option>
+              <option value="sale_event">指定年齡出售</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="propertySaleAge" data-help-key="出售年齡">出售年齡</label>
+            <input id="propertySaleAge" type="number" min="1" step="1" value="70">
+          </div>
+          <div class="field">
+            <label for="propertySaleCostRate" data-help-key="出售成本率 %">出售成本率 %</label>
+            <input id="propertySaleCostRate" type="number" min="0" step="0.1" value="5">
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-card" style="margin-top:14px;">
+        <div class="section-toolbar">
+          <h3>資產明細</h3>
+          <div class="section-note">若只填總額，這一區可以先留空；若要細分，按「新增資產」即可。</div>
+        </div>
+        <div class="section-toolbar" style="margin-top:0;">
+          <div class="section-note">每筆資產都可以填「資產名稱、所有權人、資產類型、退休前後處理」。</div>
+          <button type="button" class="ghost-btn small-btn" onclick="window.ClientIntakeApp.addAssetRow()">新增資產</button>
+        </div>
+        <div id="assetRows" class="row-list"></div>
+      </div>
+
+      <div class="sub-card" style="margin-top:14px;">
+        <div class="section-toolbar">
+          <h3>負債明細</h3>
+          <div class="section-note">房貸、信貸、車貸等都可以拆成單筆列出。</div>
+        </div>
+        <div class="section-toolbar" style="margin-top:0;">
+          <div class="section-note">若有房貸，請記得連動到房產資訊。</div>
+          <button type="button" class="ghost-btn small-btn" onclick="window.ClientIntakeApp.addLiabilityRow()">新增負債</button>
+        </div>
+        <div id="liabilityRows" class="row-list"></div>
+      </div>
+    </section>
+
+    <section class="intake-section card" id="incomeSection">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">3. 收入支出表</h2>
+          <div class="section-subtitle">收入先抓大類，支出先抓必要生活費與固定支出，之後顧問再幫你做更細的現金流分析。</div>
+        </div>
+        <span class="section-tag">現金流</span>
+      </div>
+
+      <div class="sub-card">
+        <div class="section-toolbar">
+          <h3>收入明細</h3>
+          <div class="section-note">薪資、獎金、租金、利息、股利、年金都可以分筆列出。</div>
+        </div>
+        <div class="section-toolbar" style="margin-top:0;">
+          <div class="section-note">收入欄位也會自動幫你加上小 i 說明。</div>
+          <button type="button" class="ghost-btn small-btn" onclick="window.ClientIntakeApp.addIncomeRow()">新增收入</button>
+        </div>
+        <div id="incomeRows" class="row-list"></div>
+      </div>
+
+      <div class="sub-card" style="margin-top:14px;">
+        <div class="section-toolbar">
+          <h3>支出摘要</h3>
+          <div class="section-note">這裡先抓固定每月支出。若有扶養、稅金或特殊支出，可先寫在顧問備註。</div>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <label for="essentialExpense" data-help-key="必要生活支出 / 月">必要生活支出 / 月</label>
+            <input id="essentialExpense" type="number" min="0" step="1" value="0">
+          </div>
+          <div class="summary-card">
+            <label for="discretionaryExpense" data-help-key="彈性生活支出 / 月">彈性生活支出 / 月</label>
+            <input id="discretionaryExpense" type="number" min="0" step="1" value="0">
+          </div>
+          <div class="summary-card">
+            <label for="monthlyMedicalExpense" data-help-key="醫療支出 / 月">醫療支出 / 月</label>
+            <input id="monthlyMedicalExpense" type="number" min="0" step="1" value="0">
+          </div>
+          <div class="summary-card">
+            <label for="monthlyCareExpense" data-help-key="照護支出 / 月">照護支出 / 月</label>
+            <input id="monthlyCareExpense" type="number" min="0" step="1" value="0">
+          </div>
+          <div class="summary-card">
+            <label for="monthlyPremiumExpense" data-help-key="保費 / 月">保費 / 月</label>
+            <input id="monthlyPremiumExpense" type="number" min="0" step="1" value="0">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="intake-section card">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">4. 檢查與送出</h2>
+          <div class="section-subtitle">填完後先儲存草稿，再送交顧問版產出報表。顧問版會先算數字，再切客戶版呈現。</div>
+        </div>
+        <span class="section-tag">送出</span>
+      </div>
+      <div class="intake-actions">
+        <button type="button" class="ghost-btn small-btn" onclick="window.ClientIntakeApp.saveDraft()">儲存草稿</button>
+        <button type="button" class="ghost-btn small-btn" onclick="window.ClientIntakeApp.submitToAdvisor()">送交顧問版</button>
+      </div>
+      <div class="intake-footer">
+        <div class="intake-footnote">送交後，顧問版會讀取同一份草稿。若沒有報表快照，客戶版會先顯示空狀態。</div>
+        <div class="intake-footnote">客戶頁可以列印與輸出 PDF，顯示的是顧問版產出的同一份結果。</div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="client_intake.js"></script>
+</body>
+</html>
