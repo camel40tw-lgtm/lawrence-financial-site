@@ -9,6 +9,8 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| — | 2026-08-02 | 新增投資不動產規劃平台（property-invest/，五步驟精靈：購屋能力／房貸／出租／出售／IRR，三情境＋六壓力測試），整合進 tools.html |
+| — | 2026-08-01 | 新增保單現金流與年化報酬率試算工具（policy-irr/，IRR／XIRR 引擎，保證／非保證雙軌），整合進 tools.html |
 | — | 2026-07-31 | 部署退休規劃顧問版試算器V2（calculator-v2/，多頁面 App，新增 Bengen/Guyton-Klinger/三桶金提領策略），整合進 tools.html |
 | — | 2026-07-31 | 新增 MBTI 職場性格測驗工具（mbti-quiz.html），套用統一美術規格並整合進 tools.html |
 | `v10` Tag | 2026-04-11 | 網站 v10 基準線：完成 SEO、暗模式、退休試算器整合 |
@@ -26,6 +28,40 @@
 ## 詳細記錄
 
 ---
+
+### [新增] 投資不動產規劃平台上線 — 2026-08-02
+
+**類型**：Feature
+
+**來源**：使用者提供「投資不動產規劃平台_MVP產品規格書.md」，要求依站台美術規格建置在 tools.html 之下。開工前先提出規格審查與優化建議並取得使用者確認：技術棧採原生 JS（放棄規格書建議的 Next.js/React/後端資料庫）、金額精度採原生 Number＋延遲取整（不引入 Decimal.js）、UI 採五步驟 wizard（沿用 calculator-v2 既有分步表單模式）；並依使用者指示將規格書 2.2 節原本排除的「分段利率」「提前還款」納入本次範圍（抵利型房貸維持排除）。
+
+**執行內容**：
+- 新增 `property-invest/` 目錄：`property_calc_engine.js`（純函式計算引擎：購屋能力 FR-A、三種房貸攤還法＋二段式利率＋提前還款 FR-L、出租營運 FR-R、增值出售 FR-S、綜合報酬 IRR/ROI/EquityMultiple FR-I、三情境＋六壓力測試）、`property_invest_ui.js`（五步驟 wizard 控制器）、`property_invest_style.css`（沿用 `design-tokens.css`）、`index.html`
+- 計算引擎精度策略：全程原生 `Number`、絕不中間取整，房貸攤還表每期用「期初餘額」逐期計算、最後一期本金直接設為期初餘額本身，確保期末餘額精確為 0
+- `test/property_calc_engine.test.js`：涵蓋規格書第 13 章全部 15 項測試案例（TC-A01/A02、TC-L01～L05、TC-R01/R02、TC-S01/S02、TC-I01～I03、TC-V01）＋ 3 項擴充範圍迴歸測試（二段利率、提前還款兩種模式），共 18 項，`node property-invest/test/property_calc_engine.test.js` 可直接執行，不需 npm install
+- PDF 報告（jsPDF＋html2canvas，沿用 policy-irr 已驗證做法）、CSV 匯出、本機儲存（localStorage）、三情境比較表、法規提示區塊（16.2 節央行規則提示，原樣引用未自行驗證，標註資料更新日期）
+- `tools.html` 新增「投資不動產規劃平台」卡片；`sitemap.xml` 新增 `property-invest/`
+
+**驗證**：`node --check` 全部 JS 檔案通過；引擎測試 18/18 通過；本機起 `python -m http.server` 以 Playwright 逐步驟實測五個步驟＋PDF／CSV 匯出／深色模式／手機版。過程中發現並修正兩個真實 bug：① 步驟五分析結果原本會直接白屏（`scenarioResults` 存取路徑多套一層 `.result`，undefined 存取）；② Chart.js 顏色在圖表建立當下就寫死，不會隨 `[data-theme]` 屬性即時重繪，切換深色模式後圖表文字會用舊主題顏色留在畫面上變成看不見——已改用 `MutationObserver` 監聽主題切換即時重繪圖表修正。
+
+**明確跳過／待辦**：抵利型房貸（規格書附錄 B 僅預留資料結構，未串接）；提前還款在寬限期間內會被略過不生效（僅寬限期結束後才套用，未在畫面上明講）；P01「快速試算／專業試算」雙模式未做，直接做成單一完整五步驟流程；深色模式圖表即時重繪的修正尚未回頭套用到 `policy-irr/`（該工具已交付驗收，此次不在範圍內）。
+
+### [新增] 保單現金流與年化報酬率試算工具上線 — 2026-08-01
+
+**類型**：Feature
+
+**來源**：使用者提供「保單現金價值與IRR試算工具_產品規格書.md」，要求依站台美術規格建置在 tools.html 之下。開工前先提出規格審查與優化建議並取得使用者確認：技術棧採原生 JS（放棄規格書建議的 React/Next.js/TypeScript/Tailwind）、範疇聚焦 MVP＋精選第二階段功能（雙軌 IRR、XIRR、三情境、圖表），不做分享連結（與站台既有隱私聲明衝突）、PDF 精緻報告與 Excel 上傳等列為後續優化方向，經使用者後續指示追加實作。
+
+**執行內容**：
+- 新增 `policy-irr/` 目錄：`irr_engine.js`（IRR／XIRR 純函式引擎：粗掃描定位變號區間→二分法收斂→Newton-Raphson 拋光，範圍 -99.99%～1000%，容許誤差 1e-8）、`policy_irr_ui.js`、`policy_irr_style.css`、`index.html`
+- 核心功能：年度現金流輸入表、保證／含非保證利益雙軌 IRR、解約金是否已包含當年度領回三種模式、三情境比較、非保證利益實現比例滑桿、各年度解約比較表、三張 Chart.js 圖表、名目／複利回本年度、CSV 匯出、本機儲存
+- `test/irr_engine.test.js`：涵蓋規格書第 14 章驗收案例（單筆投入、無解、多重 IRR、XIRR）＋跳年現金流迴歸測試
+- 後續追加：批次填入改正式表單彈窗（原為 `prompt()`）、CSV 檔案上傳、PDF 報告（jsPDF＋html2canvas，中文以 html2canvas 截圖繞過 jsPDF 不支援中文字型的限制，JPEG 壓縮將檔案從 28.8MB 降到 446KB）、效能優化（逐年序列整份渲染只算一次，IRR 呼叫次數從約 240 次降到 60 次）
+- `tools.html` 新增「保單現金流與年化報酬率試算工具」卡片；`sitemap.xml` 新增 `policy-irr/`
+
+**驗證**：`node --check` 全部 JS 檔案通過；引擎測試全數通過；本機起 `python -m http.server` 以 Playwright 實測。過程中發現並修正兩個真實 bug：① 保單年度跳年（例如只填第 0、10 年）時，IRR 計算誤把「第 2 筆現金流」當成「第 2 年」折現，導致 IRR 嚴重失真（曾算出 21.9% 而非正確的 2%）——已改用實際 `policyYear` 折現；② 深色模式下多處文字使用 `--navy-900` 直接當文字色，但 `design-tokens.css` 的深色模式區塊未覆寫此變數，導致深色底上文字幾乎看不見——已改用區域變數 `--pirr-ink`/`--pirr-accent` 依主題切換。
+
+**明確跳過／待辦**：分享連結（與「資料只留在瀏覽器」隱私承諾衝突，且站台無後端）；月／季繳頻率完整支援；深色模式圖表即時重繪修正（見上方投資不動產規劃平台條目，尚未回頭套用）。
 
 ### [新增] 退休規劃顧問版試算器V2 部署上線 — 2026-07-31
 

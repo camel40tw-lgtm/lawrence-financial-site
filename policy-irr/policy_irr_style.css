@@ -1,0 +1,257 @@
+/* ─────────────────────────────────────────────────────────────
+   保單現金流與年化報酬率試算工具 — 樣式
+   全部顏色／字體／圓角／陰影走 assets/design-tokens.css 的變數，
+   依 DESIGN.md §7 工具頁規範，不另寫死品牌色 hex。
+
+   注意：design-tokens.css 的 [data-theme="dark"] 區塊沒有覆寫
+   --navy-900 / --navy-700 本身（其他頁面是逐一元件寫 dark 覆寫）。
+   本檔用 --pirr-ink / --pirr-accent 兩個區域變數統一處理，
+   深色模式一次性切換，避免深色底上文字看不見。
+   ───────────────────────────────────────────────────────────── */
+
+.pirr-main{
+  background:var(--bg); padding:32px 0 84px;
+  --pirr-ink: var(--navy-900);
+  --pirr-accent: var(--navy-700);
+}
+[data-theme="dark"] .pirr-main{
+  --pirr-ink: var(--text-main);
+  --pirr-accent: var(--amber-500);
+}
+.pirr-container{ max-width:1180px; margin:0 auto; padding:0 20px; }
+
+.pirr-header{ text-align:center; margin-bottom:28px; }
+.pirr-header h1{
+  font-family:var(--font-display); font-weight:600;
+  font-size:clamp(1.6rem,3.6vw,2.4rem); color:var(--pirr-ink);
+  letter-spacing:.02em; line-height:1.25;
+}
+.pirr-header p{ color:var(--slate-700); margin-top:10px; font-size:.95rem; line-height:1.8; max-width:760px; margin-left:auto; margin-right:auto; }
+.pirr-badge{
+  display:inline-block; font-size:.72rem; font-weight:900; letter-spacing:.11em;
+  color:var(--pirr-accent); text-transform:uppercase; margin-bottom:10px;
+}
+
+.pirr-card{
+  background:linear-gradient(180deg,var(--bg-card-grad-start),var(--bg-card-grad-end));
+  border:1px solid var(--line); border-radius:var(--radius-md);
+  box-shadow:var(--shadow-sm); padding:24px 26px; margin-bottom:20px;
+}
+.pirr-card-title{
+  font-family:var(--font-display); font-weight:700; font-size:1.05rem;
+  color:var(--pirr-ink); margin-bottom:16px; padding-bottom:10px;
+  border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.pirr-card-title small{
+  font-family:var(--font-body); font-weight:400; font-size:.78rem; color:var(--slate-500);
+}
+
+/* ── 表單 ─────────────────────────────────── */
+.pirr-field-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px 18px; }
+.pirr-field-grid.cols-3{ grid-template-columns:repeat(3,1fr); }
+.pirr-field{ display:flex; flex-direction:column; gap:6px; }
+.pirr-field label{ font-size:.78rem; font-weight:800; color:var(--pirr-ink); letter-spacing:.03em; }
+.pirr-field .pirr-hint{ font-size:.72rem; color:var(--slate-500); }
+
+.pirr-field input[type="text"],
+.pirr-field input[type="number"],
+.pirr-field input[type="date"],
+.pirr-field select{
+  width:100%; padding:9px 12px; font-size:.9rem; font-family:var(--font-body);
+  border:1px solid var(--line); border-radius:12px; background:var(--white); color:var(--text-main);
+  transition:border-color var(--ease-ui), box-shadow var(--ease-ui);
+}
+.pirr-field input:focus, .pirr-field select:focus{
+  outline:none; border-color:var(--navy-700); box-shadow:0 0 0 3px rgba(53,104,159,.15);
+}
+
+@media (max-width:960px){ .pirr-field-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px){ .pirr-field-grid{ grid-template-columns:1fr; } }
+
+/* ── 工具列 ───────────────────────────────── */
+.pirr-toolbar{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+.pirr-btn{
+  display:inline-flex; align-items:center; gap:6px; padding:9px 16px;
+  border-radius:999px; font-size:.82rem; font-weight:800; letter-spacing:.02em;
+  border:1px solid var(--line-strong); background:var(--white); color:var(--pirr-ink);
+  cursor:pointer; transition:all var(--ease-ui); white-space:nowrap;
+}
+.pirr-btn:hover{ background:var(--surface-accent); border-color:var(--navy-700); transform:translateY(-1px); }
+.pirr-btn-primary{
+  background:linear-gradient(135deg,var(--navy-900),var(--navy-700)); color:#fff; border:none; box-shadow:var(--shadow-sm);
+}
+.pirr-btn-primary:hover{ box-shadow:var(--shadow-md); }
+.pirr-btn-danger{ color:var(--danger); border-color:rgba(220,38,38,.3); }
+.pirr-btn-danger:hover{ background:rgba(220,38,38,.08); }
+.pirr-btn-sm{ padding:5px 10px; font-size:.72rem; }
+
+/* ── 現金流輸入表 ─────────────────────────── */
+.pirr-table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--white); }
+.pirr-table{ width:100%; min-width:920px; border-collapse:collapse; font-family:var(--font-mono); font-size:.82rem; }
+.pirr-table th{
+  position:sticky; top:0; background:var(--bg-soft); color:var(--pirr-ink); font-family:var(--font-body);
+  font-weight:800; font-size:.74rem; letter-spacing:.03em; text-align:right; padding:10px 8px; white-space:nowrap;
+  border-bottom:1px solid var(--line-strong);
+}
+.pirr-table th:first-child, .pirr-table td:first-child{ text-align:center; }
+.pirr-table td{ padding:4px 6px; border-bottom:1px solid var(--line); text-align:right; vertical-align:middle; }
+.pirr-table tr:last-child td{ border-bottom:none; }
+.pirr-table input{
+  width:100%; min-width:88px; padding:6px 8px; text-align:right; font-family:var(--font-mono); font-size:.82rem;
+  border:1px solid transparent; border-radius:8px; background:transparent; color:var(--text-main);
+}
+.pirr-table input:hover{ background:var(--bg-soft); }
+.pirr-table input:focus{ outline:none; border-color:var(--navy-700); background:var(--white); box-shadow:0 0 0 2px rgba(53,104,159,.15); }
+.pirr-table input[readonly]{ color:var(--slate-500); background:transparent; }
+.pirr-table .pirr-note-input{ text-align:left; min-width:110px; }
+.pirr-table .pirr-row-actions{ display:flex; gap:4px; justify-content:center; }
+.pirr-table .pirr-icon-btn{
+  border:none; background:transparent; color:var(--slate-500); cursor:pointer; padding:4px 6px; border-radius:8px; font-size:.85rem;
+}
+.pirr-table .pirr-icon-btn:hover{ background:var(--bg-soft); color:var(--danger); }
+.pirr-net-negative{ color:var(--danger); }
+.pirr-net-positive{ color:var(--success); }
+.pirr-row-flow-out td:nth-child(2){ box-shadow:inset 3px 0 0 var(--danger); }
+
+.pirr-flow-note{
+  font-size:.78rem; color:var(--slate-700); background:var(--bg-soft); border:1px solid var(--line);
+  border-radius:12px; padding:10px 14px; margin:12px 0 16px; line-height:1.7;
+}
+
+/* ── 設定行（解約金是否含當年給付 / 折現率 / 解約年度） ── */
+.pirr-settings-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:18px; }
+@media (max-width:760px){ .pirr-settings-row{ grid-template-columns:1fr; } }
+
+/* ── 非保證利益滑桿 ───────────────────────── */
+.pirr-slider-row{ display:flex; align-items:center; gap:14px; margin-top:6px; }
+.pirr-slider-row input[type="range"]{ flex:1; accent-color:var(--navy-700); }
+.pirr-slider-value{ font-family:var(--font-mono); font-weight:800; color:var(--pirr-accent); min-width:52px; text-align:right; }
+
+/* ── 結果指標卡 ───────────────────────────── */
+.pirr-stat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+@media (max-width:960px){ .pirr-stat-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px){ .pirr-stat-grid{ grid-template-columns:1fr; } }
+
+.pirr-stat{
+  border:1px solid var(--line); border-radius:var(--radius-sm); padding:16px 18px; background:var(--white);
+}
+.pirr-stat-label{ font-size:.76rem; color:var(--slate-500); font-weight:700; letter-spacing:.03em; margin-bottom:6px; }
+.pirr-stat-value{ font-family:var(--font-mono); font-size:1.32rem; font-weight:700; color:var(--pirr-ink); }
+.pirr-stat-value.amber{ color:var(--amber-600); }
+.pirr-stat-value.danger{ color:var(--danger); }
+.pirr-stat-value.success{ color:var(--success); }
+.pirr-stat-sub{ font-size:.74rem; color:var(--slate-500); margin-top:4px; }
+
+.pirr-dual-irr{
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; align-items:center;
+  background:var(--surface-accent); border:1px solid var(--surface-accent-border); border-radius:var(--radius-sm);
+  padding:20px 22px; margin-bottom:18px;
+}
+@media (max-width:760px){ .pirr-dual-irr{ grid-template-columns:1fr; } }
+.pirr-dual-irr .pirr-stat{ background:var(--white); }
+
+.pirr-scenario-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px; }
+@media (max-width:760px){ .pirr-scenario-grid{ grid-template-columns:1fr; } }
+.pirr-scenario-card{ border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-align:center; background:var(--white); }
+.pirr-scenario-card .name{ font-size:.78rem; font-weight:800; color:var(--slate-700); margin-bottom:6px; }
+.pirr-scenario-card .val{ font-family:var(--font-mono); font-size:1.2rem; font-weight:700; color:var(--pirr-ink); }
+
+/* ── 警示區 ───────────────────────────────── */
+.pirr-alert{ border-radius:12px; padding:12px 16px; font-size:.84rem; line-height:1.7; margin-bottom:10px; border:1px solid; }
+.pirr-alert-warning{ background:var(--amber-100); border-color:rgba(217,119,6,.35); color:var(--warning); }
+.pirr-alert-danger{ background:rgba(220,38,38,.08); border-color:rgba(220,38,38,.3); color:var(--danger); }
+.pirr-alert-info{ background:var(--surface-accent); border-color:var(--surface-accent-border); color:var(--pirr-ink); }
+
+/* ── 年度比較表 ───────────────────────────── */
+.pirr-year-table{ width:100%; border-collapse:collapse; font-size:.82rem; font-family:var(--font-mono); }
+.pirr-year-table th{
+  background:var(--bg-soft); color:var(--pirr-ink); font-family:var(--font-body); font-weight:800; font-size:.74rem;
+  padding:10px 8px; text-align:right; border-bottom:1px solid var(--line-strong); white-space:nowrap;
+}
+.pirr-year-table th:first-child, .pirr-year-table td:first-child{ text-align:center; }
+.pirr-year-table td{ padding:8px; text-align:right; border-bottom:1px solid var(--line); white-space:nowrap; }
+.pirr-year-table tr{ cursor:pointer; transition:background var(--ease-ui); }
+.pirr-year-table tr:hover{ background:var(--bg-soft); }
+.pirr-year-table tr.active{ background:var(--surface-accent); }
+.pirr-year-table tr.active td:first-child{ font-weight:800; color:var(--pirr-accent); }
+.pirr-year-table .breakeven{ color:var(--success); font-weight:700; }
+
+/* ── 圖表 ─────────────────────────────────── */
+.pirr-chart-wrap{ position:relative; height:320px; }
+
+/* ── 免責聲明 ─────────────────────────────── */
+.pirr-disclaimer{
+  background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--radius-sm);
+  padding:18px 20px; font-size:.8rem; line-height:1.85; color:var(--slate-700); margin-top:24px;
+}
+.pirr-disclaimer strong{ color:var(--pirr-ink); }
+
+/* ── 貼上資料 modal ───────────────────────── */
+.pirr-modal-backdrop{
+  position:fixed; inset:0; background:rgba(11,29,51,.55); display:flex; align-items:center; justify-content:center;
+  padding:20px; z-index:200;
+}
+.pirr-modal{
+  background:var(--white); border-radius:var(--radius-md); box-shadow:var(--shadow-lg); max-width:640px; width:100%;
+  padding:26px 28px; max-height:86vh; overflow:auto;
+}
+.pirr-modal h3{ font-family:var(--font-display); font-size:1.15rem; color:var(--pirr-ink); margin-bottom:10px; }
+.pirr-modal p{ font-size:.82rem; color:var(--slate-700); line-height:1.7; margin-bottom:10px; }
+.pirr-modal textarea{
+  width:100%; min-height:160px; font-family:var(--font-mono); font-size:.82rem; padding:10px 12px;
+  border:1px solid var(--line); border-radius:12px; resize:vertical; background:var(--white); color:var(--text-main);
+}
+.pirr-modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:16px; }
+
+/* ── 響應式：手機把輸入表轉成卡片 ─────────── */
+@media (max-width:720px){
+  .pirr-table thead{ display:none; }
+  .pirr-table, .pirr-table tbody, .pirr-table tr, .pirr-table td{ display:block; width:100%; }
+  .pirr-table{ min-width:0; }
+  .pirr-table tr{
+    border:1px solid var(--line); border-radius:12px; margin-bottom:10px; padding:10px 12px; background:var(--white);
+  }
+  .pirr-table td{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; border:none; padding:6px 0; text-align:right;
+  }
+  .pirr-table td::before{
+    content:attr(data-label); font-family:var(--font-body); font-weight:700; font-size:.74rem; color:var(--slate-500);
+    text-align:left; flex-shrink:0;
+  }
+  .pirr-table .pirr-row-actions{ justify-content:flex-end; }
+}
+
+.hidden{ display:none !important; }
+.break-inside-avoid{ break-inside:avoid; }
+
+/* ── PDF 報告排版頁（html2canvas 擷取用）───────────────────
+   固定用明確的淺色 hex，不吃 CSS 變數／深色模式，
+   確保匯出的 PDF 永遠是列印穩定的淺色排版。 */
+#pdfReportRoot{ position:fixed; left:-10000px; top:0; width:780px; z-index:-1; }
+.pirr-pdf-page{
+  width:780px; padding:40px; background:#ffffff; color:#1a2433;
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; box-sizing:border-box;
+}
+.pirr-pdf-page h2{
+  font-family:"Noto Serif TC",serif; font-size:20px; font-weight:700; color:#102947;
+  margin:0 0 18px; padding-bottom:10px; border-bottom:2px solid #244f83;
+}
+.pirr-pdf-kv{ display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+.pirr-pdf-kv div{ display:flex; justify-content:space-between; gap:10px; border-bottom:1px solid #dbe4ee; padding:8px 0; font-size:13px; }
+.pirr-pdf-kv div span:first-child{ color:#4a586e; }
+.pirr-pdf-kv div span:last-child{ font-weight:700; color:#102947; }
+.pirr-pdf-table{ width:100%; border-collapse:collapse; font-size:11px; }
+.pirr-pdf-table th, .pirr-pdf-table td{ border:1px solid #dbe4ee; padding:5px 6px; text-align:right; }
+.pirr-pdf-table th{ background:#edf3f9; color:#102947; }
+.pirr-pdf-assumptions ul{ margin:0 0 16px 18px; padding:0; }
+.pirr-pdf-assumptions li{ font-size:12px; line-height:1.9; color:#1a2433; }
+.pirr-pdf-assumptions p{ font-size:12px; line-height:1.8; color:#4a586e; margin:0 0 10px; }
+.pirr-pdf-assumptions strong{ color:#102947; }
+
+/* ── 列印 ─────────────────────────────────── */
+@media print{
+  .no-print, .pirr-toolbar, .pirr-modal-backdrop{ display:none !important; }
+  .pirr-main{ padding:0; background:#fff; }
+  .pirr-card{ box-shadow:none; border:1px solid #ccc; break-inside:avoid; }
+  body{ background:#fff; }
+}

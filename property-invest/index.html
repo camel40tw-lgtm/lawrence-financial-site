@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>投資不動產規劃平台｜駱潤生 Lawrence</title>
+  <meta name="description" content="免費投資不動產規劃工具：五步驟評估自備款是否足夠、可負擔房價、房貸攤還、出租現金流、出售回收與整體投資報酬率(IRR)，並提供保守/基準/樂觀三情境與六種壓力測試。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="author" content="駱潤生 Lawrence" />
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0A192F" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" href="https://lawrence-financial-site.pages.dev/property-invest/" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="投資不動產規劃平台｜駱潤生 Lawrence" />
+  <meta property="og:description" content="免費投資不動產規劃工具：五步驟評估自備款是否足夠、可負擔房價、房貸攤還、出租現金流、出售回收與整體投資報酬率(IRR)。" />
+  <meta property="og:url" content="https://lawrence-financial-site.pages.dev/property-invest/" />
+  <meta property="og:site_name" content="駱潤生 Lawrence" />
+  <meta property="og:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="投資不動產規劃平台｜駱潤生 Lawrence" />
+  <meta name="twitter:description" content="免費投資不動產規劃工具：五步驟評估自備款是否足夠、可負擔房價、房貸攤還、出租現金流、出售回收與整體投資報酬率(IRR)。" />
+  <meta name="twitter:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
+  <script>
+    try {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
+  <link rel="stylesheet" href="../assets/styles.css?v=20260412b" />
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "@id":"https://lawrence-financial-site.pages.dev/#professional-service",
+    "name":"駱潤生 Lawrence",
+    "url":"https://lawrence-financial-site.pages.dev/property-invest/",
+    "image":"https://lawrence-financial-site.pages.dev/images/lawrence-profile-standing.jpg",
+    "description":"免費投資不動產規劃工具：五步驟評估自備款、可負擔房價、房貸攤還、出租現金流、出售回收與整體投資報酬率。",
+    "email":"camel40tw@gmail.com",
+    "areaServed":"Taiwan",
+    "inLanguage":"zh-Hant",
+    "sameAs":["https://line.me/ti/p/iaCU1C6Wbl"],
+    "knowsAbout":["CFP®認證理財規劃","高齡金融","信託","資產傳承","保險","財稅整合","不動產投資"],
+    "founder": {
+      "@type":"Person",
+      "name":"駱潤生 Lawrence",
+      "jobTitle":"CFP®認證理財規劃顧問"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="property_invest_style.css?v=20260802a">
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html">
+        <strong>駱潤生 Lawrence</strong>
+        <span>CFP®認證理財規劃顧問｜高齡金融・信託・資產傳承</span>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌓</button>
+        <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="../index.html">首頁</a>
+        <a href="../about.html">關於我</a>
+        <a href="../services.html">服務項目</a>
+        <a href="../articles.html">文章</a>
+        <a href="../tools.html" class="calc-link">📝免費試算</a>
+        <a href="../contact.html">聯絡我</a>
+        <a href="../contact.html#booking" class="nav-cta">預約諮詢</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pinv-main">
+    <div class="pinv-container">
+
+      <div class="pinv-header">
+        <span class="pinv-badge">PROPERTY INVESTMENT PLANNER</span>
+        <h1>投資不動產規劃平台</h1>
+        <p>五個步驟評估：自備款夠不夠、能負擔多少房價、房貸每月要繳多少、租金能否覆蓋房貸、持有數年後出售能拿回多少錢，以及整體投資報酬率（IRR）。所有資料只保留在你的瀏覽器中，不會上傳伺服器；試算結果僅供規劃參考，不代表銀行核貸或投資保證。</p>
+      </div>
+
+      <!-- 五步驟進度指示 -->
+      <div class="pinv-progress no-print" id="progressBar"></div>
+
+      <!-- ══════════ Step 1：購屋能力 ══════════ -->
+      <section class="pinv-step-panel" id="step1" data-step="1">
+        <div class="pinv-card">
+          <div class="pinv-card-title">步驟 1／5　購屋能力</div>
+          <div class="pinv-card-desc">先確認資金與收入，抓出「自備款夠不夠」與「大概能負擔多少房價」。</div>
+
+          <div class="pinv-step-layout">
+            <div>
+              <div class="pinv-section-title">資金與負擔能力</div>
+              <div class="pinv-field-grid">
+                <div class="pinv-field"><label>可動用現金</label><input type="number" id="aAvailableCash" min="0" value="4000000"></div>
+                <div class="pinv-field"><label>緊急預備金</label><input type="number" id="aEmergencyFund" min="0" value="600000"></div>
+                <div class="pinv-field"><label>每月家庭收入</label><input type="number" id="aMonthlyIncome" min="0" value="150000"></div>
+                <div class="pinv-field"><label>每月固定支出</label><input type="number" id="aMonthlyExpense" min="0" value="70000"></div>
+                <div class="pinv-field"><label>其他貸款月付</label><input type="number" id="aOtherDebtPayment" min="0" value="10000"></div>
+                <div class="pinv-field"><label>房貸支出上限率 %</label><input type="number" id="aMortgageBurdenRate" min="0" max="100" step="1" value="30"></div>
+              </div>
+
+              <div class="pinv-section-title">房屋條件</div>
+              <div class="pinv-field-grid">
+                <div class="pinv-field"><label>預計成交價</label><input type="number" id="aPurchasePrice" min="0" value="12000000"></div>
+                <div class="pinv-field"><label>銀行預估鑑價（選填）</label><input type="number" id="aAppraisalValue" min="0" value="11500000"></div>
+                <div class="pinv-field">
+                  <label>貸款計算基礎</label>
+                  <select id="aLoanBaseMethod">
+                    <option value="lower_of_two" selected>成交價與鑑價孰低（建議）</option>
+                    <option value="purchase_price">以成交價計算</option>
+                    <option value="appraisal">以銀行鑑價計算</option>
+                  </select>
+                </div>
+                <div class="pinv-field"><label>預估貸款成數 %</label><input type="number" id="aLtv" min="0" max="100" step="1" value="70"></div>
+                <div class="pinv-field"><label>購屋附加成本（固定金額）</label><input type="number" id="aAcquisitionFixedCost" min="0" value="500000"></div>
+                <div class="pinv-field"><label>購屋成本率 %（房價比例，選填）</label><input type="number" id="aAcquisitionCostRate" min="0" step="0.1" value="0"></div>
+                <div class="pinv-field"><label>裝潢家具</label><input type="number" id="aRenovationCost" min="0" value="600000"></div>
+                <div class="pinv-field"><label>最高預算上限（選填）</label><input type="number" id="aMaxPurchaseBudget" min="0" value=""></div>
+              </div>
+            </div>
+
+            <div class="pinv-summary-panel">
+              <div class="pinv-summary-title">即時計算摘要</div>
+              <div id="alertZoneStep1"></div>
+              <div class="pinv-kv"><span class="label">貸款基礎</span><span class="value" id="sumLoanBase">—</span></div>
+              <div class="pinv-kv"><span class="label">預估貸款金額</span><span class="value" id="sumEstimatedLoan">—</span></div>
+              <div class="pinv-kv"><span class="label">所需自備款</span><span class="value lg" id="sumRequiredDownPayment">—</span></div>
+              <div class="pinv-kv"><span class="label">自備款狀態</span><span class="value" id="sumDownPaymentStatus">—</span></div>
+              <div class="pinv-kv"><span class="label">房貸最高可負擔</span><span class="value" id="sumMaxMonthlyPayment">—</span></div>
+              <div class="pinv-kv"><span class="label">資金限制房價</span><span class="value" id="sumCashLimitedPrice">—</span></div>
+              <div class="pinv-kv"><span class="label">月付限制房價</span><span class="value" id="sumPmtLimitedPrice">—</span></div>
+              <div class="pinv-kv"><span class="label">建議可負擔房價</span><span class="value lg" id="sumAffordablePrice">—</span></div>
+            </div>
+          </div>
+
+          <div class="pinv-step-nav no-print">
+            <span></span>
+            <button class="pinv-btn pinv-btn-primary" data-goto="2" type="button">下一步 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ Step 2：房貸規劃 ══════════ -->
+      <section class="pinv-step-panel hidden" id="step2" data-step="2">
+        <div class="pinv-card">
+          <div class="pinv-card-title">步驟 2／5　房貸規劃</div>
+          <div class="pinv-card-desc">貸款金額預設帶入步驟一算出的「預估貸款金額」，也可以手動指定。</div>
+
+          <div class="pinv-step-layout">
+            <div>
+              <div class="pinv-section-title">貸款條件</div>
+              <label class="pinv-checkbox-row"><input type="checkbox" id="lManualLoanAmount"> 手動指定貸款金額（不使用步驟一的自動試算值）</label>
+              <div class="pinv-field-grid">
+                <div class="pinv-field"><label>貸款本金</label><input type="number" id="lLoanAmount" min="0" value="8000000" disabled></div>
+                <div class="pinv-field"><label>年利率 %</label><input type="number" id="lAnnualRate" min="0" max="30" step="0.01" value="2.40"></div>
+                <div class="pinv-field"><label>貸款年限</label><input type="number" id="lTermYears" min="1" max="50" value="30"></div>
+              </div>
+
+              <div class="pinv-section-title">還款方式</div>
+              <div class="pinv-radio-row">
+                <label><input type="radio" name="repaymentMethod" value="annuity" checked> 本息平均攤還</label>
+                <label><input type="radio" name="repaymentMethod" value="equal_principal"> 本金平均攤還</label>
+                <label><input type="radio" name="repaymentMethod" value="grace"> 還本寬限期</label>
+              </div>
+              <div class="pinv-field-grid" id="graceFieldWrap" style="display:none">
+                <div class="pinv-field"><label>寬限期（月）</label><input type="number" id="lGraceMonths" min="0" value="24"></div>
+              </div>
+
+              <label class="pinv-checkbox-row"><input type="checkbox" id="lRateStage2Enabled"> 啟用二段式利率（前 N 個月固定，之後轉第二段利率）</label>
+              <div class="pinv-field-grid cols-3 hidden" id="rateStage2Wrap">
+                <div class="pinv-field"><label>第一段適用月數</label><input type="number" id="lRateStage2ChangeMonth" min="1" value="36"></div>
+                <div class="pinv-field"><label>第二段年利率 %</label><input type="number" id="lRateStage2Rate" min="0" max="30" step="0.01" value="2.6"></div>
+                <div class="pinv-field"></div>
+              </div>
+
+              <div class="pinv-section-title">提前還款（選填，不含違約金試算）</div>
+              <div id="prepaymentList"></div>
+              <button class="pinv-btn pinv-btn-sm no-print" id="btnAddPrepayment" type="button">＋ 新增一筆提前還款</button>
+
+              <div class="pinv-toolbar no-print" style="margin-top:18px">
+                <button class="pinv-btn" id="btnToggleSchedule" type="button">查看完整攤還表</button>
+              </div>
+              <div class="pinv-table-wrap hidden" id="scheduleTableWrap">
+                <table class="pinv-table" id="scheduleTable">
+                  <thead><tr><th>期數</th><th>期初餘額</th><th>月付金</th><th>本金</th><th>利息</th><th>提前還款</th><th>期末餘額</th></tr></thead>
+                  <tbody id="scheduleTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pinv-summary-panel">
+              <div class="pinv-summary-title">還款摘要</div>
+              <div id="alertZoneStep2"></div>
+              <div class="pinv-kv"><span class="label">每月還款（首期）</span><span class="value lg" id="sumMonthlyPayment">—</span></div>
+              <div class="pinv-kv"><span class="label">總利息</span><span class="value" id="sumTotalInterest">—</span></div>
+              <div class="pinv-kv"><span class="label">貸款期數</span><span class="value" id="sumActualTermMonths">—</span></div>
+              <div class="pinv-kv"><span class="label">出售年度貸款餘額</span><span class="value" id="sumBalanceAtSale">—</span></div>
+              <div class="pinv-kv"><span class="label">月付壓力</span><span class="value" id="sumBurdenStatus">—</span></div>
+            </div>
+          </div>
+
+          <div class="pinv-step-nav no-print">
+            <button class="pinv-btn" data-goto="1" type="button">← 上一步</button>
+            <button class="pinv-btn pinv-btn-primary" data-goto="3" type="button">下一步 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ Step 3：出租營運 ══════════ -->
+      <section class="pinv-step-panel hidden" id="step3" data-step="3">
+        <div class="pinv-card">
+          <div class="pinv-card-title">步驟 3／5　出租報酬</div>
+          <div class="pinv-card-desc">評估租金收入能否覆蓋營運費用與房貸。</div>
+
+          <div class="pinv-step-layout">
+            <div>
+              <div class="pinv-section-title">租金收入</div>
+              <div class="pinv-field-grid">
+                <div class="pinv-field"><label>月租金</label><input type="number" id="rMonthlyRent" min="0" value="30000"></div>
+                <div class="pinv-field"><label>車位租金</label><input type="number" id="rParkingRent" min="0" value="0"></div>
+                <div class="pinv-field"><label>其他月收入</label><input type="number" id="rOtherMonthlyIncome" min="0" value="0"></div>
+                <div class="pinv-field"><label>空置率 %</label><input type="number" id="rVacancyRate" min="0" max="100" step="1" value="5"></div>
+                <div class="pinv-field"><label>欠租損失（年）</label><input type="number" id="rBadDebtLoss" min="0" value="0"></div>
+                <div class="pinv-field"><label>租金年成長率 %</label><input type="number" id="rRentGrowthRate" min="0" step="0.1" value="1"></div>
+              </div>
+
+              <div class="pinv-section-title">營運費用（每年）</div>
+              <div id="operatingCostList"></div>
+              <button class="pinv-btn pinv-btn-sm no-print" id="btnAddOperatingCost" type="button">＋ 新增一筆費用</button>
+            </div>
+
+            <div class="pinv-summary-panel">
+              <div class="pinv-summary-title">年度結果（第 1 年）</div>
+              <div id="alertZoneStep3"></div>
+              <div class="pinv-kv"><span class="label">年度潛在租金</span><span class="value" id="sumPotentialRent">—</span></div>
+              <div class="pinv-kv"><span class="label">空置損失</span><span class="value danger" id="sumVacancyLoss">—</span></div>
+              <div class="pinv-kv"><span class="label">有效租金收入</span><span class="value" id="sumEffectiveRent">—</span></div>
+              <div class="pinv-kv"><span class="label">營運費用</span><span class="value danger" id="sumOperatingCosts">—</span></div>
+              <div class="pinv-kv"><span class="label">NOI</span><span class="value lg" id="sumNoi">—</span></div>
+              <div class="pinv-kv"><span class="label">房貸本息</span><span class="value danger" id="sumMortgagePI">—</span></div>
+              <div class="pinv-kv"><span class="label">稅前現金流</span><span class="value lg" id="sumPreTaxCashFlow">—</span></div>
+              <div class="pinv-kv"><span class="label">毛租金報酬率</span><span class="value" id="sumGrossYield">—</span></div>
+              <div class="pinv-kv"><span class="label">Cap Rate</span><span class="value" id="sumCapRate">—</span></div>
+              <div class="pinv-kv"><span class="label">DSCR</span><span class="value" id="sumDscr">—</span></div>
+            </div>
+          </div>
+
+          <div class="pinv-step-nav no-print">
+            <button class="pinv-btn" data-goto="2" type="button">← 上一步</button>
+            <button class="pinv-btn pinv-btn-primary" data-goto="4" type="button">下一步 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ Step 4：增值與出售 ══════════ -->
+      <section class="pinv-step-panel hidden" id="step4" data-step="4">
+        <div class="pinv-card">
+          <div class="pinv-card-title">步驟 4／5　增值與出售</div>
+          <div class="pinv-card-desc">設定持有年限與增值假設，估算出售時可以拿回多少錢。</div>
+
+          <div class="pinv-step-layout">
+            <div>
+              <div class="pinv-section-title">持有設定</div>
+              <div class="pinv-field-grid">
+                <div class="pinv-field"><label>持有期間（年）</label><input type="number" id="sHoldingYears" min="1" max="40" value="5"></div>
+                <div class="pinv-field"></div>
+              </div>
+
+              <div class="pinv-section-title">增值方式</div>
+              <div class="pinv-radio-row">
+                <label><input type="radio" name="appreciationMethod" value="fixed_rate" checked> 固定年增值率</label>
+                <label><input type="radio" name="appreciationMethod" value="target_price"> 指定出售價格</label>
+              </div>
+              <div class="pinv-field-grid">
+                <div class="pinv-field" id="appreciationRateWrap"><label>房價年增值率 %</label><input type="number" id="sAppreciationRate" min="-20" max="20" step="0.1" value="2"></div>
+                <div class="pinv-field hidden" id="targetPriceWrap"><label>指定出售價格</label><input type="number" id="sTargetSalePrice" min="0" value=""></div>
+              </div>
+
+              <div class="pinv-section-title">出售成本</div>
+              <div class="pinv-field-grid">
+                <div class="pinv-field"><label>仲介與其他費用率 %</label><input type="number" id="sSaleCostRate" min="0" max="20" step="0.1" value="4"></div>
+                <div class="pinv-field"><label>固定出售費用</label><input type="number" id="sFixedSaleCost" min="0" value="0"></div>
+                <div class="pinv-field"><label>稅費估算（選填，使用者自行輸入）</label><input type="number" id="sSaleTaxInput" min="0" value="0"></div>
+              </div>
+            </div>
+
+            <div class="pinv-summary-panel">
+              <div class="pinv-summary-title" id="saleSummaryTitle">出售摘要</div>
+              <div id="alertZoneStep4"></div>
+              <div class="pinv-kv"><span class="label">預估出售價格</span><span class="value lg" id="sumSalePrice">—</span></div>
+              <div class="pinv-kv"><span class="label">出售成本</span><span class="value danger" id="sumSaleCost">—</span></div>
+              <div class="pinv-kv"><span class="label">當時貸款餘額</span><span class="value" id="sumLoanBalanceAtSale">—</span></div>
+              <div class="pinv-kv"><span class="label">出售淨回收</span><span class="value lg success" id="sumNetSaleProceeds">—</span></div>
+              <div class="pinv-kv"><span class="label">房屋淨值</span><span class="value" id="sumHomeEquity">—</span></div>
+            </div>
+          </div>
+
+          <div class="pinv-step-nav no-print">
+            <button class="pinv-btn" data-goto="3" type="button">← 上一步</button>
+            <button class="pinv-btn pinv-btn-primary" data-goto="5" type="button">看結果 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ Step 5：分析結果 ══════════ -->
+      <section class="pinv-step-panel hidden" id="step5" data-step="5">
+        <div class="pinv-card">
+          <div class="pinv-card-title">投資分析結果</div>
+
+          <div class="pinv-scenario-tabs no-print" id="scenarioTabs">
+            <button class="pinv-scenario-tab" data-scenario="conservative" type="button">保守</button>
+            <button class="pinv-scenario-tab active" data-scenario="base" type="button">基準</button>
+            <button class="pinv-scenario-tab" data-scenario="optimistic" type="button">樂觀</button>
+          </div>
+
+          <div class="pinv-stat-grid">
+            <div class="pinv-stat"><div class="pinv-stat-label">自備款</div><div class="pinv-stat-value" id="statDownPayment">—</div></div>
+            <div class="pinv-stat"><div class="pinv-stat-label">每月房貸</div><div class="pinv-stat-value" id="statMonthlyPayment">—</div></div>
+            <div class="pinv-stat"><div class="pinv-stat-label">每月出租現金流</div><div class="pinv-stat-value" id="statMonthlyCashFlow">—</div></div>
+            <div class="pinv-stat"><div class="pinv-stat-label">持有期間 IRR</div><div class="pinv-stat-value" id="statIrr">—</div></div>
+          </div>
+
+          <div class="pinv-section-title">三情境比較</div>
+          <div class="pinv-table-wrap">
+            <table class="pinv-table" style="min-width:0">
+              <thead><tr><th>情境</th><th>每月現金流</th><th>出售淨回收</th><th>IRR</th><th>ROI</th><th>權益倍數</th></tr></thead>
+              <tbody id="scenarioCompareBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pinv-card break-inside-avoid">
+          <div class="pinv-card-title">房屋市值與貸款餘額</div>
+          <div class="pinv-chart-wrap"><canvas id="chartEquity"></canvas></div>
+        </div>
+        <div class="pinv-card break-inside-avoid">
+          <div class="pinv-card-title">年度現金流量</div>
+          <div class="pinv-chart-wrap"><canvas id="chartCashflow"></canvas></div>
+        </div>
+
+        <div class="pinv-card">
+          <div class="pinv-judge-grid">
+            <div class="pinv-judge-box">
+              <h4>投資判讀</h4>
+              <ul id="judgeList"></ul>
+            </div>
+            <div class="pinv-judge-box">
+              <h4>風險提示</h4>
+              <ul id="riskList"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="pinv-card">
+          <div class="pinv-card-title">壓力測試</div>
+          <div class="pinv-card-desc">在基準情境下，各別套用一個不利假設，觀察對現金流與 IRR 的影響。</div>
+          <div class="pinv-stress-grid" id="stressGrid"></div>
+        </div>
+
+        <div class="pinv-card">
+          <div class="pinv-card-title">法規提示</div>
+          <div class="pinv-card-desc">資料更新日期：2026-08-02。以下僅為一般性提示，實際核貸條件以金融機構審核與正式契約為準。</div>
+          <table class="pinv-reg-table">
+            <thead><tr><th>情況</th><th>一般性限制提示</th></tr></thead>
+            <tbody>
+              <tr><td>公司法人購置住宅</td><td>不得有寬限期，最高貸款成數三成</td></tr>
+              <tr><td>自然人購置高價住宅</td><td>原則上比照公司法人限制</td></tr>
+              <tr><td>自然人無房貸但已有房屋</td><td>不得有寬限期</td></tr>
+              <tr><td>自然人已有一戶房貸</td><td>不得有寬限期，最高貸款成數六成</td></tr>
+              <tr><td>自然人已有二戶以上房貸</td><td>不得有寬限期，最高貸款成數三成</td></tr>
+            </tbody>
+          </table>
+          <div id="alertZoneRegulatory" style="margin-top:14px"></div>
+        </div>
+
+        <div class="pinv-toolbar no-print">
+          <button class="pinv-btn" data-goto="4" type="button">← 上一步</button>
+          <button class="pinv-btn" id="btnSave" type="button">💾 儲存草稿（本機）</button>
+          <button class="pinv-btn" id="btnLoad" type="button">載入已儲存草稿</button>
+          <button class="pinv-btn" id="btnExportCsv" type="button">匯出 CSV</button>
+          <button class="pinv-btn" id="btnPrint" type="button">列印</button>
+          <button class="pinv-btn pinv-btn-primary" id="btnGeneratePdf" type="button">📄 下載報告（PDF）</button>
+          <button class="pinv-btn pinv-btn-danger" id="btnReset" type="button">重新試算</button>
+        </div>
+
+        <div class="pinv-disclaimer">
+          <p><strong>非產品承諾：</strong>本平台不宣稱使用者一定可以取得試算中的貸款金額，試算結果不代表銀行鑑價或核貸結果，房價增值率不代表未來市場預測，試算稅費不是使用者最終稅額，IRR 亦非保證報酬。</p>
+          <p style="margin-top:8px">本平台提供的貸款成數、寬限期及房貸條件僅供財務規劃參考。實際適用規範、房貸戶數認定、擔保品鑑價、利率與核貸結果，應以中央銀行最新規定、承貸金融機構審核及正式貸款契約為準。DSCR、Cap Rate 等判讀僅作規劃提示，不代表銀行授信門檻，亦未涵蓋房地合一稅、土地增值稅、租賃所得稅等稅負計算。</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- PDF 報告用的隱藏排版頁（html2canvas 擷取用） -->
+  <div id="pdfReportRoot" aria-hidden="true">
+    <div class="pinv-pdf-page" id="pdfPage1">
+      <h2>試算摘要</h2>
+      <div id="pdfSummaryContent"></div>
+    </div>
+    <div class="pinv-pdf-page" id="pdfPage2">
+      <h2>房貸攤還表（年度彙總）</h2>
+      <div id="pdfScheduleContent"></div>
+    </div>
+    <div class="pinv-pdf-page" id="pdfPage3">
+      <h2>圖表</h2>
+      <div id="pdfChartsContent"></div>
+    </div>
+    <div class="pinv-pdf-page" id="pdfPage4">
+      <h2>假設與聲明</h2>
+      <div id="pdfAssumptionsContent" class="pinv-pdf-assumptions"></div>
+    </div>
+  </div>
+
+  <div class="floating-actions">
+    <a class="fab fab-line" href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">
+      <span class="fab-label">加入 LINE</span>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.9 10.6c0-4.4-4-8-8.9-8S3 6.2 3 10.6c0 4 3.1 7.3 7.2 7.9.3.1.8.2.9.5.1.2.1.7 0 .9l-.1.8c0 .2-.2.9.8.5 1-.4 5.2-3.1 7.1-5.3 1.3-1.4 2-3 2-5.3Zm-12.8 2h-1.7V8.7h1.7v3.9Zm3.1 0H9.5V8.7h1.7v2.3l1.8-2.3h1.8l-2 2.5 2.1 1.4h-2l-1.7-1.2v1.2Zm4 .1c-1.4 0-2.5-.8-2.5-2V8.7h1.7v1.8c0 .4.4.8.9.8s.9-.3.9-.8V8.7H18v2c0 1.2-1.1 2-2.8 2Zm5.1-.1h-3.8V8.7h1.7v2.5h2.1v1.4Z"/></svg>
+    </a>
+    <a class="fab fab-book" href="../contact.html#booking">
+      <span class="fab-label">立即預約</span>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v13a3 3 0 0 0 3 3h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H6a1 1 0 0 1-1-1V10h14v10Zm0-12H5V6h14v2Zm-9 5h2v2h-2v-2Zm4 0h2v2h-2v-2Z"/></svg>
+    </a>
+  </div>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <strong>駱潤生 Lawrence</strong>
+        <p>CFP®認證理財規劃顧問<br>高齡金融・信託・資產傳承</p>
+      </div>
+      <div class="footer-nav">
+        <strong>網站導覽</strong>
+        <a href="../about.html">關於我</a>
+        <a href="../services.html">服務項目</a>
+        <a href="../articles.html">專業文章</a>
+        <a href="../tools.html">免費試算工具</a>
+      </div>
+      <div class="footer-contact">
+        <strong>聯絡方式</strong>
+        <a href="mailto:camel40tw@gmail.com">camel40tw@gmail.com</a>
+        <a href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">LINE 預約諮詢</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div>© 2026 駱潤生 Lawrence. All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <script src="../assets/main.js?v=20260712a" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous" defer></script>
+  <script src="property_calc_engine.js?v=20260802d" defer></script>
+  <script src="property_invest_ui.js?v=20260802d" defer></script>
+</body>
+</html>

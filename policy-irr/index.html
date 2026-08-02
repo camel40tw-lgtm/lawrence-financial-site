@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>保單現金流與年化報酬率試算工具｜駱潤生 Lawrence</title>
+  <meta name="description" content="免費保單現金流試算工具：輸入保費、生存還本金與解約金，換算年化報酬率 IRR／XIRR，同時檢視保證與含非保證利益兩種結果，並可比較各年度解約報酬率。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="author" content="駱潤生 Lawrence" />
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0A192F" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" href="https://lawrence-financial-site.pages.dev/policy-irr/" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="保單現金流與年化報酬率試算工具｜駱潤生 Lawrence" />
+  <meta property="og:description" content="免費保單現金流試算工具：輸入保費、生存還本金與解約金，換算年化報酬率 IRR／XIRR，同時檢視保證與含非保證利益兩種結果，並可比較各年度解約報酬率。" />
+  <meta property="og:url" content="https://lawrence-financial-site.pages.dev/policy-irr/" />
+  <meta property="og:site_name" content="駱潤生 Lawrence" />
+  <meta property="og:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="保單現金流與年化報酬率試算工具｜駱潤生 Lawrence" />
+  <meta name="twitter:description" content="免費保單現金流試算工具：輸入保費、生存還本金與解約金，換算年化報酬率 IRR／XIRR，同時檢視保證與含非保證利益兩種結果，並可比較各年度解約報酬率。" />
+  <meta name="twitter:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
+  <script>
+    try {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
+  <link rel="stylesheet" href="../assets/styles.css?v=20260412b" />
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "@id":"https://lawrence-financial-site.pages.dev/#professional-service",
+    "name":"駱潤生 Lawrence",
+    "url":"https://lawrence-financial-site.pages.dev/policy-irr/",
+    "image":"https://lawrence-financial-site.pages.dev/images/lawrence-profile-standing.jpg",
+    "description":"免費保單現金流試算工具：輸入保費、生存還本金與解約金，換算年化報酬率 IRR／XIRR，同時檢視保證與含非保證利益兩種結果。",
+    "email":"camel40tw@gmail.com",
+    "areaServed":"Taiwan",
+    "inLanguage":"zh-Hant",
+    "sameAs":["https://line.me/ti/p/iaCU1C6Wbl"],
+    "knowsAbout":["CFP®認證理財規劃","高齡金融","信託","資產傳承","保險","財稅整合"],
+    "founder": {
+      "@type":"Person",
+      "name":"駱潤生 Lawrence",
+      "jobTitle":"CFP®認證理財規劃顧問"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="policy_irr_style.css?v=20260801c">
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html">
+        <strong>駱潤生 Lawrence</strong>
+        <span>CFP®認證理財規劃顧問｜高齡金融・信託・資產傳承</span>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌓</button>
+        <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="../index.html">首頁</a>
+        <a href="../about.html">關於我</a>
+        <a href="../services.html">服務項目</a>
+        <a href="../articles.html">文章</a>
+        <a href="../tools.html" class="calc-link">📝免費試算</a>
+        <a href="../contact.html">聯絡我</a>
+        <a href="../contact.html#booking" class="nav-cta">預約諮詢</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pirr-main">
+    <div class="pirr-container">
+
+      <div class="pirr-header">
+        <span class="pirr-badge">POLICY CASHFLOW · IRR / XIRR</span>
+        <h1>保單現金流與年化報酬率試算工具</h1>
+        <p>把保單各年度的繳費、生存還本金與解約金整理成完整現金流，反推出隱含的年化報酬率（IRR／XIRR）。同時分開呈現「保證」與「含非保證利益」兩種結果，避免把假設利益誤認為保證收益。所有資料只保留在你的瀏覽器中，不會上傳伺服器；試算結果僅供參考，不構成保險或投資意見。</p>
+      </div>
+
+      <!-- ① 基本資料 -->
+      <div class="pirr-card">
+        <div class="pirr-card-title">① 基本資料</div>
+        <div class="pirr-field-grid">
+          <div class="pirr-field">
+            <label for="fName">試算名稱</label>
+            <input id="fName" type="text" placeholder="未命名試算">
+          </div>
+          <div class="pirr-field">
+            <label for="fProduct">商品名稱</label>
+            <input id="fProduct" type="text" placeholder="（選填）">
+          </div>
+          <div class="pirr-field">
+            <label for="fCurrency">幣別</label>
+            <select id="fCurrency">
+              <option value="TWD" selected>新臺幣 TWD</option>
+              <option value="USD">美元 USD</option>
+              <option value="CNY">人民幣 CNY</option>
+              <option value="AUD">澳幣 AUD</option>
+              <option value="JPY">日圓 JPY</option>
+              <option value="EUR">歐元 EUR</option>
+            </select>
+            <div class="pirr-hint">不同幣別不可直接合併計算 IRR</div>
+          </div>
+          <div class="pirr-field">
+            <label for="fMode">計算模式</label>
+            <select id="fMode">
+              <option value="annual" selected>年度簡易模式（IRR）</option>
+              <option value="date">精確日期模式（XIRR）</option>
+            </select>
+          </div>
+          <div class="pirr-field">
+            <label for="fInvestDate">投保日期</label>
+            <input id="fInvestDate" type="date">
+          </div>
+          <div class="pirr-field">
+            <label for="fYears">試算期間（年）</label>
+            <input id="fYears" type="number" min="1" max="60" value="20">
+          </div>
+          <div class="pirr-field">
+            <label for="fUnit">金額顯示單位</label>
+            <select id="fUnit">
+              <option value="1" selected>元</option>
+              <option value="100">百元</option>
+              <option value="1000">千元</option>
+            </select>
+          </div>
+          <div class="pirr-field">
+            <label for="fIrrDecimals">IRR 顯示位數</label>
+            <select id="fIrrDecimals">
+              <option value="1">1 位</option>
+              <option value="2" selected>2 位</option>
+              <option value="3">3 位</option>
+              <option value="4">4 位</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② 現金流輸入表 -->
+      <div class="pirr-card">
+        <div class="pirr-card-title">② 年度現金流輸入表 <small>繳入保費視為資金流出；領回金額及解約金視為資金流入，輸入正數即可。</small></div>
+
+        <div class="pirr-toolbar no-print">
+          <button class="pirr-btn" id="btnAddRow" type="button">＋ 新增一列</button>
+          <button class="pirr-btn" id="btnBuildYears" type="button">一次建立年度</button>
+          <button class="pirr-btn" id="btnDuplicate" type="button">複製上一列</button>
+          <button class="pirr-btn" id="btnBatchPremium" type="button">批次填入保費</button>
+          <button class="pirr-btn" id="btnBatchGuaranteed" type="button">批次填入保證領回</button>
+          <button class="pirr-btn" id="btnPaste" type="button">貼上資料</button>
+          <button class="pirr-btn" id="btnUploadCsv" type="button">上傳 CSV 檔案</button>
+          <input type="file" id="csvFileInput" accept=".csv,text/csv" class="hidden">
+          <button class="pirr-btn" id="btnUndo" type="button">↶ 復原</button>
+          <button class="pirr-btn" id="btnRedo" type="button">↷ 重做</button>
+          <button class="pirr-btn pirr-btn-danger" id="btnClear" type="button">清除全部</button>
+        </div>
+
+        <div class="pirr-table-wrap">
+          <table class="pirr-table" id="cashflowTable">
+            <thead>
+              <tr>
+                <th>保單年度</th>
+                <th id="thDate" style="display:none">日期</th>
+                <th>繳入保費</th>
+                <th>保證領回</th>
+                <th>非保證領回</th>
+                <th>解約金</th>
+                <th>當期淨現金流</th>
+                <th>備註</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cashflowBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ③ 計算設定 -->
+      <div class="pirr-card">
+        <div class="pirr-card-title">③ 計算設定</div>
+        <div class="pirr-settings-row">
+          <div class="pirr-field">
+            <label for="fSurrenderYear">選擇解約年度</label>
+            <select id="fSurrenderYear"></select>
+          </div>
+          <div class="pirr-field">
+            <label for="fSurrenderIncludes">解約金是否已包含當年度領回？</label>
+            <select id="fSurrenderIncludes">
+              <option value="not_included" selected>未包含，另外加計</option>
+              <option value="included">已包含，不另行加計</option>
+              <option value="unknown">不確定（顯示警告）</option>
+            </select>
+          </div>
+          <div class="pirr-field">
+            <label for="fDiscountRate">複利回本折現率（機會成本率）</label>
+            <select id="fDiscountRate">
+              <option value="2">2%</option>
+              <option value="3" selected>3%</option>
+              <option value="5">5%</option>
+            </select>
+          </div>
+        </div>
+        <div class="pirr-field" style="margin-top:18px">
+          <label for="fNonGuaranteedFactor">非保證利益實現比例（用於「試算 IRR」；超過 100% 僅供敏感度測試，不代表預測）</label>
+          <div class="pirr-slider-row">
+            <input type="range" id="fNonGuaranteedFactor" min="0" max="120" value="100">
+            <span class="pirr-slider-value" id="fNonGuaranteedFactorVal">100%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 警示區 -->
+      <div id="alertZone"></div>
+
+      <!-- ④ 試算結果 -->
+      <div class="pirr-card">
+        <div class="pirr-card-title">④ 試算結果 <small id="resultYearLabel"></small></div>
+
+        <div class="pirr-dual-irr">
+          <div class="pirr-stat">
+            <div class="pirr-stat-label">保證年化 IRR</div>
+            <div class="pirr-stat-value" id="statGuaranteedIrr">—</div>
+          </div>
+          <div class="pirr-stat">
+            <div class="pirr-stat-label">含非保證利益年化 IRR</div>
+            <div class="pirr-stat-value amber" id="statTrialIrr">—</div>
+          </div>
+          <div class="pirr-stat">
+            <div class="pirr-stat-label">差異（個百分點）</div>
+            <div class="pirr-stat-value" id="statIrrDiff">—</div>
+          </div>
+        </div>
+
+        <div class="pirr-stat-grid">
+          <div class="pirr-stat"><div class="pirr-stat-label">累積繳入保費</div><div class="pirr-stat-value" id="statCumPremium">—</div></div>
+          <div class="pirr-stat"><div class="pirr-stat-label">累積保證領回</div><div class="pirr-stat-value" id="statCumGuaranteed">—</div></div>
+          <div class="pirr-stat"><div class="pirr-stat-label">累積非保證領回</div><div class="pirr-stat-value" id="statCumNonGuaranteed">—</div></div>
+          <div class="pirr-stat"><div class="pirr-stat-label">解約時總領回</div><div class="pirr-stat-value" id="statTotalPayout">—</div></div>
+          <div class="pirr-stat"><div class="pirr-stat-label">損益金額</div><div class="pirr-stat-value" id="statProfit">—</div></div>
+          <div class="pirr-stat"><div class="pirr-stat-label">總報酬率</div><div class="pirr-stat-value" id="statTotalReturn">—</div></div>
+          <div class="pirr-stat"><div class="pirr-stat-label">名目回本年度</div><div class="pirr-stat-value" id="statBreakevenNominal">—</div></div>
+          <div class="pirr-stat"><div class="pirr-stat-label">複利回本年度</div><div class="pirr-stat-value" id="statBreakevenCompound">—</div></div>
+          <div class="pirr-stat"><div class="pirr-stat-label">指定折現率下 NPV</div><div class="pirr-stat-value" id="statNpv">—</div></div>
+        </div>
+
+        <div class="pirr-card-title" style="margin-top:22px">三情境比較（非保證利益 0％／50％／80％）</div>
+        <div class="pirr-scenario-grid" id="scenarioGrid"></div>
+      </div>
+
+      <!-- ⑤ 年度比較表 -->
+      <div class="pirr-card">
+        <div class="pirr-card-title">⑤ 各年度解約比較 <small>點選任一列，切換上方「選擇解約年度」</small></div>
+        <div class="pirr-table-wrap">
+          <table class="pirr-year-table" id="yearTable">
+            <thead>
+              <tr>
+                <th>解約年度</th><th>累積保費</th><th>累積保證領回</th><th>累積非保證領回</th>
+                <th>解約金</th><th>總領回</th><th>保證 IRR</th><th>試算 IRR</th><th>已回本</th>
+              </tr>
+            </thead>
+            <tbody id="yearTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 圖表 -->
+      <div class="pirr-card break-inside-avoid">
+        <div class="pirr-card-title">圖表一：累積保費與累積價值</div>
+        <div class="pirr-chart-wrap"><canvas id="chartAccumulation"></canvas></div>
+      </div>
+      <div class="pirr-card break-inside-avoid">
+        <div class="pirr-card-title">圖表二：各年度解約 IRR 曲線</div>
+        <div class="pirr-chart-wrap"><canvas id="chartIrrCurve"></canvas></div>
+      </div>
+      <div class="pirr-card break-inside-avoid">
+        <div class="pirr-card-title">圖表三：年度現金流量</div>
+        <div class="pirr-chart-wrap"><canvas id="chartCashflowBar"></canvas></div>
+      </div>
+
+      <!-- 匯出 / 儲存 -->
+      <div class="pirr-toolbar no-print">
+        <button class="pirr-btn pirr-btn-primary" id="btnSave" type="button">💾 儲存試算（本機）</button>
+        <button class="pirr-btn" id="btnLoad" type="button">載入已儲存試算</button>
+        <button class="pirr-btn" id="btnExportCsv" type="button">匯出 CSV</button>
+        <button class="pirr-btn" id="btnPrint" type="button">瀏覽器列印</button>
+        <button class="pirr-btn pirr-btn-primary" id="btnGeneratePdf" type="button">📄 產出 PDF 報告</button>
+        <button class="pirr-btn pirr-btn-danger" id="btnClearSaved" type="button">清除本機儲存</button>
+      </div>
+
+      <div class="pirr-disclaimer">
+        <p><strong>揭露與免責聲明：</strong>本工具係依使用者輸入之保費、領回金額及解約金進行現金流與內部報酬率試算，不代表保險公司之保證給付、宣告利率、投資績效或實際解約金。實際權利義務及給付金額，仍應以保險契約、保單條款、保險公司正式文件及實際辦理結果為準。</p>
+        <p style="margin-top:8px">內部報酬率僅反映所輸入現金流的時間價值，未呈現保險保障成本、死亡保障價值、稅務效果、匯率風險、流動性限制及提前終止契約等因素，不宜作為選擇保險商品的唯一依據。</p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 批次填入 modal -->
+  <div class="pirr-modal-backdrop hidden no-print" id="batchFillModal">
+    <div class="pirr-modal">
+      <h3 id="batchFillTitle">批次填入</h3>
+      <p>指定金額與套用的保單年度範圍，範圍內每一列的數值都會被覆蓋。</p>
+      <div class="pirr-field-grid cols-3">
+        <div class="pirr-field"><label for="batchFillAmount">金額</label><input type="number" id="batchFillAmount" min="0" value="0"></div>
+        <div class="pirr-field"><label for="batchFillFrom">從第幾年</label><input type="number" id="batchFillFrom" min="0" value="1"></div>
+        <div class="pirr-field"><label for="batchFillTo">到第幾年</label><input type="number" id="batchFillTo" min="0" value="20"></div>
+      </div>
+      <div class="pirr-modal-actions">
+        <button class="pirr-btn" id="btnBatchFillCancel" type="button">取消</button>
+        <button class="pirr-btn pirr-btn-primary" id="btnBatchFillConfirm" type="button">套用</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 貼上資料 modal -->
+  <div class="pirr-modal-backdrop hidden no-print" id="pasteModal">
+    <div class="pirr-modal">
+      <h3>貼上保單建議書數字</h3>
+      <p>格式：年度｜保費｜保證領回｜非保證領回｜解約金，每列一筆，欄位以 Tab、逗號或「｜」分隔。第一列若非數字會自動視為標題略過。</p>
+      <textarea id="pasteTextarea" placeholder="1&#9;100000&#9;0&#9;0&#9;45000&#10;2&#9;100000&#9;0&#9;0&#9;130000"></textarea>
+      <div class="pirr-modal-actions">
+        <button class="pirr-btn" id="btnPasteCancel" type="button">取消</button>
+        <button class="pirr-btn pirr-btn-primary" id="btnPasteConfirm" type="button">解析並匯入</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF 報告用的隱藏排版頁（html2canvas 擷取用，固定淺色排版不跟隨深色模式） -->
+  <div id="pdfReportRoot" aria-hidden="true">
+    <div class="pirr-pdf-page" id="pdfPage1">
+      <h2>試算摘要</h2>
+      <div id="pdfSummaryContent"></div>
+    </div>
+    <div class="pirr-pdf-page" id="pdfPage2">
+      <h2>年度現金流明細</h2>
+      <div id="pdfCashflowContent"></div>
+    </div>
+    <div class="pirr-pdf-page" id="pdfPage3">
+      <h2>圖表</h2>
+      <div id="pdfChartsContent"></div>
+    </div>
+    <div class="pirr-pdf-page" id="pdfPage4">
+      <h2>假設與聲明</h2>
+      <div id="pdfAssumptionsContent" class="pirr-pdf-assumptions"></div>
+    </div>
+  </div>
+
+  <div class="floating-actions">
+    <a class="fab fab-line" href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">
+      <span class="fab-label">加入 LINE</span>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.9 10.6c0-4.4-4-8-8.9-8S3 6.2 3 10.6c0 4 3.1 7.3 7.2 7.9.3.1.8.2.9.5.1.2.1.7 0 .9l-.1.8c0 .2-.2.9.8.5 1-.4 5.2-3.1 7.1-5.3 1.3-1.4 2-3 2-5.3Zm-12.8 2h-1.7V8.7h1.7v3.9Zm3.1 0H9.5V8.7h1.7v2.3l1.8-2.3h1.8l-2 2.5 2.1 1.4h-2l-1.7-1.2v1.2Zm4 .1c-1.4 0-2.5-.8-2.5-2V8.7h1.7v1.8c0 .4.4.8.9.8s.9-.3.9-.8V8.7H18v2c0 1.2-1.1 2-2.8 2Zm5.1-.1h-3.8V8.7h1.7v2.5h2.1v1.4Z"/></svg>
+    </a>
+    <a class="fab fab-book" href="../contact.html#booking">
+      <span class="fab-label">立即預約</span>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v13a3 3 0 0 0 3 3h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H6a1 1 0 0 1-1-1V10h14v10Zm0-12H5V6h14v2Zm-9 5h2v2h-2v-2Zm4 0h2v2h-2v-2Z"/></svg>
+    </a>
+  </div>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <strong>駱潤生 Lawrence</strong>
+        <p>CFP®認證理財規劃顧問<br>高齡金融・信託・資產傳承</p>
+      </div>
+      <div class="footer-nav">
+        <strong>網站導覽</strong>
+        <a href="../about.html">關於我</a>
+        <a href="../services.html">服務項目</a>
+        <a href="../articles.html">專業文章</a>
+        <a href="../tools.html">免費試算工具</a>
+      </div>
+      <div class="footer-contact">
+        <strong>聯絡方式</strong>
+        <a href="mailto:camel40tw@gmail.com">camel40tw@gmail.com</a>
+        <a href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">LINE 預約諮詢</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div>© 2026 駱潤生 Lawrence. All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <script src="../assets/main.js?v=20260712a" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous" defer></script>
+  <script src="irr_engine.js?v=20260801c" defer></script>
+  <script src="policy_irr_ui.js?v=20260801d" defer></script>
+</body>
+</html>
