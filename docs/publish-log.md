@@ -23,3 +23,18 @@ Notes:
 
 - Prior link check found LinkedIn returning HTTP 999 to the automated checker; this is treated as bot protection, not a broken public link.
 - Unrelated existing worktree changes were left untouched.
+
+## 2026-08-10 02:16 Asia/Taipei
+
+- Task: confirm publish log and production status after article link deployment.
+- Production URL checked: https://lawrence-financial-site.pages.dev/articles
+- Latest log backup commit before this entry: `69cbbaa2b13173f7d9072d904db508630d6fe40d`
+- Deployed content commit: `6944c04c524f26051e34cdbb67d126ee37348f54`
+
+Validation:
+
+- Production `/articles` returned HTTP 200.
+- Confirmed Smart article replacement URL is present.
+- Confirmed Business Today podcast page URL is present.
+- Confirmed old UDN 404 URL is absent.
+- Confirmed `podcasts.apple.com` links are absent.
