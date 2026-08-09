@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>房地合一 2.0 稅額試算｜駱潤生 Lawrence</title>
+  <meta name="description" content="免費房地合一 2.0 稅額試算工具：輸入取得日、出售日、成交價、成本費用與土地漲價總數額，初步估算個人房地交易所得稅。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="author" content="駱潤生 Lawrence" />
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0A192F" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" href="https://lawrence-financial-site.pages.dev/house-land-tax/" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="房地合一 2.0 稅額試算｜駱潤生 Lawrence" />
+  <meta property="og:description" content="免費房地合一 2.0 初步試算，協助檢視持有期間、適用稅率、土地漲價總數額扣除與自住優惠。" />
+  <meta property="og:url" content="https://lawrence-financial-site.pages.dev/house-land-tax/" />
+  <meta property="og:site_name" content="駱潤生 Lawrence" />
+  <meta property="og:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="房地合一 2.0 稅額試算｜駱潤生 Lawrence" />
+  <meta name="twitter:description" content="免費房地合一 2.0 初步試算，協助檢視持有期間、適用稅率、土地漲價總數額扣除與自住優惠。" />
+  <meta name="twitter:image" content="https://lawrence-financial-site.pages.dev/images/site-social-share.png" />
+  <script>
+    try {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
+  <link rel="stylesheet" href="../assets/styles.css?v=20260412b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="house_land_tax_style.css?v=20260809a" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html">
+        <strong>駱潤生 Lawrence</strong>
+        <span>CFP®認證理財規劃顧問｜高齡金融・信託・資產傳承</span>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌓</button>
+        <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="../index.html">首頁</a>
+        <a href="../about.html">關於我</a>
+        <a href="../services.html">服務項目</a>
+        <a href="../articles.html">文章</a>
+        <a href="../tools.html" class="calc-link active">📝免費試算</a>
+        <a href="../contact.html">聯絡我</a>
+        <a href="../contact.html#booking" class="nav-cta">預約諮詢</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="hlt-main">
+    <div class="hlt-container">
+      <section class="hlt-header">
+        <span class="hlt-badge">HOUSE LAND TAX 2.0</span>
+        <h1>房地合一 2.0 稅額試算</h1>
+        <p>輸入取得日、出售日、成交價、成本費用與土地漲價總數額，初步估算個人房地交易所得稅。所有資料只保留在你的瀏覽器中，不會上傳伺服器；試算結果僅供規劃參考，不代表申報或核定稅額。</p>
+        <div class="hlt-rule">規則版本 <strong id="ruleVersion">house-land-tax-v1.1</strong>｜資料更新日期 2026-08-09</div>
+      </section>
+
+      <section class="hlt-live-overview" aria-label="即時試算總覽">
+        <div class="hlt-overview-head">
+          <div>
+            <span>LIVE TAX CHECK</span>
+            <h2>即時總覽</h2>
+          </div>
+          <p id="caseStatus">先完成案件篩選與必要金額，這裡會同步更新稅額、級距與分流狀態。</p>
+        </div>
+        <div class="hlt-overview-grid">
+          <button type="button" class="hlt-overview-item" data-goto="step2"><span>持有期間</span><strong id="liveHolding">—</strong></button>
+          <button type="button" class="hlt-overview-item" data-goto="step2"><span>適用稅率</span><strong id="liveRate">—</strong></button>
+          <button type="button" class="hlt-overview-item" data-goto="step4"><span>採用土地扣除</span><strong id="liveLandDeduction">—</strong></button>
+          <button type="button" class="hlt-overview-item" data-goto="step5"><span>課稅所得</span><strong id="liveTaxableIncome">—</strong></button>
+          <button type="button" class="hlt-overview-item primary" data-goto="result"><span>預估稅額</span><strong id="liveEstimatedTax">—</strong></button>
+        </div>
+      </section>
+
+      <form id="taxForm" class="hlt-form">
+        <section class="hlt-card" id="step1">
+          <div class="hlt-card-title">步驟 1／5　案件篩選</div>
+          <div class="hlt-card-desc">先確認是否屬於 MVP 可做一般概算的個人一般買賣案件。</div>
+          <div class="hlt-step-layout">
+            <div>
+              <div class="hlt-section-title">身分與標的</div>
+              <div class="hlt-field-grid">
+                <fieldset class="hlt-field"><legend>是否為自然人</legend><div class="hlt-radio-row"><label><input type="radio" name="isIndividual" value="true" checked>是</label><label><input type="radio" name="isIndividual" value="false">否</label></div></fieldset>
+                <fieldset class="hlt-field"><legend>是否為中華民國境內居住者</legend><div class="hlt-radio-row"><label><input type="radio" name="isResident" value="true" checked>是</label><label><input type="radio" name="isResident" value="false">否</label></div></fieldset>
+                <div class="hlt-field"><label for="assetType">標的類型</label><select id="assetType"><option value="house_land">房屋及土地</option><option value="house_only">房屋</option><option value="land_only">土地</option><option value="presale">預售屋／紅單</option><option value="building_right">房屋使用權</option><option value="specific_equity">特定股權</option><option value="other">其他</option></select></div>
+                <div class="hlt-field"><label for="acquisitionMethod">取得方式</label><select id="acquisitionMethod"><option value="purchase">一般買賣</option><option value="inheritance">繼承／受遺贈</option><option value="gift">贈與</option><option value="spouse_gift">配偶贈與</option><option value="trust">信託</option><option value="other">其他</option></select></div>
+              </div>
+              <div class="hlt-section-title">特殊情境</div>
+              <div class="hlt-check-grid">
+                <label><input type="checkbox" name="specialScenarios" value="urban_renewal"><span>都市更新</span></label>
+                <label><input type="checkbox" name="specialScenarios" value="dangerous_old_building"><span>危老重建</span></label>
+                <label><input type="checkbox" name="specialScenarios" value="joint_construction"><span>合建</span></label>
+                <label><input type="checkbox" name="specialScenarios" value="land_readjustment"><span>重劃／區段徵收</span></label>
+                <label><input type="checkbox" name="specialScenarios" value="involuntary"><span>非自願因素</span></label>
+                <label><input type="checkbox" name="specialScenarios" value="repurchase"><span>自住重購</span></label>
+                <label><input type="checkbox" name="specialScenarios" value="co_ownership_split"><span>共有物分割</span></label>
+                <label><input type="checkbox" name="specialScenarios" value="exchange"><span>交換或非典型移轉</span></label>
+              </div>
+            </div>
+            <aside class="hlt-summary-panel">
+              <div class="hlt-summary-title">案件狀態</div>
+              <div id="caseAlerts"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="hlt-card" id="step2">
+          <div class="hlt-card-title">步驟 2／5　日期與持有期間</div>
+          <div class="hlt-card-desc">一般已登記房屋、土地原則上以所有權移轉登記日判斷取得日與交易日。</div>
+          <div class="hlt-step-layout">
+            <div>
+              <div class="hlt-field-grid">
+                <div class="hlt-field"><label for="acquisitionDate">取得日</label><input type="date" id="acquisitionDate" value="2019-08-01"></div>
+                <div class="hlt-field"><label for="transferDate">交易日</label><input type="date" id="transferDate" value="2026-08-09"></div>
+              </div>
+              <label class="hlt-checkbox-row"><input type="checkbox" id="datesAreRegistrationDates" checked>上述日期為所有權移轉登記日</label>
+            </div>
+            <aside class="hlt-summary-panel">
+              <div class="hlt-summary-title">持有期間摘要</div>
+              <div class="hlt-kv"><span>持有期間</span><strong id="sumHolding">—</strong></div>
+              <div class="hlt-kv"><span>一般稅率</span><strong id="sumRate">—</strong></div>
+              <div class="hlt-kv"><span>申報提醒日</span><strong id="sumFilingDate">—</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="hlt-card" id="step3">
+          <div class="hlt-card-title">步驟 3／5　成交價、成本與費用</div>
+          <div class="hlt-card-desc">概算費用與實際憑證費用不能重複加總；持有期間房屋稅、地價稅、管理費通常不列入本欄。</div>
+          <div class="hlt-step-layout">
+            <div>
+              <div class="hlt-field-grid">
+                <div class="hlt-field"><label for="salePrice">出售成交價額</label><input type="number" id="salePrice" min="0" value="18000000"></div>
+                <div class="hlt-field"><label for="acquisitionCost">原始取得成本</label><input type="number" id="acquisitionCost" min="0" value="12000000"></div>
+                <div class="hlt-field"><label for="purchaseRelatedCosts">取得附帶成本</label><input type="number" id="purchaseRelatedCosts" min="0" value="250000"><small>契稅、印花稅、代書費、規費等</small></div>
+                <div class="hlt-field"><label for="improvementCosts">改良／增置成本</label><input type="number" id="improvementCosts" min="0" value="600000"></div>
+                <div class="hlt-field"><label for="transferExpenses">移轉費用</label><input type="number" id="transferExpenses" min="0" value="360000"><small>仲介費、廣告費、清潔費、搬運費等</small></div>
+              </div>
+              <fieldset class="hlt-field full">
+                <legend>是否可提示成本費用憑證</legend>
+                <div class="hlt-radio-row">
+                  <label><input type="radio" name="canProvideExpenseEvidence" value="true" checked>可提示憑證，採實際費用</label>
+                  <label><input type="radio" name="canProvideExpenseEvidence" value="false">無法提示／採 3% 概算</label>
+                </div>
+              </fieldset>
+            </div>
+            <aside class="hlt-summary-panel">
+              <div class="hlt-summary-title">費用摘要</div>
+              <div class="hlt-kv"><span>實際費用合計</span><strong id="sumBaseExpenses">—</strong></div>
+              <div class="hlt-kv"><span>3%／30 萬概算</span><strong id="sumStandardExpense">—</strong></div>
+              <div class="hlt-kv"><span>本頁採認基礎費用</span><strong id="sumRecognizedBaseExpenses">—</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="hlt-card" id="step4">
+          <div class="hlt-card-title">步驟 4／5　土地漲價總數額</div>
+          <div class="hlt-card-desc">土地漲價總數額不同於土地增值稅。110 年 7 月 1 日後交易，得減除土地漲價總數額可能受法定上限限制。</div>
+          <div class="hlt-step-layout">
+            <div>
+              <div class="hlt-field-grid">
+                <div class="hlt-field"><label for="landValueIncrementTotal">依土地稅法計算之土地漲價總數額</label><input type="number" id="landValueIncrementTotal" min="0" value="2500000"></div>
+                <div class="hlt-field"><label for="currentAssessedLandValue">交易當年度公告土地現值</label><input type="number" id="currentAssessedLandValue" min="0" value="7000000"></div>
+                <div class="hlt-field"><label for="previousTransferValue">前次移轉現值</label><input type="number" id="previousTransferValue" min="0" value="5200000"></div>
+                <div class="hlt-field"><label for="landValueIncrementTaxPaid">已納土地增值稅</label><input type="number" id="landValueIncrementTaxPaid" min="0" value="400000"><small>參考欄位，不會自動全額扣除</small></div>
+                <div class="hlt-field full"><label for="excessLandValueIncrementTaxPaid">未減除土地漲價總數額部分對應之土地增值稅</label><input type="number" id="excessLandValueIncrementTaxPaid" min="0" value="0"><small>進階欄位，只能填超過法定減除上限部分對應之土地增值稅</small></div>
+              </div>
+            </div>
+            <aside class="hlt-summary-panel">
+              <div class="hlt-summary-title">土地扣除摘要</div>
+              <div class="hlt-kv"><span>法定減除上限</span><strong id="sumLandCap">—</strong></div>
+              <div class="hlt-kv"><span>實際採用扣除額</span><strong id="sumRecognizedLand">—</strong></div>
+              <div class="hlt-kv"><span>未減除土地漲價總數額</span><strong id="sumExcessLand">—</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="hlt-card" id="step5">
+          <div class="hlt-card-title">步驟 5／5　自住優惠與結果</div>
+          <div class="hlt-card-desc">全部條件均符合時，才試算自住 400 萬元免稅與超過部分 10% 稅率。</div>
+          <div class="hlt-step-layout">
+            <div>
+              <label class="hlt-checkbox-row"><input type="checkbox" id="checkSelfUseBenefit">檢核自住房地優惠</label>
+              <div class="hlt-check-grid self-use-grid">
+                <label><input type="checkbox" id="selfUseRegistered"><span>已辦竣戶籍登記</span></label>
+                <label><input type="checkbox" id="selfUseSixYears"><span>持有並居住連續滿 6 年</span></label>
+                <label><input type="checkbox" id="selfUseNoRental"><span>交易前 6 年內無出租</span></label>
+                <label><input type="checkbox" id="selfUseNoBusiness"><span>交易前 6 年內無營業或執業使用</span></label>
+                <label><input type="checkbox" id="selfUseNotUsedBefore"><span>交易前 6 年內未曾適用本優惠</span></label>
+              </div>
+            </div>
+            <aside class="hlt-summary-panel">
+              <div class="hlt-summary-title">自住優惠摘要</div>
+              <div class="hlt-kv"><span>自住優惠狀態</span><strong id="sumSelfUse">—</strong></div>
+              <div class="hlt-kv"><span>自住優惠稅額</span><strong id="sumSelfUseTax">—</strong></div>
+            </aside>
+          </div>
+        </section>
+      </form>
+
+      <section class="hlt-result-card" id="result">
+        <div class="hlt-result-head">
+          <div>
+            <span>RESULT</span>
+            <h2 id="resultTitle">預估房地合一稅</h2>
+          </div>
+          <div class="hlt-result-tax" id="resultEstimatedTax">—</div>
+        </div>
+        <div id="resultMessages"></div>
+        <div class="hlt-stat-grid">
+          <div class="hlt-stat"><span>房地交易所得</span><strong id="statTransactionIncome">—</strong></div>
+          <div class="hlt-stat"><span>房地合一課稅所得</span><strong id="statTaxableIncome">—</strong></div>
+          <div class="hlt-stat"><span>適用稅率</span><strong id="statRate">—</strong></div>
+          <div class="hlt-stat"><span>持有期間</span><strong id="statHolding">—</strong></div>
+          <div class="hlt-stat"><span>申報提醒日</span><strong id="statFiling">—</strong></div>
+        </div>
+        <div class="hlt-table-wrap">
+          <table class="hlt-table">
+            <tbody id="resultTable"></tbody>
+          </table>
+        </div>
+        <div class="hlt-toolbar no-print">
+          <button type="button" class="hlt-btn hlt-btn-primary" id="copySummary">複製試算摘要</button>
+          <button type="button" class="hlt-btn" id="printResult">列印結果</button>
+          <button type="button" class="hlt-btn hlt-btn-danger" id="resetForm">重新試算</button>
+        </div>
+      </section>
+
+      <section class="hlt-card hlt-notes">
+        <div class="hlt-card-title">法規提示與免責聲明</div>
+        <p>土地漲價總數額不同於土地增值稅。房地合一稅計算時，應先判斷得減除的土地漲價總數額，且可能受到法定減除上限限制；已納土地增值稅不會自動全額扣除。</p>
+        <p>本工具依使用者輸入資料及網站載明規則進行初步估算，僅供教育與試算參考，不構成稅務、法律、會計或申報意見。重大交易或實際申報前，應向稽徵機關、會計師、稅務代理人或其他專業人士確認。</p>
+        <div class="hlt-source-links">
+          <a href="https://law-out.mof.gov.tw/LawContent.aspx?id=FL005935" target="_blank" rel="noopener">所得稅法</a>
+          <a href="https://law-out.mof.gov.tw/LawContent.aspx?id=GL009961" target="_blank" rel="noopener">房地合一課徵所得稅申報作業要點</a>
+          <a href="https://www.mof.gov.tw/houseandland/" target="_blank" rel="noopener">財政部房地合一專區</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <strong>駱潤生 Lawrence</strong>
+        <p>CFP®認證理財規劃顧問<br>高齡金融、信託、資產傳承</p>
+      </div>
+      <div class="footer-nav">
+        <strong>網站導覽</strong>
+        <a href="../about.html">關於我</a>
+        <a href="../services.html">服務項目</a>
+        <a href="../articles.html">文章</a>
+        <a href="../tools.html">免費試算</a>
+      </div>
+      <div class="footer-nav">
+        <strong>聯絡</strong>
+        <a href="mailto:camel40tw@gmail.com">camel40tw@gmail.com</a>
+        <a href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">LINE 諮詢</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/main.js?v=20260412b"></script>
+  <script src="house_land_tax_engine.js?v=20260809a"></script>
+  <script src="house_land_tax_ui.js?v=20260809a"></script>
+</body>
+</html>
