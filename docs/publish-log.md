@@ -70,3 +70,28 @@ Validation:
 - Confirmed 52 Facebook share links are present in production.
 - Confirmed the 52 Facebook share links are unique.
 - Confirmed `docs/publish-log.md` is valid UTF-8; any garbled Chinese seen in PowerShell output is terminal display encoding, not file corruption.
+
+## 2026-08-11 22:54 Asia/Taipei
+
+- Task: publish Facebook event card summaries for the `講座與活動` section.
+- Production URL checked: https://lawrence-financial-site.pages.dev/articles
+- Cloudflare deployment preview: https://1146ce05.lawrence-financial-site.pages.dev
+- Git content commit deployed: `443529ec89734e6f7d992b21a4901fef2a19fbd9`
+- Publish snapshot: `D:\AI\lawrence_financial_site\output\publish-media-article-20260811-225419`
+- Static zip backup: `D:\AI\lawrence_financial_site_backups\lawrence_financial_site_static_20260811_225419.zip`
+- Deployment command: `npx --yes wrangler pages deploy "<snapshot-dir>" --project-name=lawrence-financial-site --branch=main --commit-hash=443529ec89734e6f7d992b21a4901fef2a19fbd9 --commit-message="Add Facebook event summaries" --commit-dirty=true --skip-caching`
+
+Validation:
+
+- Production `/articles` returned HTTP 200.
+- Preview `/articles` returned HTTP 200.
+- Confirmed 52 Facebook event cards remain present.
+- Confirmed 52 Facebook share links remain present.
+- Confirmed representative summary cards are present in production: `高雄「傳家」信託講座`, `Google 板橋傳承規劃分享`, and `Facebook 登入限制連結 47`.
+- Confirmed old placeholder title `Facebook 講座與活動紀錄 01` is absent from production.
+
+Notes:
+
+- Facebook metadata extraction produced usable summaries for public pages where available; login-limited, photo-only, or metadata-empty links were labeled as limited or unavailable and deferred to the original FB page.
+- PowerShell `Invoke-WebRequest` returned a local response-object error during verification, so production verification used `curl.exe` plus UTF-8 string checks instead.
+- Unrelated existing worktree changes were left untouched.
