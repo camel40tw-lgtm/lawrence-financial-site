@@ -38,3 +38,19 @@ Validation:
 - Confirmed Business Today podcast page URL is present.
 - Confirmed old UDN 404 URL is absent.
 - Confirmed `podcasts.apple.com` links are absent.
+
+## 2026-08-11 18:49 Asia/Taipei
+
+- Task: add a new `講座與活動` category to the articles index for Facebook public activity links.
+- Production URL checked: https://lawrence-financial-site.pages.dev/articles
+- Cloudflare deployment preview: https://cc9eb6e0.lawrence-financial-site.pages.dev
+- Git content commit deployed: `33a071dc2d253289e7fa27b867c3b6c7e0ec98f4`
+- Publish snapshot: `D:\AI\lawrence_financial_site\output\publish-media-article-20260811-184904`
+
+Validation:
+
+- Production `/articles` returned HTTP 200.
+- Confirmed `講座與活動` navigation and section are present.
+- Confirmed 52 Facebook share links are present in production.
+- Confirmed Facebook share links are unique after removing one duplicate input URL.
+- Facebook pages may restrict automated metadata extraction, so cards use conservative labels: Facebook public activity record, date unspecified, and details deferred to the original FB page.
