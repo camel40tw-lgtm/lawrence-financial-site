@@ -54,3 +54,19 @@ Validation:
 - Confirmed 52 Facebook share links are present in production.
 - Confirmed Facebook share links are unique after removing one duplicate input URL.
 - Facebook pages may restrict automated metadata extraction, so cards use conservative labels: Facebook public activity record, date unspecified, and details deferred to the original FB page.
+
+## 2026-08-11 18:58 Asia/Taipei
+
+- Task: confirm production status and log state for the Facebook events publishing update.
+- Production URL checked: https://lawrence-financial-site.pages.dev/articles
+- Latest content commit: `33a071dc2d253289e7fa27b867c3b6c7e0ec98f4`
+- Latest publish log commit before this entry: `28b4852cddb4fd84ddcc77a68039be70a272a361`
+- Publish snapshot still current: `D:\AI\lawrence_financial_site\output\publish-media-article-20260811-184904`
+
+Validation:
+
+- Production `/articles` returned HTTP 200.
+- Confirmed `講座與活動` navigation and section are present.
+- Confirmed 52 Facebook share links are present in production.
+- Confirmed the 52 Facebook share links are unique.
+- Confirmed `docs/publish-log.md` is valid UTF-8; any garbled Chinese seen in PowerShell output is terminal display encoding, not file corruption.
