@@ -26,14 +26,13 @@ if (menuToggle && navLinks) {
 // ─── Active nav link (robust pathname match) ─────────────────────────────────
 (function markActiveNav() {
   if (!navLinks) return;
-  // Normalise: strip query/hash, get the last path segment
-  const rawPath = window.location.pathname.replace(/\/$/, '');
-  const currentFile = rawPath.split('/').pop() || 'index.html';
+  // Normalise a pathname: drop trailing slash and .html/index.html suffixes
+  const normalise = (path) => path.replace(/\/index\.html$/, '/').replace(/\.html$/, '').replace(/\/$/, '') || '/';
+  const currentPath = normalise(window.location.pathname);
 
   navLinks.querySelectorAll('a:not(.nav-cta)').forEach(link => {
-    const href = link.getAttribute('href')?.split('#')[0] || '';
-    const match = href === currentFile || (currentFile === '' && href === 'index.html');
-    link.classList.toggle('active', match);
+    const linkPath = normalise(link.pathname);
+    link.classList.toggle('active', linkPath === currentPath);
   });
 })();
 
@@ -162,7 +161,7 @@ if (bookingForm) {
         signal : controller.signal,
       });
       showStatus('表單已送出，正在前往確認頁面…', 'success');
-      window.setTimeout(() => { window.location.href = 'thanks.html'; }, 500);
+      window.setTimeout(() => { window.location.href = '/thanks'; }, 500);
     } catch (error) {
       if (error.name === 'AbortError') {
         showStatus('送出逾時，請稍後再試，或改用 LINE / Email 聯繫。', 'error');
@@ -178,7 +177,7 @@ if (bookingForm) {
 
 // ─── Global site config ───────────────────────────────────────────────────────
 window.SITE_CONFIG = {
-  bookingUrl : 'contact.html#booking',
+  bookingUrl : '/contact#booking',
   lineUrl    : 'https://line.me/ti/p/iaCU1C6Wbl',
 };
 

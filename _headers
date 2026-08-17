@@ -18,5 +18,8 @@
 /calculator-v2/*
   Cache-Control: public, max-age=0, must-revalidate
 
+/estate-tax/*
+  Cache-Control: public, max-age=0, must-revalidate
+
 /images/*
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
