@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>台灣遺產稅試算｜駱潤生 Lawrence</title>
+  <meta name="description" content="免費台灣遺產稅試算工具：依 115 年度免稅額、扣除額與遺產及贈與稅法第 13 條稅率，初步估算課稅遺產淨額與應納遺產稅。" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="author" content="駱潤生 Lawrence" />
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0A192F" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" href="https://lawrence.money/estate-tax/" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="台灣遺產稅試算｜駱潤生 Lawrence" />
+  <meta property="og:description" content="依 115 年度公告金額與現行稅率，初步估算遺產總額、扣除額、免稅額、課稅遺產淨額與應納遺產稅。" />
+  <meta property="og:url" content="https://lawrence.money/estate-tax/" />
+  <meta property="og:site_name" content="駱潤生 Lawrence" />
+  <meta property="og:image" content="https://lawrence.money/images/site-social-share.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="台灣遺產稅試算｜駱潤生 Lawrence" />
+  <meta name="twitter:description" content="依 115 年度公告金額與現行稅率，初步估算課稅遺產淨額與應納遺產稅。" />
+  <meta name="twitter:image" content="https://lawrence.money/images/site-social-share.png" />
+  <script>
+    try {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch (error) {}
+  </script>
+  <link rel="stylesheet" href="../assets/styles.css?v=20260412b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estate_tax_style.css?v=20260809a" />
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="/">
+        <strong>駱潤生 Lawrence</strong>
+        <span>CFP®認證理財規劃顧問｜高齡金融・信託・資產傳承</span>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">🌓</button>
+        <button class="menu-toggle" id="menuToggle" aria-label="開啟選單">☰</button>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="/">首頁</a>
+        <a href="/about">關於我</a>
+        <a href="/services">服務項目</a>
+        <a href="/articles">文章</a>
+        <a href="/tools" class="calc-link active">📝免費試算</a>
+        <a href="/contact">聯絡我</a>
+        <a href="/contact#booking" class="nav-cta">預約諮詢</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="etax-main">
+    <div class="etax-container">
+      <section class="etax-header">
+        <span class="etax-badge">TAIWAN ESTATE TAX</span>
+        <h1>台灣遺產稅試算</h1>
+        <p>輸入遺產總額、不計入遺產項目與法定扣除額，初步估算課稅遺產淨額與應納遺產稅。所有資料只保留在你的瀏覽器中，不會上傳伺服器；試算結果僅供規劃參考，不代表正式申報或核定稅額。</p>
+        <div class="etax-rule">規則版本 <strong id="ruleVersion">tw-estate-tax-115-v1.0</strong>｜資料更新日期 <strong id="updatedAt">2026-08-09</strong></div>
+      </section>
+
+      <section class="etax-live-overview" aria-label="即時試算總覽">
+        <div class="etax-overview-head">
+          <div>
+            <span>LIVE ESTATE CHECK</span>
+            <h2>即時總覽</h2>
+          </div>
+          <p id="caseStatus">先輸入遺產總額與家屬扣除條件，這裡會同步更新課稅遺產淨額、適用級距與預估稅額。</p>
+        </div>
+        <div class="etax-overview-grid">
+          <button type="button" class="etax-overview-item" data-goto="step1"><span>遺產總額</span><strong id="liveGrossEstate">—</strong></button>
+          <button type="button" class="etax-overview-item" data-goto="step2"><span>不計入合計</span><strong id="liveExcluded">—</strong></button>
+          <button type="button" class="etax-overview-item" data-goto="step3"><span>扣除額合計</span><strong id="liveDeductions">—</strong></button>
+          <button type="button" class="etax-overview-item" data-goto="result"><span>課稅遺產淨額</span><strong id="liveNetEstate">—</strong></button>
+          <button type="button" class="etax-overview-item" data-goto="result"><span>適用級距</span><strong id="liveBracket">—</strong></button>
+          <button type="button" class="etax-overview-item primary" data-goto="result"><span>預估稅額</span><strong id="liveEstateTax">—</strong></button>
+        </div>
+      </section>
+
+      <form id="taxForm" class="etax-form">
+        <section class="etax-card" id="step1">
+          <div class="etax-card-title">步驟 1／4　日期與遺產總額</div>
+          <div class="etax-card-desc">以死亡日／繼承事實發生日判斷適用版本；本頁目前內建 115 年度公告金額。</div>
+          <div class="etax-step-layout">
+            <div>
+              <div class="etax-field-grid">
+                <div class="etax-field"><label for="deathDate">死亡日／繼承事實發生日</label><input type="date" id="deathDate" value="2026-08-09"></div>
+                <div class="etax-field"><label for="grossEstate">遺產總額</label><input type="number" id="grossEstate" min="0" value="30000000"><small>全部應計入遺產之財產合計。</small></div>
+              </div>
+              <div class="etax-section-title">進階覆核情境</div>
+              <div class="etax-check-grid">
+                <label><input type="checkbox" name="advancedFlags" value="debts"><span>需扣除債務、稅捐或未償費用</span></label>
+                <label><input type="checkbox" name="advancedFlags" value="spouseRemainder"><span>配偶剩餘財產差額分配</span></label>
+                <label><input type="checkbox" name="advancedFlags" value="farmland"><span>農地或公共設施保留地等特別規定</span></label>
+                <label><input type="checkbox" name="advancedFlags" value="insurance"><span>保險給付是否計入遺產</span></label>
+                <label><input type="checkbox" name="advancedFlags" value="overseas"><span>境外財產或非居住者情境</span></label>
+                <label><input type="checkbox" name="advancedFlags" value="trust"><span>信託、閉鎖公司或股權估值</span></label>
+                <label><input type="checkbox" name="advancedFlags" value="dispute"><span>繼承人資格、遺產範圍或訴訟爭議</span></label>
+              </div>
+            </div>
+            <aside class="etax-summary-panel">
+              <div class="etax-summary-title">案件狀態</div>
+              <div id="caseAlerts"></div>
+              <div class="etax-kv"><span>適用版本</span><strong id="sumRuleYear">—</strong></div>
+              <div class="etax-kv"><span>免稅額</span><strong id="sumExemption">—</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="etax-card" id="step2">
+          <div class="etax-card-title">步驟 2／4　不計入遺產總額</div>
+          <div class="etax-card-desc">輸入實際價值後，系統會自動以法定上限截斷：日常生活器具及用具 100 萬元、職業上工具 56 萬元。</div>
+          <div class="etax-step-layout">
+            <div class="etax-field-grid">
+              <div class="etax-field"><label for="dailyNecessitiesValue">日常生活器具及用具總值</label><input type="number" id="dailyNecessitiesValue" min="0" value="800000"></div>
+              <div class="etax-field"><label for="workToolsValue">職業上工具總值</label><input type="number" id="workToolsValue" min="0" value="0"></div>
+            </div>
+            <aside class="etax-summary-panel">
+              <div class="etax-summary-title">不計入摘要</div>
+              <div class="etax-kv"><span>日常生活器具採認</span><strong id="sumExcludedDaily">—</strong></div>
+              <div class="etax-kv"><span>職業工具採認</span><strong id="sumExcludedWork">—</strong></div>
+              <div class="etax-kv"><span>合計</span><strong id="sumExcludedTotal">—</strong></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="etax-card" id="step3">
+          <div class="etax-card-title">步驟 3／4　法定扣除額</div>
+          <div class="etax-card-desc">依 115 年度公告金額輸入家屬與扣除條件。未成年加扣請填「距屆滿成年之年數合計」。</div>
+          <div class="etax-step-layout">
+            <div>
+              <div class="etax-field-grid">
+                <div class="etax-field"><label for="spouseCount">配偶人數</label><select id="spouseCount"><option value="0">0</option><option value="1" selected>1</option></select></div>
+                <div class="etax-field"><label for="linealDescCount">直系血親卑親屬人數</label><input type="number" id="linealDescCount" min="0" value="2"></div>
+                <div class="etax-field"><label for="linealMinorExtraYears">未成年卑親屬距成年年數合計</label><input type="number" id="linealMinorExtraYears" min="0" value="0"></div>
+                <div class="etax-field"><label for="parentCount">父母人數</label><select id="parentCount"><option value="0" selected>0</option><option value="1">1</option><option value="2">2</option></select></div>
+                <div class="etax-field"><label for="disabledCount">重度以上身心障礙特別扣除人數</label><input type="number" id="disabledCount" min="0" value="0"></div>
+                <div class="etax-field"><label for="dependentSiblingGrandparentCount">受扶養兄弟姊妹及祖父母人數</label><input type="number" id="dependentSiblingGrandparentCount" min="0" value="0"></div>
+                <div class="etax-field"><label for="dependentSiblingMinorExtraYears">未成年受扶養兄弟姊妹距成年年數合計</label><input type="number" id="dependentSiblingMinorExtraYears" min="0" value="0"></div>
+              </div>
+              <label class="etax-checkbox-row"><input type="checkbox" id="funeralDeductionEnabled" checked>適用喪葬費扣除額</label>
+            </div>
+            <aside class="etax-summary-panel">
+              <div class="etax-summary-title">扣除額摘要</div>
+              <div class="etax-kv"><span>配偶</span><strong id="sumSpouse">—</strong></div>
+              <div class="etax-kv"><span>卑親屬與未成年加扣</span><strong id="sumLineal">—</strong></div>
+              <div class="etax-kv"><span>父母</span><strong id="sumParent">—</strong></div>
+              <div class="etax-kv"><span>身心障礙</span><strong id="sumDisabled">—</strong></div>
+              <div class="etax-kv"><span>受扶養兄弟姊妹／祖父母</span><strong id="sumDependent">—</strong></div>
+              <div class="etax-kv"><span>喪葬費</span><strong id="sumFuneral">—</strong></div>
+              <div class="etax-kv"><span>合計</span><strong id="sumDeductionsTotal">—</strong></div>
+            </aside>
+          </div>
+        </section>
+      </form>
+
+      <section class="etax-result-card" id="result">
+        <div class="etax-result-head">
+          <div>
+            <span>RESULT</span>
+            <h2 id="resultTitle">預估應納遺產稅額</h2>
+          </div>
+          <div class="etax-result-tax" id="resultEstateTax">—</div>
+        </div>
+        <div id="resultMessages"></div>
+        <div class="etax-stat-grid">
+          <div class="etax-stat"><span>課稅遺產淨額</span><strong id="statNetEstate">—</strong></div>
+          <div class="etax-stat"><span>適用級距</span><strong id="statBracket">—</strong></div>
+          <div class="etax-stat"><span>占遺產總額</span><strong id="statEffectiveRate">—</strong></div>
+          <div class="etax-stat"><span>規則年度</span><strong id="statRule">—</strong></div>
+        </div>
+        <div class="etax-formula">
+          <strong>核心公式</strong>
+          <p>課稅遺產淨額 = max(0, 遺產總額 - 不計入遺產總額合計 - 扣除額合計 - 免稅額)</p>
+          <p>應納遺產稅額 = 依《遺產及贈與稅法》第 13 條三段級距計算。</p>
+        </div>
+        <div class="etax-table-wrap">
+          <table class="etax-table">
+            <tbody id="resultTable"></tbody>
+          </table>
+        </div>
+        <div class="etax-toolbar no-print">
+          <button type="button" class="etax-btn etax-btn-primary" id="copySummary">複製試算摘要</button>
+          <button type="button" class="etax-btn" id="printResult">列印結果</button>
+          <button type="button" class="etax-btn etax-btn-danger" id="resetForm">重新試算</button>
+        </div>
+      </section>
+
+      <section class="etax-card etax-notes">
+        <div class="etax-card-title">法規提示與免責聲明</div>
+        <p>本版係依 115 年度公告金額與現行《遺產及贈與稅法》第 13 條整理。若未來財政部公告新年度免稅額或扣除額，應先更新版本常數表。</p>
+        <p>本頁只處理核心概算，不等同完整申報法律或稅務意見。個案仍可能涉及債務扣除、配偶剩餘財產差額分配、農地、保險給付、跨境財產、信託、股權估值與繼承爭議等因素。</p>
+        <div class="etax-source-links">
+          <a href="https://law-out.mof.gov.tw/LawContent.aspx?id=FL006067" target="_blank" rel="noopener">財政部主管法規：遺產及贈與稅法</a>
+          <a href="https://www.etax.nat.gov.tw/etwmain/tax-info/understanding/tax-saving-manual/national/estate-and-gift-tax/QbA7Lqp" target="_blank" rel="noopener">財政部稅務入口網：遺產稅簡介</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <strong>駱潤生 Lawrence</strong>
+        <p>CFP®認證理財規劃顧問<br>高齡金融、信託、資產傳承</p>
+      </div>
+      <div class="footer-nav">
+        <strong>網站導覽</strong>
+        <a href="/about">關於我</a>
+        <a href="/services">服務項目</a>
+        <a href="/articles">文章</a>
+        <a href="/tools">免費試算</a>
+      </div>
+      <div class="footer-nav">
+        <strong>聯絡</strong>
+        <a href="mailto:camel40tw@gmail.com">camel40tw@gmail.com</a>
+        <a href="https://line.me/ti/p/iaCU1C6Wbl" target="_blank" rel="noopener">LINE 諮詢</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/main.js?v=20260412b"></script>
+  <script src="estate_tax_engine.js?v=20260809a"></script>
+  <script src="estate_tax_ui.js?v=20260809a"></script>
+</body>
+</html>

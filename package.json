@@ -1,0 +1,28 @@
+{
+  "name": "lawrence_financial_site",
+  "version": "1.0.0",
+  "description": "Static financial tools site.",
+  "private": true,
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  },
+  "scripts": {
+    "test:estate-tax": "node estate-tax/test/estate_tax_engine.test.js",
+    "qa:estate-tax": "node estate-tax/test/estate_tax_page_smoke.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camel40tw-lgtm/lawrence-financial-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/camel40tw-lgtm/lawrence-financial-site/issues"
+  },
+  "homepage": "https://github.com/camel40tw-lgtm/lawrence-financial-site#readme"
+}
