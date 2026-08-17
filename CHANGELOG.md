@@ -9,6 +9,11 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| — | 2026-08-17 | 全站 AEO/GEO 優化：11 個頁面（首頁/about/services/文章總覽/6篇文章/5個試算工具）加 FAQPage schema＋可見 FAQ 區塊，新增 llms.txt |
+| — | 2026-08-17 | policy-irr 新增多保單投資組合功能（新增／切換／改名／刪除保單，跨幣別加總） |
+| — | 2026-08-17 | property-invest 新增可負擔房貸負債考量、NPV、依身分動態法規提示 |
+| — | 2026-08-17 | 網域遷移至 lawrence.money：全站乾淨路徑改寫＋Cloudflare Bulk Redirects（www、舊 pages.dev 網域皆 301 轉址） |
+| — | 2026-08-09 | 新增台灣遺產稅試算工具（estate-tax/），整合進 tools.html（本次遲至 2026-08-17 才補記） |
 | — | 2026-08-02 | 新增投資不動產規劃平台（property-invest/，五步驟精靈：購屋能力／房貸／出租／出售／IRR，三情境＋六壓力測試），整合進 tools.html |
 | — | 2026-08-01 | 新增保單現金流與年化報酬率試算工具（policy-irr/，IRR／XIRR 引擎，保證／非保證雙軌），整合進 tools.html |
 | — | 2026-07-31 | 部署退休規劃顧問版試算器V2（calculator-v2/，多頁面 App，新增 Bengen/Guyton-Klinger/三桶金提領策略），整合進 tools.html |
@@ -29,7 +34,55 @@
 
 ---
 
-### [新增] 投資不動產規劃平台上線 — 2026-08-02
+### [新增] 全站 AEO／GEO 優化 — 2026-08-17
+
+**類型**：Feature / SEO
+
+**來源**：換完網域後使用者要求接續做 AEO（Answer Engine Optimization）與 GEO（Generative Engine Optimization）。開工前先盤點現況：全站有 Article／WebPage／ProfessionalService schema，但**沒有任何 FAQPage／HowTo schema**；`calculator-v2`／`house-land-tax`／`estate-tax` 三個工具頁完全沒有結構化資料；沒有 `llms.txt`。經確認後分兩批施工。
+
+**執行內容**：
+- 新增 `.faq-list`／`.faq-item` 手風琴元件（`assets/styles.css`），用原生 `<details>/<summary>`，不用 JS，套用既有 design tokens 與既有卡片／深色模式覆寫模式。
+- 第一批（首頁、about、services、文章總覽、6 篇 article-*）：每頁 3 題 FAQ，同時寫成頁面可見文字＋`FAQPage` JSON-LD，兩者逐字一致。內容全部改寫自頁面既有文字，沒有新增站內原本沒有的承諾（例如不寫「免費諮詢」，因為 `contact.html` 只承諾 24 小時內回覆）。
+- 第二批（calculator-v2、policy-irr、property-invest、house-land-tax、estate-tax）：同樣每頁 3 題 FAQ。`calculator-v2` 用自己獨立的「kaki／和紙」設計系統（不載入共用 `assets/styles.css`），FAQ 樣式改在該頁既有的行內 `<style>` 區塊用自己的 token 另外寫一份；其餘 4 頁沿用共用元件。`calculator-v2`／`house-land-tax`／`estate-tax` 原本零結構化資料，順便補上基礎 `WebPage` schema。
+- 新增網站根目錄 `llms.txt`（純 Markdown，llmstxt.org 慣例），彙整服務、5 個試算工具、7 篇文章與聯絡方式，供 AI 助理直接讀取摘要。
+
+**驗證**：寫 Python 腳本對全部 16 頁的 JSON-LD 逐一 `json.loads` 驗證語法，並比對「頁面可見 FAQ 文字」與「schema 內文字」是否逐字相同（Google FAQPage 規範要求兩者一致，不一致會被拿掉 rich result 資格）——16 頁全部通過。本機起 `python -m http.server` 以瀏覽器實測淺色／深色模式排版與手風琴展開，包含 `calculator-v2` 獨立配色系統。分兩個 commit 推上正式環境後，用 curl 逐頁確認 `FAQPage` schema 與 `llms.txt` 都正確部署。
+
+**明確跳過／待辦**：目前每頁固定 3 題，沒有做 `HowTo` schema（工具頁的步驟式操作流程未來可考慮補上）；FAQ 內容目前是一次性人工改寫，站內文字若之後更新，需要記得同步更新對應的 FAQ 文字與 schema，避免兩者不一致。
+
+### [新增] policy-irr 多保單投資組合功能 — 2026-08-17
+
+**類型**：Feature
+
+**執行內容**：`policy_irr_ui.js` 新增多保單工作區——新增、切換、重新命名、刪除保單（皆用瀏覽器原生 `prompt()`/`confirm()`，與既有存檔/清除功能同一套寫法），每張保單各自設定幣別與對 TWD 匯率；新增「組合總覽」，依保單年度加總所有保單現金流，同幣別直接原幣加總，不同幣別則換算為 TWD 後合計，計算整體保證／含非保證利益 IRR，並可選擇是否納入 PDF 報告。
+
+**驗證**：底層 `irr_engine.js` 換匯邏輯單元測試 8/8 通過。UI 操作流程用瀏覽器自動化實測：新增／切換／改名／刪除保單、僅剩一張保單時的刪除保護機制、跨幣別組合加總數學（手動核對 TWD 5,000 ＋ USD 10,000 × 匯率 31.5 = 320,000 TWD，與畫面顯示一致）。過程中發現自動化工具因原生 `prompt()`/`confirm()` 彈窗卡住兩次，改用注入 JS 覆寫彈窗方式重測，非程式本身的 bug。
+
+**明確跳過／待辦**：多保單 UI 操作流程沒有自動化測試（只有手動驗證過一輪），之後如果要重構這塊建議先補測試。
+
+### [新增] property-invest 可負擔房貸負債考量、NPV、動態法規提示 — 2026-08-17
+
+**類型**：Feature
+
+**執行內容**：`property_calc_engine.js` 的可負擔房貸月付計算，從只看「收入負擔率」改成取「收入負擔率扣既有負債」與「收支餘裕扣既有負債」兩者較低值，避免高估可負擔房貸金額（新增測試 TC-A03）。新增出售步驟 NPV／折現率欄位與情境比較表 NPV 欄；新增「即時總覽」面板同步顯示資金缺口／月付／現金流／DSCR／淨回收／IRR；新增「貸款法規條件」欄位（借款人身分、既有房貸戶數、換屋需求、高價住宅），法規提示表格改為依這些輸入動態產生，取代原本固定的靜態表格。
+
+**驗證**：引擎測試 19/19 通過（含新增的 TC-A03）。
+
+### [變更] 網域遷移至 lawrence.money — 2026-08-17
+
+**類型**：Infrastructure
+
+**執行內容**：全站 HTML/CSS/JS 的 canonical／og／twitter／JSON-LD 標籤與內部導覽連結，從舊網域 `lawrence-financial-site.pages.dev` 改成 `lawrence.money`，內部連結同時從 `about.html` 這種寫法改成 `/about` 乾淨路徑（靠 Cloudflare Pages 原生「請求 `.html` 自動轉址到無副檔名網址」的行為達成，沒有搬動實體檔案）。`calculator-v2` 內部頁面互連（`advisor.html`／`client.html`／`client_intake.html`）刻意保留 `.html`，因為 `ui_controller_v3.js` 仍用 `pathname.endsWith('.html')` 判斷顧問版／客戶版模式。
+
+之後在 Cloudflare 帳號層級設定 **Bulk Redirects**：建立一份清單，把 `www.lawrence.money/*` 與舊網域 `lawrence-financial-site.pages.dev/*` 都 301 轉址到 `lawrence.money/*`（勾選 Subpath matching／Preserve path suffix／Preserve query string，讓子路徑與查詢字串也正確轉址），再建立 Bulk Redirect Rule 套用生效。`_redirects` 檔案本身不支援依網域比對，這是 Cloudflare 官方文件建議、也是唯一能把 `.pages.dev` 網域轉走的做法。
+
+同批一併清掉確認無引用的舊檔案（10 支 `scripts/*.py` 舊腳本、2 張已被響應式圖檔取代的舊版 `.webp`），並把 `output/`、`.wrangler/` 加進 `.gitignore`。
+
+**驗證**：curl 逐一測試 `www.lawrence.money`、`lawrence-financial-site.pages.dev`、含路徑的網址（如 `/tools`），確認都 301 正確轉到 `lawrence.money` 且路徑保留；同時確認 `lawrence.money` 自己沒有形成轉址迴圈。
+
+**明確跳過／待辦**：無。
+
+
 
 **類型**：Feature
 
