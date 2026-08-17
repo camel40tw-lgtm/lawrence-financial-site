@@ -780,6 +780,23 @@ button,input,textarea{font:inherit}
 }
 .article-block ul{margin:12px 0 0; padding-left:18px}
 .article-block p + p,.article-block li + li{margin-top:12px}
+
+.faq-list{display:flex; flex-direction:column; gap:14px}
+.faq-item{
+  background:linear-gradient(180deg, var(--bg-card-grad-start), var(--bg-card-grad-end)); border:1px solid var(--line);
+  border-radius:var(--radius-md); padding:24px 28px; box-shadow:var(--shadow-sm);
+}
+.faq-item summary{
+  cursor:pointer; list-style:none; margin:0; color:var(--navy-900); font-weight:700; font-size:1.05rem;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{
+  content:"+"; flex-shrink:0; color:var(--amber-600); font-size:1.3rem; font-weight:700; transition:transform .2s ease;
+}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item p{margin:14px 0 0; color:var(--text-soft); line-height:1.78}
+
 .cta-band{
   margin-top:4px; padding:34px; border-radius:28px;
   background:linear-gradient(135deg,var(--navy-900),var(--navy-700)); color:#fff;
@@ -900,6 +917,7 @@ textarea{min-height:170px; resize:vertical}
 [data-theme="dark"] .contact-card,
 [data-theme="dark"] .timeline-card,
 [data-theme="dark"] .article-block,
+[data-theme="dark"] .faq-item,
 [data-theme="dark"] .floating-badge{
   border-color:rgba(148,163,184,.18);
   box-shadow:0 20px 46px rgba(2,8,23,.28);
@@ -921,6 +939,7 @@ textarea{min-height:170px; resize:vertical}
 [data-theme="dark"] .contact-card,
 [data-theme="dark"] .timeline-card,
 [data-theme="dark"] .article-block,
+[data-theme="dark"] .faq-item,
 [data-theme="dark"] .floating-badge,
 [data-theme="dark"] .hero-mini div,
 [data-theme="dark"] .stat-box,
@@ -954,6 +973,7 @@ textarea{min-height:170px; resize:vertical}
 [data-theme="dark"] .timeline-card p,
 [data-theme="dark"] .article-block p,
 [data-theme="dark"] .article-block li,
+[data-theme="dark"] .faq-item p,
 [data-theme="dark"] .section-title p,
 [data-theme="dark"] .contact-method-card p{
   color:#d8e1ec;
@@ -974,6 +994,7 @@ textarea{min-height:170px; resize:vertical}
 [data-theme="dark"] .article-card h3,
 [data-theme="dark"] .timeline-card strong,
 [data-theme="dark"] .article-block h2,
+[data-theme="dark"] .faq-item summary,
 [data-theme="dark"] .contact-method-value,
 [data-theme="dark"] .floating-badge strong,
 [data-theme="dark"] .section-title h2,
@@ -1080,7 +1101,7 @@ footer{padding:40px 0 30px; color:var(--slate-500); font-size:.95rem}
   }
   .nav-links.open{display:flex}
   .feature-grid,.service-grid,.article-grid,.stat-grid{grid-template-columns:1fr}
-  .hero-card,.panel,.feature-card,.service-card,.article-card,.testimonial,.contact-card,.timeline-card,.article-block,.cta-band{padding:20px}
+  .hero-card,.panel,.feature-card,.service-card,.article-card,.testimonial,.contact-card,.timeline-card,.article-block,.faq-item,.cta-band{padding:20px}
   .hero-title{font-size:clamp(1.8rem, 10vw, 2.5rem)}
   .hero-photo{max-height:460px}
   .hero-photo-full{
