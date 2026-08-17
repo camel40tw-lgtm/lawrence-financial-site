@@ -26,12 +26,15 @@
     return "r" + Math.random().toString(36).slice(2, 9);
   }
 
-  function defaultState() {
+  function defaultPolicy(label) {
     return {
+      id: uid(),
+      label: label || "保單 1",
       meta: {
-        name: "",
+        name: label || "",
         product: "",
         currency: "TWD",
+        fxToTwd: 1,
         mode: "annual",
         investDate: todayStr(),
         years: 20,
@@ -48,6 +51,72 @@
         { id: uid(), policyYear: 0, date: null, premium: 100000, guaranteed: 0, nonGuaranteed: 0, surrender: 0, note: "躉繳／首期保費" },
       ],
     };
+  }
+
+  function defaultState() {
+    const policy = defaultPolicy("保單 1");
+    return hydrateState({
+      version: 2,
+      activePolicyId: policy.id,
+      policies: [policy],
+      global: {
+        nonGuaranteedFactor: policy.settings.nonGuaranteedFactor,
+        portfolioCurrencyMode: "auto",
+      },
+    });
+  }
+
+  function normalizePolicy(policy, index) {
+    const fallback = defaultPolicy(`保單 ${index + 1}`);
+    const normalized = Object.assign({}, fallback, policy || {});
+    normalized.id = normalized.id || uid();
+    normalized.label = normalized.label || normalized.meta?.name || `保單 ${index + 1}`;
+    normalized.meta = Object.assign({}, fallback.meta, normalized.meta || {});
+    normalized.meta.fxToTwd = normalized.meta.currency === "TWD" ? 1 : Math.max(0, parseFloat(normalized.meta.fxToTwd) || 1);
+    normalized.settings = Object.assign({}, fallback.settings, normalized.settings || {});
+    normalized.rows = Array.isArray(normalized.rows) && normalized.rows.length ? normalized.rows : fallback.rows;
+    normalized.rows.forEach((row) => {
+      row.id = row.id || uid();
+    });
+    return normalized;
+  }
+
+  function hydrateState(raw) {
+    const base = raw && typeof raw === "object" ? raw : {};
+    if (!Array.isArray(base.policies) || !base.policies.length) {
+      base.policies = [
+        normalizePolicy({
+          label: base.meta?.name || "保單 1",
+          meta: base.meta,
+          settings: base.settings,
+          rows: base.rows,
+        }, 0),
+      ];
+    } else {
+      base.policies = base.policies.map((policy, index) => normalizePolicy(policy, index));
+    }
+    base.version = 2;
+    base.activePolicyId = base.activePolicyId && base.policies.some((p) => p.id === base.activePolicyId) ? base.activePolicyId : base.policies[0].id;
+    base.global = Object.assign({ nonGuaranteedFactor: base.policies[0].settings.nonGuaranteedFactor || 100, portfolioCurrencyMode: "auto" }, base.global || {});
+    base.policies.forEach((policy) => {
+      policy.settings.nonGuaranteedFactor = base.global.nonGuaranteedFactor;
+    });
+    const active = base.policies.find((p) => p.id === base.activePolicyId) || base.policies[0];
+    base.meta = active.meta;
+    base.settings = active.settings;
+    base.rows = active.rows;
+    return base;
+  }
+
+  function activePolicy() {
+    return state.policies.find((p) => p.id === state.activePolicyId) || state.policies[0];
+  }
+
+  function syncActiveAliases() {
+    const active = activePolicy();
+    state.meta = active.meta;
+    state.settings = active.settings;
+    state.rows = active.rows;
   }
 
   // ── 日期輔助 ─────────────────────────────────────────────
@@ -68,6 +137,14 @@
     const scaled = v / (state.meta.unit || 1);
     const rounded = Math.round(scaled);
     return rounded.toLocaleString("zh-Hant-TW") + (state.meta.unit === 1 ? "" : state.meta.unit === 100 ? " 百元" : " 千元");
+  }
+
+  function formatMoneyWithCurrency(v, currency) {
+    if (v === null || v === undefined || !isFinite(v)) return "—";
+    const scaled = v / (state.meta.unit || 1);
+    const rounded = Math.round(scaled);
+    const suffix = state.meta.unit === 1 ? "" : state.meta.unit === 100 ? " 百元" : " 千元";
+    return `${rounded.toLocaleString("zh-Hant-TW")}${suffix} ${currency}`;
   }
 
   function formatPercent(rate) {
@@ -91,7 +168,7 @@
   function undo() {
     if (historyIndex <= 0) return;
     historyIndex--;
-    state = JSON.parse(history[historyIndex]);
+    state = hydrateState(JSON.parse(history[historyIndex]));
     scheduleRender();
     scheduleAutoSave();
   }
@@ -99,13 +176,15 @@
   function redo() {
     if (historyIndex >= history.length - 1) return;
     historyIndex++;
-    state = JSON.parse(history[historyIndex]);
+    state = hydrateState(JSON.parse(history[historyIndex]));
     scheduleRender();
     scheduleAutoSave();
   }
 
   function mutate(fn) {
+    syncActiveAliases();
     fn();
+    syncActiveAliases();
     snapshot();
     scheduleRender();
     scheduleAutoSave();
@@ -149,7 +228,7 @@
       return;
     }
     try {
-      state = JSON.parse(raw);
+      state = hydrateState(JSON.parse(raw));
       snapshot();
       renderAll();
     } catch (e) {
@@ -205,6 +284,7 @@
   function deleteRow(id) {
     mutate(() => {
       state.rows = state.rows.filter((r) => r.id !== id);
+      activePolicy().rows = state.rows;
     });
   }
 
@@ -212,6 +292,60 @@
     if (!confirm("確定要清除全部現金流資料嗎？")) return;
     mutate(() => {
       state.rows = [{ id: uid(), policyYear: 0, date: state.meta.investDate, premium: 0, guaranteed: 0, nonGuaranteed: 0, surrender: 0, note: "" }];
+      activePolicy().rows = state.rows;
+    });
+  }
+
+  // ── 多保單操作 ─────────────────────────────────────────
+  function addPolicy() {
+    const label = prompt("請輸入新保單名稱", `保單 ${state.policies.length + 1}`);
+    if (label === null) return;
+    mutate(() => {
+      const policy = defaultPolicy(label.trim() || `保單 ${state.policies.length + 1}`);
+      policy.meta.currency = state.meta.currency;
+      policy.meta.fxToTwd = state.meta.currency === "TWD" ? 1 : state.meta.fxToTwd;
+      policy.meta.mode = state.meta.mode;
+      policy.meta.investDate = state.meta.investDate;
+      policy.meta.years = state.meta.years;
+      policy.meta.unit = state.meta.unit;
+      policy.meta.irrDecimals = state.meta.irrDecimals;
+      policy.settings.nonGuaranteedFactor = state.global.nonGuaranteedFactor;
+      state.policies.push(policy);
+      state.activePolicyId = policy.id;
+      syncActiveAliases();
+    });
+  }
+
+  function switchPolicy(id) {
+    if (id === state.activePolicyId) return;
+    mutate(() => {
+      state.activePolicyId = id;
+      syncActiveAliases();
+    });
+  }
+
+  function renamePolicy() {
+    const policy = activePolicy();
+    const label = prompt("請輸入保單名稱", policy.label || state.meta.name || "");
+    if (label === null) return;
+    mutate(() => {
+      const nextLabel = label.trim() || policy.label || "未命名保單";
+      policy.label = nextLabel;
+      policy.meta.name = nextLabel;
+    });
+  }
+
+  function deletePolicy() {
+    if (state.policies.length <= 1) {
+      alert("至少需要保留一張保單。");
+      return;
+    }
+    const policy = activePolicy();
+    if (!confirm(`確定要刪除「${policy.label || policy.meta.name || "目前保單"}」嗎？此動作可用復原找回。`)) return;
+    mutate(() => {
+      state.policies = state.policies.filter((p) => p.id !== policy.id);
+      state.activePolicyId = state.policies[0].id;
+      syncActiveAliases();
     });
   }
 
@@ -516,10 +650,166 @@
   }
 
   // ── 主渲染 ───────────────────────────────────────────────
+  function renderPolicyTabs() {
+    const tabs = document.getElementById("policyTabs");
+    if (!tabs) return;
+    tabs.innerHTML = state.policies
+      .map((policy, index) => {
+        const active = policy.id === state.activePolicyId ? " active" : "";
+        const label = escapeHtml(policy.label || policy.meta.name || `保單 ${index + 1}`);
+        return `<button type="button" class="pirr-policy-tab tone-${index % 6}${active}" data-policy-id="${policy.id}"><span class="pirr-policy-dot"></span>${label}</button>`;
+      })
+      .join("");
+    tabs.querySelectorAll("[data-policy-id]").forEach((btn) => {
+      btn.addEventListener("click", () => switchPolicy(btn.dataset.policyId));
+    });
+  }
+
+  function policyCashflowRows(policy, nonGuaranteedFactor, guaranteedOnly) {
+    const surrenderYear = policy.settings.surrenderYear || 1;
+    const includes = policy.settings.surrenderIncludes || "not_included";
+    return policy.rows
+      .slice()
+      .sort((a, b) => a.policyYear - b.policyYear)
+      .filter((row) => row.policyYear <= surrenderYear)
+      .map((row) => {
+        const premium = row.premium || 0;
+        const guaranteed = row.guaranteed || 0;
+        const nonGuaranteed = guaranteedOnly ? 0 : (row.nonGuaranteed || 0) * (nonGuaranteedFactor / 100);
+        let surrender = 0;
+        if (row.policyYear === surrenderYear) surrender = row.surrender || 0;
+        const inflow = row.policyYear === surrenderYear && includes === "included" ? surrender : guaranteed + nonGuaranteed + surrender;
+        return {
+          year: row.policyYear,
+          premium,
+          guaranteed,
+          nonGuaranteed,
+          surrender,
+          net: inflow - premium,
+        };
+      });
+  }
+
+  function portfolioCurrencyInfo() {
+    const currencies = [...new Set(state.policies.map((p) => p.meta.currency || "TWD"))];
+    const sameCurrency = currencies.length === 1;
+    const forceTwd = state.global.portfolioCurrencyMode === "twd";
+    return {
+      sameCurrency,
+      currencies,
+      displayCurrency: sameCurrency && !forceTwd ? currencies[0] : "TWD",
+      usesFx: !sameCurrency || forceTwd,
+    };
+  }
+
+  function portfolioAggregate() {
+    const factor = state.global.nonGuaranteedFactor;
+    const currencyInfo = portfolioCurrencyInfo();
+    const byYear = new Map();
+
+    state.policies.forEach((policy) => {
+      const fx = currencyInfo.usesFx ? Math.max(0, parseFloat(policy.meta.fxToTwd) || 0) : 1;
+      const guaranteedRows = policyCashflowRows(policy, 0, true);
+      const trialRows = policyCashflowRows(policy, factor, false);
+      trialRows.forEach((row) => {
+        if (!byYear.has(row.year)) {
+          byYear.set(row.year, { year: row.year, premium: 0, guaranteed: 0, nonGuaranteed: 0, surrender: 0, guaranteedNet: 0, trialNet: 0 });
+        }
+        const target = byYear.get(row.year);
+        target.premium += row.premium * fx;
+        target.guaranteed += row.guaranteed * fx;
+        target.nonGuaranteed += row.nonGuaranteed * fx;
+        target.surrender += row.surrender * fx;
+        target.trialNet += row.net * fx;
+      });
+      guaranteedRows.forEach((row) => {
+        if (!byYear.has(row.year)) {
+          byYear.set(row.year, { year: row.year, premium: 0, guaranteed: 0, nonGuaranteed: 0, surrender: 0, guaranteedNet: 0, trialNet: 0 });
+        }
+        byYear.get(row.year).guaranteedNet += row.net * fx;
+      });
+    });
+
+    const rows = [...byYear.values()].sort((a, b) => a.year - b.year);
+    const periods = rows.map((row) => row.year);
+    const guaranteedCashflows = rows.map((row) => row.guaranteedNet);
+    const trialCashflows = rows.map((row) => row.trialNet);
+    const premiumSum = rows.reduce((sum, row) => sum + row.premium, 0);
+    const guaranteedPayout = rows.reduce((sum, row) => sum + row.guaranteed + row.surrender, 0);
+    const trialPayout = rows.reduce((sum, row) => sum + row.guaranteed + row.nonGuaranteed + row.surrender, 0);
+    return {
+      rows,
+      currencyInfo,
+      premiumSum,
+      guaranteedPayout,
+      trialPayout,
+      guaranteedIrr: Engine.irr(guaranteedCashflows, periods),
+      trialIrr: Engine.irr(trialCashflows, periods),
+    };
+  }
+
+  function renderPortfolioOverview() {
+    const summaryEl = document.getElementById("portfolioSummary");
+    const body = document.getElementById("portfolioYearBody");
+    if (!summaryEl || !body) return;
+
+    const aggregate = portfolioAggregate();
+    const currencyInfo = aggregate.currencyInfo;
+    const money = (v) => formatMoneyWithCurrency(v, currencyInfo.displayCurrency);
+    const missingFx = currencyInfo.usesFx ? state.policies.filter((p) => (p.meta.currency || "TWD") !== "TWD" && !(parseFloat(p.meta.fxToTwd) > 0)) : [];
+    if (missingFx.length) {
+      summaryEl.innerHTML = `<div class="pirr-alert pirr-alert-warning">以下外幣保單缺少有效的對 TWD 匯率：${missingFx.map((p) => escapeHtml(p.label || p.meta.name || p.meta.currency)).join("、")}。請先填入正數匯率後再查看組合總覽。</div>`;
+      body.innerHTML = "";
+      return;
+    }
+    const guaranteedProfit = aggregate.guaranteedPayout - aggregate.premiumSum;
+    const trialProfit = aggregate.trialPayout - aggregate.premiumSum;
+    const fxNote = currencyInfo.usesFx
+      ? `組合總覽已依各保單設定匯率換算為 TWD：${state.policies.map((p) => `${escapeHtml(p.label || p.meta.name || p.meta.currency)} ${p.meta.currency}×${p.meta.fxToTwd}`).join("；")}。匯率僅為試算假設，不代表實際兌換結果。`
+      : `所有保單皆為 ${currencyInfo.displayCurrency}，組合總覽直接以原幣加總，未使用匯率換算。`;
+    summaryEl.innerHTML = `
+      <div class="pirr-flow-note">${fxNote}</div>
+      <div class="pirr-stat-grid portfolio">
+        <div class="pirr-stat"><div class="pirr-stat-label">保單張數</div><div class="pirr-stat-value">${state.policies.length}</div></div>
+        <div class="pirr-stat"><div class="pirr-stat-label">組合累積保費</div><div class="pirr-stat-value">${money(aggregate.premiumSum)}</div></div>
+        <div class="pirr-stat"><div class="pirr-stat-label">組合保證 IRR</div><div class="pirr-stat-value">${aggregate.guaranteedIrr.converged ? formatPercent(aggregate.guaranteedIrr.rate) : "無法計算"}</div></div>
+        <div class="pirr-stat"><div class="pirr-stat-label">組合試算 IRR</div><div class="pirr-stat-value amber">${aggregate.trialIrr.converged ? formatPercent(aggregate.trialIrr.rate) : "無法計算"}</div></div>
+        <div class="pirr-stat"><div class="pirr-stat-label">保證損益</div><div class="pirr-stat-value ${guaranteedProfit >= 0 ? "success" : "danger"}">${money(guaranteedProfit)}</div></div>
+        <div class="pirr-stat"><div class="pirr-stat-label">含非保證損益</div><div class="pirr-stat-value ${trialProfit >= 0 ? "success" : "danger"}">${money(trialProfit)}</div></div>
+      </div>`;
+
+    body.innerHTML = aggregate.rows
+      .map(
+        (row) => `
+          <tr>
+            <td>第 ${row.year} 年</td>
+            <td>${money(row.premium)}</td>
+            <td>${money(row.guaranteed)}</td>
+            <td>${money(row.nonGuaranteed)}</td>
+            <td>${money(row.surrender)}</td>
+            <td>${money(row.guaranteedNet)}</td>
+            <td>${money(row.trialNet)}</td>
+          </tr>`
+      )
+      .join("");
+  }
+
   function renderMetaFields() {
+    syncActiveAliases();
+    renderPolicyTabs();
+    const activeIndex = Math.max(0, state.policies.findIndex((p) => p.id === state.activePolicyId));
+    const activeBanner = document.getElementById("activePolicyBanner");
+    if (activeBanner) {
+      activeBanner.className = `pirr-active-policy tone-${activeIndex % 6}`;
+      activeBanner.innerHTML = `<span class="pirr-policy-dot"></span><strong>目前編輯：</strong>${escapeHtml(activePolicy().label || state.meta.name || `保單 ${activeIndex + 1}`)} <small>${state.meta.currency}${state.meta.currency === "TWD" ? "" : ` · 對 TWD 匯率 ${state.meta.fxToTwd}`}</small>`;
+    }
     document.getElementById("fName").value = state.meta.name;
     document.getElementById("fProduct").value = state.meta.product;
     document.getElementById("fCurrency").value = state.meta.currency;
+    const fxInput = document.getElementById("fFxToTwd");
+    fxInput.value = state.meta.currency === "TWD" ? 1 : state.meta.fxToTwd;
+    fxInput.readOnly = state.meta.currency === "TWD";
+    fxInput.disabled = state.meta.currency === "TWD";
     document.getElementById("fMode").value = state.meta.mode;
     document.getElementById("fInvestDate").value = state.meta.investDate;
     document.getElementById("fYears").value = state.meta.years;
@@ -527,8 +817,9 @@
     document.getElementById("fIrrDecimals").value = state.meta.irrDecimals;
     document.getElementById("fSurrenderIncludes").value = state.settings.surrenderIncludes;
     document.getElementById("fDiscountRate").value = state.settings.discountRate;
-    document.getElementById("fNonGuaranteedFactor").value = state.settings.nonGuaranteedFactor;
-    document.getElementById("fNonGuaranteedFactorVal").textContent = state.settings.nonGuaranteedFactor + "%";
+    document.getElementById("fNonGuaranteedFactor").value = state.global.nonGuaranteedFactor;
+    document.getElementById("fNonGuaranteedFactorVal").textContent = state.global.nonGuaranteedFactor + "%";
+    document.getElementById("fPortfolioCurrencyMode").value = state.global.portfolioCurrencyMode;
     document.getElementById("thDate").style.display = state.meta.mode === "date" ? "" : "none";
 
     const surrenderSelect = document.getElementById("fSurrenderYear");
@@ -781,6 +1072,7 @@
     const mainResult = renderResults(series, maxYear);
     renderYearTable(series);
     renderAlerts(computeAlerts(mainResult));
+    renderPortfolioOverview();
     renderCharts(series, maxYear);
   }
 
@@ -835,51 +1127,108 @@
     }
   }
 
+  function policyRowDate(policy, row) {
+    if (policy.meta.mode === "date" && row.date) return row.date;
+    return addYears(policy.meta.investDate, row.policyYear);
+  }
+
+  function withPolicyContext(policy, fn) {
+    const prevActiveId = state.activePolicyId;
+    state.activePolicyId = policy.id;
+    syncActiveAliases();
+    try {
+      return fn();
+    } finally {
+      state.activePolicyId = prevActiveId;
+      syncActiveAliases();
+    }
+  }
+
+  function pdfPolicySection(policy, index) {
+    return withPolicyContext(policy, () => {
+      const y = state.settings.surrenderYear;
+      const factor = state.global.nonGuaranteedFactor;
+      const stats = yearlyStatsWithIrr(y, factor);
+      const guaranteedResult = stats.guaranteedIrr;
+      const trialResult = stats.trialIrr;
+      const sortedRows = state.rows.slice().sort((a, b) => a.policyYear - b.policyYear);
+      return `
+        <div class="pirr-pdf-section">
+          <h3>${index + 1}. ${escapeHtml(policy.label || state.meta.name || "未命名保單")}</h3>
+          <div class="pirr-pdf-kv">
+            <div><span>商品名稱</span><span>${escapeHtml(state.meta.product || "（未填寫）")}</span></div>
+            <div><span>幣別</span><span>${state.meta.currency}${state.meta.currency === "TWD" ? "" : `（對 TWD 匯率 ${state.meta.fxToTwd}）`}</span></div>
+            <div><span>指定解約年度</span><span>第 ${y} 年</span></div>
+            <div><span>計算模式</span><span>${state.meta.mode === "date" ? "精確日期模式（XIRR）" : "年度簡易模式（IRR）"}</span></div>
+            <div><span>累積繳入保費</span><span>${formatMoney(stats.premiumSum)}</span></div>
+            <div><span>解約時總領回</span><span>${formatMoney(stats.totalPayout)}</span></div>
+            <div><span>保證年化 IRR</span><span>${guaranteedResult.converged ? formatPercent(guaranteedResult.rate) : "無法計算"}</span></div>
+            <div><span>含非保證利益年化 IRR</span><span>${trialResult.converged ? formatPercent(trialResult.rate) : "無法計算"}</span></div>
+          </div>
+          <table class="pirr-pdf-table" style="margin-top:14px">
+            <thead><tr><th>保單年度</th><th>日期</th><th>繳入保費</th><th>保證領回</th><th>非保證領回</th><th>解約金</th><th>備註</th></tr></thead>
+            <tbody>
+              ${sortedRows
+                .map((r) => `<tr><td style="text-align:center">第 ${r.policyYear} 年</td><td>${policyRowDate(policy, r)}</td><td>${formatMoney(r.premium || 0)}</td><td>${formatMoney(r.guaranteed || 0)}</td><td>${formatMoney(r.nonGuaranteed || 0)}</td><td>${formatMoney(r.surrender || 0)}</td><td style="text-align:left">${escapeHtml(r.note || "")}</td></tr>`)
+                .join("")}
+            </tbody>
+          </table>
+        </div>`;
+    });
+  }
+
+  function pdfPortfolioSection() {
+    const aggregate = portfolioAggregate();
+    const currencyInfo = aggregate.currencyInfo;
+    const money = (v) => formatMoneyWithCurrency(v, currencyInfo.displayCurrency);
+    const guaranteedProfit = aggregate.guaranteedPayout - aggregate.premiumSum;
+    const trialProfit = aggregate.trialPayout - aggregate.premiumSum;
+    const fxNote = currencyInfo.usesFx
+      ? `已依各保單設定匯率換算為 TWD：${state.policies.map((p) => `${escapeHtml(p.label || p.meta.name || p.meta.currency)} ${p.meta.currency}×${p.meta.fxToTwd}`).join("；")}。匯率僅為試算假設。`
+      : `所有保單皆為 ${currencyInfo.displayCurrency}，直接以原幣加總，未使用匯率換算。`;
+    return `
+      <p class="pirr-pdf-note">${fxNote}</p>
+      <div class="pirr-pdf-kv">
+        <div><span>保單張數</span><span>${state.policies.length}</span></div>
+        <div><span>組合累積保費</span><span>${money(aggregate.premiumSum)}</span></div>
+        <div><span>組合保證 IRR</span><span>${aggregate.guaranteedIrr.converged ? formatPercent(aggregate.guaranteedIrr.rate) : "無法計算"}</span></div>
+        <div><span>組合試算 IRR</span><span>${aggregate.trialIrr.converged ? formatPercent(aggregate.trialIrr.rate) : "無法計算"}</span></div>
+        <div><span>保證損益</span><span>${money(guaranteedProfit)}</span></div>
+        <div><span>含非保證損益</span><span>${money(trialProfit)}</span></div>
+      </div>
+      <table class="pirr-pdf-table" style="margin-top:14px">
+        <thead><tr><th>保單年度</th><th>總繳入保費</th><th>總保證領回</th><th>總非保證領回</th><th>總解約金</th><th>組合保證淨流</th><th>組合試算淨流</th></tr></thead>
+        <tbody>
+          ${aggregate.rows.map((row) => `<tr><td style="text-align:center">第 ${row.year} 年</td><td>${money(row.premium)}</td><td>${money(row.guaranteed)}</td><td>${money(row.nonGuaranteed)}</td><td>${money(row.surrender)}</td><td>${money(row.guaranteedNet)}</td><td>${money(row.trialNet)}</td></tr>`).join("")}
+        </tbody>
+      </table>`;
+  }
+
   async function generatePdfReport() {
     const btn = document.getElementById("btnGeneratePdf");
     if (typeof window.jspdf === "undefined" || typeof window.html2canvas === "undefined") {
       alert("PDF 產生元件尚未載入完成（可能是離線或 CDN 資源被封鎖），請確認網路連線後重新整理頁面再試一次。");
       return;
     }
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = "產生中…";
-    try {
-      const y = state.settings.surrenderYear;
-      const factor = state.settings.nonGuaranteedFactor;
-      const stats = yearlyStatsWithIrr(y, factor);
-      const guaranteedResult = stats.guaranteedIrr;
-      const trialResult = stats.trialIrr;
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "產生中…";
+      try {
+      const includePolicies = document.getElementById("reportIncludePolicies")?.checked !== false;
+      const includePortfolio = document.getElementById("reportIncludePortfolio")?.checked !== false;
+      if (!includePolicies && !includePortfolio) {
+        alert("請至少勾選一項報表內容。");
+        return;
+      }
+      const factor = state.global.nonGuaranteedFactor;
 
-      document.getElementById("pdfSummaryContent").innerHTML = `
-        <div class="pirr-pdf-kv">
-          <div><span>商品名稱</span><span>${escapeHtml(state.meta.product || "（未填寫）")}</span></div>
-          <div><span>試算名稱</span><span>${escapeHtml(state.meta.name || "未命名試算")}</span></div>
-          <div><span>試算日期</span><span>${todayStr()}</span></div>
-          <div><span>幣別</span><span>${state.meta.currency}</span></div>
-          <div><span>指定解約年度</span><span>第 ${y} 年</span></div>
-          <div><span>計算模式</span><span>${state.meta.mode === "date" ? "精確日期模式（XIRR）" : "年度簡易模式（IRR）"}</span></div>
-          <div><span>累積繳入保費</span><span>${formatMoney(stats.premiumSum)}</span></div>
-          <div><span>解約時總領回</span><span>${formatMoney(stats.totalPayout)}</span></div>
-          <div><span>保證年化 IRR</span><span>${guaranteedResult.converged ? formatPercent(guaranteedResult.rate) : "無法計算"}</span></div>
-          <div><span>含非保證利益年化 IRR</span><span>${trialResult.converged ? formatPercent(trialResult.rate) : "無法計算"}</span></div>
-          <div><span>損益金額</span><span>${formatMoney(stats.profit)}</span></div>
-          <div><span>總報酬率</span><span>${stats.totalReturn === null ? "—" : (stats.totalReturn * 100).toFixed(1) + "%"}</span></div>
-        </div>`;
+      document.getElementById("pdfSummaryContent").innerHTML = includePortfolio
+        ? pdfPortfolioSection()
+        : `<p class="pirr-pdf-note">本次報告未勾選組合總覽。各張保單明細自下一頁開始。</p>`;
 
-      const sortedRows = state.rows.slice().sort((a, b) => a.policyYear - b.policyYear);
-      document.getElementById("pdfCashflowContent").innerHTML = `
-        <table class="pirr-pdf-table">
-          <thead><tr><th>保單年度</th><th>日期</th><th>繳入保費</th><th>保證領回</th><th>非保證領回</th><th>解約金</th><th>備註</th></tr></thead>
-          <tbody>
-            ${sortedRows
-              .map(
-                (r) =>
-                  `<tr><td style="text-align:center">第 ${r.policyYear} 年</td><td>${rowDate(r)}</td><td>${formatMoney(r.premium || 0)}</td><td>${formatMoney(r.guaranteed || 0)}</td><td>${formatMoney(r.nonGuaranteed || 0)}</td><td>${formatMoney(r.surrender || 0)}</td><td style="text-align:left">${escapeHtml(r.note || "")}</td></tr>`
-              )
-              .join("")}
-          </tbody>
-        </table>`;
+      document.getElementById("pdfCashflowContent").innerHTML = includePolicies
+        ? state.policies.map((policy, index) => pdfPolicySection(policy, index)).join("")
+        : `<p class="pirr-pdf-note">本次報告未勾選各張保單明細。</p>`;
 
       const accCanvas = document.getElementById("chartAccumulation");
       const irrCanvas = document.getElementById("chartIrrCurve");
@@ -906,8 +1255,8 @@
       const includesLabel = { not_included: "未包含，另外加計", included: "已包含，不另行加計", unknown: "不確定" }[state.settings.surrenderIncludes];
       document.getElementById("pdfAssumptionsContent").innerHTML = `
         <ul>
-          <li>保費繳納時點：各保單年度期初</li>
-          <li>領回／解約金給付時點：${state.meta.mode === "date" ? "依實際輸入日期" : "各保單年度期末（簡易年度模式）"}</li>
+          <li>年度簡易模式時點：保單年度 0 為投保當下（t=0），保單年度 n 為投保後第 n 年的保單週年日（t=n）</li>
+          <li>保費、領回與解約金時點：${state.meta.mode === "date" ? "依實際輸入日期" : "同一列合併為該保單年度節點的當期淨現金流"}</li>
           <li>是否採實際日期折現：${state.meta.mode === "date" ? "是（XIRR，Actual/365）" : "否（年度 IRR）"}</li>
           <li>解約金是否已包含當年度領回：${includesLabel}</li>
           <li>非保證利益實現比例：${factor}%</li>
@@ -924,7 +1273,7 @@
       const pageHeight = doc.internal.pageSize.getHeight();
 
       await addHtmlPageSliced(doc, "pdfPage1", pageWidth, pageHeight, true);
-      await addHtmlPageSliced(doc, "pdfPage2", pageWidth, pageHeight, false);
+      if (includePolicies) await addHtmlPageSliced(doc, "pdfPage2", pageWidth, pageHeight, false);
       await addHtmlPageSliced(doc, "pdfPage3", pageWidth, pageHeight, false);
       await addHtmlPageSliced(doc, "pdfPage4", pageWidth, pageHeight, false);
 
@@ -946,12 +1295,19 @@
           const val = parser ? parser(e.target.value) : e.target.value;
           const [group, key] = path;
           state[group][key] = val;
+          if (group === "meta" && key === "name") activePolicy().label = val || activePolicy().label;
         });
       });
     };
     bind("fName", ["meta", "name"]);
     bind("fProduct", ["meta", "product"]);
-    bind("fCurrency", ["meta", "currency"]);
+    document.getElementById("fCurrency").addEventListener("change", (e) => {
+      mutate(() => {
+        state.meta.currency = e.target.value;
+        if (state.meta.currency === "TWD") state.meta.fxToTwd = 1;
+      });
+    });
+    bind("fFxToTwd", ["meta", "fxToTwd"], (v) => state.meta.currency === "TWD" ? 1 : Math.max(0, parseFloat(v) || 0));
     bind("fMode", ["meta", "mode"]);
     bind("fInvestDate", ["meta", "investDate"]);
     bind("fYears", ["meta", "years"], (v) => Math.max(1, parseInt(v, 10) || 20));
@@ -960,6 +1316,11 @@
     bind("fSurrenderYear", ["settings", "surrenderYear"], (v) => parseInt(v, 10));
     bind("fSurrenderIncludes", ["settings", "surrenderIncludes"]);
     bind("fDiscountRate", ["settings", "discountRate"], (v) => parseFloat(v));
+    document.getElementById("fPortfolioCurrencyMode").addEventListener("change", (e) => {
+      mutate(() => {
+        state.global.portfolioCurrencyMode = e.target.value;
+      });
+    });
 
     const slider = document.getElementById("fNonGuaranteedFactor");
     slider.addEventListener("input", () => {
@@ -967,12 +1328,19 @@
     });
     slider.addEventListener("change", () => {
       mutate(() => {
-        state.settings.nonGuaranteedFactor = parseInt(slider.value, 10);
+        state.global.nonGuaranteedFactor = parseInt(slider.value, 10);
+        state.policies.forEach((policy) => {
+          policy.settings.nonGuaranteedFactor = state.global.nonGuaranteedFactor;
+        });
+        state.settings.nonGuaranteedFactor = state.global.nonGuaranteedFactor;
       });
     });
   }
 
   function bindToolbar() {
+    document.getElementById("btnAddPolicy").addEventListener("click", addPolicy);
+    document.getElementById("btnRenamePolicy").addEventListener("click", renamePolicy);
+    document.getElementById("btnDeletePolicy").addEventListener("click", deletePolicy);
     document.getElementById("btnAddRow").addEventListener("click", addRow);
     document.getElementById("btnBuildYears").addEventListener("click", buildYears);
     document.getElementById("btnDuplicate").addEventListener("click", duplicateLastRow);
@@ -1019,7 +1387,7 @@
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       try {
-        state = JSON.parse(raw);
+        state = hydrateState(JSON.parse(raw));
       } catch (e) {
         state = defaultState();
       }

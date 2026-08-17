@@ -64,12 +64,18 @@
 .pirr-field input:focus, .pirr-field select:focus{
   outline:none; border-color:var(--navy-700); box-shadow:0 0 0 3px rgba(53,104,159,.15);
 }
+.pirr-field input:disabled{ color:var(--slate-500); background:var(--bg-soft); cursor:not-allowed; }
 
 @media (max-width:960px){ .pirr-field-grid{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:640px){ .pirr-field-grid{ grid-template-columns:1fr; } }
 
 /* ── 工具列 ───────────────────────────────── */
 .pirr-toolbar{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+.pirr-report-option{
+  display:inline-flex; align-items:center; gap:6px; padding:9px 12px; border:1px solid var(--line);
+  border-radius:999px; background:var(--bg-soft); color:var(--pirr-ink); font-size:.8rem; font-weight:800;
+}
+.pirr-report-option input{ accent-color:var(--navy-700); }
 .pirr-btn{
   display:inline-flex; align-items:center; gap:6px; padding:9px 16px;
   border-radius:999px; font-size:.82rem; font-weight:800; letter-spacing:.02em;
@@ -92,6 +98,9 @@
   position:sticky; top:0; background:var(--bg-soft); color:var(--pirr-ink); font-family:var(--font-body);
   font-weight:800; font-size:.74rem; letter-spacing:.03em; text-align:right; padding:10px 8px; white-space:nowrap;
   border-bottom:1px solid var(--line-strong);
+}
+.pirr-table th small{
+  display:block; margin-top:3px; font-size:.66rem; font-weight:600; color:var(--slate-500); letter-spacing:0;
 }
 .pirr-table th:first-child, .pirr-table td:first-child{ text-align:center; }
 .pirr-table td{ padding:4px 6px; border-bottom:1px solid var(--line); text-align:right; vertical-align:middle; }
@@ -118,17 +127,60 @@
   border-radius:12px; padding:10px 14px; margin:12px 0 16px; line-height:1.7;
 }
 
+/* ── 多保單工作區 ─────────────────────────── */
+.pirr-policy-bar{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+.pirr-policy-tabs{ display:flex; flex-wrap:wrap; gap:8px; flex:1; }
+.pirr-policy-tab{
+  --policy-tone: var(--navy-700);
+  border:1px solid var(--line); background:var(--white); color:var(--pirr-ink);
+  border-radius:999px; padding:8px 14px; font-size:.8rem; font-weight:800; cursor:pointer;
+  transition:all var(--ease-ui);
+  display:inline-flex; align-items:center; gap:7px;
+}
+.pirr-policy-tab:hover{ background:var(--bg-soft); border-color:var(--navy-700); }
+.pirr-policy-tab.active{ background:rgba(36,79,131,.1); border-color:var(--policy-tone); box-shadow:inset 0 -3px 0 var(--policy-tone); }
+.pirr-policy-dot{ width:9px; height:9px; border-radius:50%; background:var(--policy-tone); flex:none; }
+.pirr-policy-tab.tone-0{ --policy-tone:#244f83; }
+.pirr-policy-tab.tone-1{ --policy-tone:#d97706; }
+.pirr-policy-tab.tone-2{ --policy-tone:#047857; }
+.pirr-policy-tab.tone-3{ --policy-tone:#7c3aed; }
+.pirr-policy-tab.tone-4{ --policy-tone:#be123c; }
+.pirr-policy-tab.tone-5{ --policy-tone:#0f766e; }
+.pirr-policy-actions{ display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+.pirr-active-policy{
+  --policy-tone:var(--navy-700);
+  display:flex; align-items:center; gap:8px; margin:0 0 12px; padding:10px 14px;
+  border:1px solid var(--line);
+  border-left:4px solid var(--policy-tone); border-radius:12px;
+  background:var(--bg-soft);
+  color:var(--pirr-ink); font-size:.84rem;
+}
+.pirr-active-policy small{ color:var(--slate-500); font-weight:700; margin-left:4px; }
+.pirr-active-policy.tone-0{ --policy-tone:#244f83; }
+.pirr-active-policy.tone-1{ --policy-tone:#d97706; }
+.pirr-active-policy.tone-2{ --policy-tone:#047857; }
+.pirr-active-policy.tone-3{ --policy-tone:#7c3aed; }
+.pirr-active-policy.tone-4{ --policy-tone:#be123c; }
+.pirr-active-policy.tone-5{ --policy-tone:#0f766e; }
+@media (max-width:760px){
+  .pirr-policy-bar{ flex-direction:column; }
+  .pirr-policy-actions{ justify-content:flex-start; }
+}
+
 /* ── 設定行（解約金是否含當年給付 / 折現率 / 解約年度） ── */
 .pirr-settings-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:18px; }
+.pirr-settings-row.portfolio-settings{ margin:0 0 16px; }
 @media (max-width:760px){ .pirr-settings-row{ grid-template-columns:1fr; } }
 
 /* ── 非保證利益滑桿 ───────────────────────── */
 .pirr-slider-row{ display:flex; align-items:center; gap:14px; margin-top:6px; }
 .pirr-slider-row input[type="range"]{ flex:1; accent-color:var(--navy-700); }
 .pirr-slider-value{ font-family:var(--font-mono); font-weight:800; color:var(--pirr-accent); min-width:52px; text-align:right; }
+.pirr-slider-note{ margin:2px 0 10px; }
 
 /* ── 結果指標卡 ───────────────────────────── */
 .pirr-stat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.pirr-stat-grid.portfolio{ margin-top:0; }
 @media (max-width:960px){ .pirr-stat-grid{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:560px){ .pirr-stat-grid{ grid-template-columns:1fr; } }
 
@@ -175,6 +227,33 @@
 .pirr-year-table tr.active{ background:var(--surface-accent); }
 .pirr-year-table tr.active td:first-child{ font-weight:800; color:var(--pirr-accent); }
 .pirr-year-table .breakeven{ color:var(--success); font-weight:700; }
+
+/* ── 組合總覽區塊 ─────────────────────────── */
+.pirr-portfolio-card{
+  background:linear-gradient(180deg,rgba(255,251,235,.92),var(--bg-card-grad-end));
+  border-color:rgba(217,119,6,.35);
+  box-shadow:0 10px 28px rgba(217,119,6,.08);
+  border-left:5px solid var(--amber-500);
+}
+.pirr-portfolio-card .pirr-card-title{ color:var(--navy-900); border-bottom-color:rgba(217,119,6,.26); }
+.pirr-portfolio-card .pirr-flow-note{
+  background:rgba(255,255,255,.76); border-color:rgba(217,119,6,.28);
+}
+.pirr-portfolio-card .pirr-stat{
+  background:rgba(255,255,255,.86); border-color:rgba(217,119,6,.22);
+}
+.pirr-portfolio-card .pirr-stat:nth-child(3),
+.pirr-portfolio-card .pirr-stat:nth-child(4){
+  background:rgba(237,243,249,.86); border-color:rgba(36,79,131,.22);
+}
+.pirr-portfolio-card .pirr-year-table th{
+  background:rgba(255,247,237,.95); border-bottom-color:rgba(217,119,6,.35);
+}
+.pirr-portfolio-card .pirr-year-table td:nth-child(6),
+.pirr-portfolio-card .pirr-year-table td:nth-child(7){
+  background:rgba(237,243,249,.62); font-weight:700;
+}
+.pirr-portfolio-card .pirr-year-table td:nth-child(7){ color:var(--amber-600); }
 
 /* ── 圖表 ─────────────────────────────────── */
 .pirr-chart-wrap{ position:relative; height:320px; }
@@ -236,13 +315,17 @@
   font-family:"Noto Serif TC",serif; font-size:20px; font-weight:700; color:#102947;
   margin:0 0 18px; padding-bottom:10px; border-bottom:2px solid #244f83;
 }
+.pirr-pdf-section{ break-inside:avoid; margin:0 0 28px; padding-bottom:20px; border-bottom:1px solid #dbe4ee; }
+.pirr-pdf-section h3{ font-size:15px; color:#102947; margin:0 0 12px; }
+.pirr-pdf-note{ font-size:12px; line-height:1.8; color:#4a586e; margin:0 0 14px; overflow-wrap:anywhere; }
 .pirr-pdf-kv{ display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
-.pirr-pdf-kv div{ display:flex; justify-content:space-between; gap:10px; border-bottom:1px solid #dbe4ee; padding:8px 0; font-size:13px; }
+.pirr-pdf-kv div{ display:flex; justify-content:space-between; gap:10px; border-bottom:1px solid #dbe4ee; padding:8px 0; font-size:13px; min-width:0; }
 .pirr-pdf-kv div span:first-child{ color:#4a586e; }
-.pirr-pdf-kv div span:last-child{ font-weight:700; color:#102947; }
-.pirr-pdf-table{ width:100%; border-collapse:collapse; font-size:11px; }
+.pirr-pdf-kv div span:last-child{ font-weight:700; color:#102947; text-align:right; overflow-wrap:anywhere; }
+.pirr-pdf-table{ width:100%; border-collapse:collapse; table-layout:fixed; font-size:10px; }
 .pirr-pdf-table th, .pirr-pdf-table td{ border:1px solid #dbe4ee; padding:5px 6px; text-align:right; }
-.pirr-pdf-table th{ background:#edf3f9; color:#102947; }
+.pirr-pdf-table th{ background:#edf3f9; color:#102947; white-space:normal; line-height:1.35; }
+.pirr-pdf-table td{ overflow-wrap:anywhere; line-height:1.35; }
 .pirr-pdf-assumptions ul{ margin:0 0 16px 18px; padding:0; }
 .pirr-pdf-assumptions li{ font-size:12px; line-height:1.9; color:#1a2433; }
 .pirr-pdf-assumptions p{ font-size:12px; line-height:1.8; color:#4a586e; margin:0 0 10px; }

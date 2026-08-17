@@ -116,7 +116,12 @@
               <option value="JPY">日圓 JPY</option>
               <option value="EUR">歐元 EUR</option>
             </select>
-            <div class="pirr-hint">不同幣別不可直接合併計算 IRR</div>
+            <div class="pirr-hint">單張保單以原幣試算；組合總覽會依需要換算</div>
+          </div>
+          <div class="pirr-field">
+            <label for="fFxToTwd">對 TWD 匯率</label>
+            <input id="fFxToTwd" type="number" min="0" step="0.0001" value="1">
+            <div class="pirr-hint">TWD 固定為 1；外幣請填 1 單位原幣可換多少 TWD</div>
           </div>
           <div class="pirr-field">
             <label for="fMode">計算模式</label>
@@ -153,9 +158,29 @@
         </div>
       </div>
 
+      <!-- 多保單工作區 -->
+      <div class="pirr-card">
+        <div class="pirr-card-title">多保單工作區 <small>第一版限定同一幣別加總；下方表格編輯目前選取的保單。</small></div>
+        <div class="pirr-flow-note">
+          <strong>使用方式：</strong>每張保單各自輸入年度現金流與解約年度；「組合總覽」會把所有保單依保單年度加總，再計算整體保證 IRR 與含非保證利益 IRR。非保證利益實現比例先共用同一個滑桿。
+        </div>
+        <div class="pirr-policy-bar">
+          <div class="pirr-policy-tabs" id="policyTabs"></div>
+          <div class="pirr-policy-actions no-print">
+            <button class="pirr-btn" id="btnAddPolicy" type="button">＋ 新增保單</button>
+            <button class="pirr-btn" id="btnRenamePolicy" type="button">重新命名</button>
+            <button class="pirr-btn pirr-btn-danger" id="btnDeletePolicy" type="button">刪除目前保單</button>
+          </div>
+        </div>
+      </div>
+
       <!-- ② 現金流輸入表 -->
       <div class="pirr-card">
         <div class="pirr-card-title">② 年度現金流輸入表 <small>繳入保費視為資金流出；領回金額及解約金視為資金流入，輸入正數即可。</small></div>
+        <div class="pirr-active-policy" id="activePolicyBanner"></div>
+        <div class="pirr-flow-note">
+          <strong>現金流時點註記：</strong>年度簡易模式以「保單年度」作為折現年度節點：保單年度 0 代表投保當下（t=0），保單年度 n 代表投保後第 n 年的保單週年日（t=n）。同一列的繳入保費、保證領回、非保證領回與解約金會合併成該年度節點的「當期淨現金流」＝保證領回＋非保證領回＋解約金－繳入保費，並以該列保單年度作為 IRR 期數。例如第 0～5 年各繳 1,000,000、第 6 年解約領回 7,000,000，會以 t=0～5 支出、t=6 流入計算。若要區分同一年度內的期初保費與期末領回，請改用「精確日期模式（XIRR）」輸入各自日期。
+        </div>
 
         <div class="pirr-toolbar no-print">
           <button class="pirr-btn" id="btnAddRow" type="button">＋ 新增一列</button>
@@ -177,11 +202,11 @@
               <tr>
                 <th>保單年度</th>
                 <th id="thDate" style="display:none">日期</th>
-                <th>繳入保費</th>
-                <th>保證領回</th>
-                <th>非保證領回</th>
-                <th>解約金</th>
-                <th>當期淨現金流</th>
+                <th>繳入保費<br><small>該年度節點支出</small></th>
+                <th>保證領回<br><small>該年度節點流入</small></th>
+                <th>非保證領回<br><small>該年度節點流入</small></th>
+                <th>解約金<br><small>該年度節點流入</small></th>
+                <th>當期淨現金流<br><small>該列年度節點</small></th>
                 <th>備註</th>
                 <th></th>
               </tr>
@@ -218,6 +243,9 @@
         </div>
         <div class="pirr-field" style="margin-top:18px">
           <label for="fNonGuaranteedFactor">非保證利益實現比例（用於「試算 IRR」；超過 100% 僅供敏感度測試，不代表預測）</label>
+          <div class="pirr-flow-note pirr-slider-note">
+            <strong>白話說明：</strong>非保證利益不是保證會拿到的錢。這個滑桿用來調整「假設最後實際拿到多少非保證利益」，並觀察 IRR 會怎麼變。100% 代表完全依照示範表計算；低於 100% 代表打折估算；超過 100% 僅供敏感度測試，不代表預測。
+          </div>
           <div class="pirr-slider-row">
             <input type="range" id="fNonGuaranteedFactor" min="0" max="120" value="100">
             <span class="pirr-slider-value" id="fNonGuaranteedFactorVal">100%</span>
@@ -263,6 +291,36 @@
         <div class="pirr-scenario-grid" id="scenarioGrid"></div>
       </div>
 
+      <div class="pirr-card pirr-portfolio-card">
+        <div class="pirr-card-title">組合總覽 <small>同幣別用原幣加總；不同幣別依匯率換算為 TWD。</small></div>
+        <div class="pirr-settings-row portfolio-settings">
+          <div class="pirr-field">
+            <label for="fPortfolioCurrencyMode">組合呈現幣別</label>
+            <select id="fPortfolioCurrencyMode">
+              <option value="auto" selected>自動（同幣別用原幣；不同幣別用 TWD）</option>
+              <option value="twd">強制換算為 TWD</option>
+            </select>
+          </div>
+        </div>
+        <div id="portfolioSummary"></div>
+        <div class="pirr-table-wrap" style="margin-top:16px">
+          <table class="pirr-year-table">
+            <thead>
+              <tr>
+                <th>保單年度</th>
+                <th>總繳入保費</th>
+                <th>總保證領回</th>
+                <th>總非保證領回</th>
+                <th>總解約金</th>
+                <th>組合保證淨流</th>
+                <th>組合試算淨流</th>
+              </tr>
+            </thead>
+            <tbody id="portfolioYearBody"></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- ⑤ 年度比較表 -->
       <div class="pirr-card">
         <div class="pirr-card-title">⑤ 各年度解約比較 <small>點選任一列，切換上方「選擇解約年度」</small></div>
@@ -295,6 +353,8 @@
 
       <!-- 匯出 / 儲存 -->
       <div class="pirr-toolbar no-print">
+        <label class="pirr-report-option"><input type="checkbox" id="reportIncludePolicies" checked> 包含各張保單明細</label>
+        <label class="pirr-report-option"><input type="checkbox" id="reportIncludePortfolio" checked> 包含組合總覽</label>
         <button class="pirr-btn pirr-btn-primary" id="btnSave" type="button">💾 儲存試算（本機）</button>
         <button class="pirr-btn" id="btnLoad" type="button">載入已儲存試算</button>
         <button class="pirr-btn" id="btnExportCsv" type="button">匯出 CSV</button>
@@ -344,7 +404,7 @@
   <!-- PDF 報告用的隱藏排版頁（html2canvas 擷取用，固定淺色排版不跟隨深色模式） -->
   <div id="pdfReportRoot" aria-hidden="true">
     <div class="pirr-pdf-page" id="pdfPage1">
-      <h2>試算摘要</h2>
+      <h2>組合總覽</h2>
       <div id="pdfSummaryContent"></div>
     </div>
     <div class="pirr-pdf-page" id="pdfPage2">
