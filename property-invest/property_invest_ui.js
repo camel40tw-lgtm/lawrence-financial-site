@@ -8,7 +8,14 @@
 
   const STORAGE_KEY = "propertyInvestState_v1";
   const Engine = window.PropertyCalcEngine;
-  const STEP_LABELS = ["購屋能力", "房貸規劃", "出租報酬", "增值出售", "分析結果"];
+  const STEP_LABELS = ["資金門檻", "貸款壓力", "營運現金流", "出場假設", "投資判讀"];
+  const MODULE_ROLES = [
+    "買不買得起",
+    "每月負擔與利率",
+    "租金能否支撐",
+    "持有期與出售回收",
+    "情境與風險統整",
+  ];
 
   let state = null;
   let currentStep = 1;
@@ -31,6 +38,7 @@
         otherDebtPayment: 10000, mortgageBurdenRate: 0.3,
         purchasePrice: 12000000, appraisalValue: 11500000, loanBaseMethod: "lower_of_two", ltv: 0.7,
         acquisitionFixedCost: 500000, acquisitionCostRate: 0, renovationCost: 600000, maxPurchaseBudget: null,
+        borrowerType: "natural_person", existingMortgageCount: 0, hasExistingHouse: "no", replacementNeed: "no", highValueResidence: "no",
       },
       loan: {
         manualLoanAmount: false, loanAmount: 8000000, annualRate: 0.024, termYears: 30,
@@ -49,9 +57,26 @@
       },
       sale: {
         holdingYears: 5, appreciationMethod: "fixed_rate", appreciationRate: 0.02, targetSalePrice: null,
-        saleCostRate: 0.04, fixedSaleCost: 0, saleTaxInput: 0,
+        saleCostRate: 0.04, fixedSaleCost: 0, saleTaxInput: 0, discountRate: 0.04,
       },
     };
+  }
+
+  function normalizeState(raw) {
+    const base = defaultState();
+    const s = raw || {};
+    s.affordability = Object.assign({}, base.affordability, s.affordability || {});
+    s.loan = Object.assign({}, base.loan, s.loan || {});
+    s.loan.rateStage2 = Object.assign({}, base.loan.rateStage2, s.loan.rateStage2 || {});
+    s.rental = Object.assign({}, base.rental, s.rental || {});
+    s.rental.annualOperatingCosts = Array.isArray(s.rental.annualOperatingCosts) ? s.rental.annualOperatingCosts : base.rental.annualOperatingCosts;
+    s.sale = Object.assign({}, base.sale, s.sale || {});
+    return s;
+  }
+
+  function npvFor(result) {
+    const rate = state && state.sale ? state.sale.discountRate || 0 : 0;
+    return Engine.calcNpv(rate, result.cashflows);
   }
 
   // ── 格式化 ───────────────────────────────────────────────
@@ -136,7 +161,7 @@
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return alert("目前沒有已儲存的草稿。");
     try {
-      state = JSON.parse(raw);
+      state = normalizeState(JSON.parse(raw));
       renderAll();
     } catch (e) {
       alert("讀取失敗，資料可能已損毀。");
@@ -144,7 +169,7 @@
   }
   function resetAll() {
     if (!confirm("確定要重新試算嗎？所有輸入資料將會清除。")) return;
-    state = defaultState();
+    state = normalizeState(defaultState());
     localStorage.removeItem(STORAGE_KEY);
     currentStep = 1;
     renderAll();
@@ -262,6 +287,8 @@
     if (res.affordability.appraisalBelowPrice) alerts.step1.push({ level: "warning", text: "銀行鑑價低於成交價，須自行補足鑑價差額" });
     if (!res.affordability.isDownPaymentSufficient) alerts.step1.push({ level: "danger", text: `自備款不足，缺口約 ${formatMoney(Math.abs(res.affordability.downPaymentGap))}` });
     if (res.affordability.estimatedLoanAmount > a.purchasePrice) alerts.step1.push({ level: "warning", text: "貸款金額高於房價，請確認貸款成數是否合理" });
+    if (res.affordability.cashflowLimitedPayment <= 0 && a.monthlyIncome > 0) alerts.step1.push({ level: "danger", text: "固定支出與既有債務已吃掉可支配收入，月付能力為 0" });
+    else if (res.affordability.cashflowLimitedPayment < res.affordability.burdenLimitedPayment) alerts.step1.push({ level: "warning", text: "月付能力主要受固定支出與既有債務限制，而非收入負擔率" });
 
     if (a.ltv < 0 || a.ltv > 1) alerts.step2.push({ level: "danger", text: "貸款成數須介於 0% 至 100%" });
     if (l.termYears * 12 < 1) alerts.step2.push({ level: "danger", text: "貸款期間至少為 1 個月" });
@@ -269,6 +296,17 @@
     if (l.repaymentMethod === "grace" && l.graceMonths > 0) alerts.step2.push({ level: "info", text: "您設定了寬限期：多數央行規範情況下（自然人名下無房貸者除外）不得有寬限期，請自行確認是否符合條件。" });
     if (a.ltv > 0.6) alerts.step2.push({ level: "info", text: "貸款成數高於六成：請自行確認是否符合央行對已有房貸者的成數上限規定。" });
     if (currentResult.monthlyPayment > a.monthlyIncome * 0.5 && a.monthlyIncome > 0) alerts.step2.push({ level: "warning", text: "房貸月付高於收入 50%，請留意還款壓力" });
+    const mortgageCount = parseInt(a.existingMortgageCount, 10) || 0;
+    const hasGrace = l.repaymentMethod === "grace" && l.graceMonths > 0;
+    if (a.borrowerType === "company" && a.ltv > 0.3) alerts.step2.push({ level: "danger", text: "公司法人購置住宅：央行提示最高貸款成數 3 成" });
+    if (a.borrowerType === "company" && hasGrace) alerts.step2.push({ level: "danger", text: "公司法人購置住宅：央行提示不得有寬限期" });
+    if (a.borrowerType === "natural_person" && a.highValueResidence === "yes" && a.ltv > 0.3) alerts.step2.push({ level: "danger", text: "自然人購置高價住宅：央行提示最高貸款成數 3 成" });
+    if (a.borrowerType === "natural_person" && a.highValueResidence === "yes" && hasGrace) alerts.step2.push({ level: "danger", text: "自然人購置高價住宅：央行提示不得有寬限期" });
+    if (a.borrowerType === "natural_person" && mortgageCount === 1 && a.replacementNeed !== "yes" && a.ltv > 0.6) alerts.step2.push({ level: "danger", text: "自然人第 2 戶購屋貸款：央行提示最高貸款成數 6 成" });
+    if (a.borrowerType === "natural_person" && mortgageCount === 1 && a.replacementNeed !== "yes" && hasGrace) alerts.step2.push({ level: "danger", text: "自然人第 2 戶購屋貸款：央行提示不得有寬限期" });
+    if (a.borrowerType === "natural_person" && mortgageCount >= 2 && a.ltv > 0.3) alerts.step2.push({ level: "danger", text: "自然人第 3 戶以上購屋貸款：央行提示最高貸款成數 3 成" });
+    if (a.borrowerType === "natural_person" && mortgageCount >= 2 && hasGrace) alerts.step2.push({ level: "danger", text: "自然人第 3 戶以上購屋貸款：央行提示不得有寬限期" });
+    if (a.borrowerType === "natural_person" && mortgageCount === 0 && a.hasExistingHouse === "yes" && a.replacementNeed !== "yes" && hasGrace) alerts.step2.push({ level: "danger", text: "自然人名下有房屋者第 1 戶購屋貸款：央行提示不得有寬限期" });
 
     if (r.vacancyRate > 1) alerts.step3.push({ level: "danger", text: "空置率須介於 0% 至 100%" });
     const y1 = res.rentalByYear[0];
@@ -292,15 +330,71 @@
   }
 
   // ── 步驟導覽 ─────────────────────────────────────────────
+  function moduleStatuses() {
+    const alerts = computeAlerts();
+    const y1 = currentResult.rentalByYear[0];
+    const monthlyCashFlow = currentResult.firstYearCashFlow / 12;
+    const irrOk = currentResult.irr.status === "ok";
+
+    function fromAlerts(list, fallback) {
+      if (list.some((a) => a.level === "danger")) return { level: "danger", text: "待修正" };
+      if (list.some((a) => a.level === "warning")) return { level: "warn", text: "需注意" };
+      return fallback || { level: "ok", text: "可行" };
+    }
+
+    return [
+      fromAlerts(alerts.step1, currentResult.affordability.isDownPaymentSufficient ? { level: "ok", text: "可負擔" } : { level: "danger", text: "資金不足" }),
+      fromAlerts(alerts.step2, { level: "ok", text: "可承受" }),
+      fromAlerts(alerts.step3, y1 && y1.dscr !== null && y1.dscr < 1 ? { level: "warn", text: "現金流緊" } : { level: "ok", text: "可持有" }),
+      fromAlerts(alerts.step4, currentResult.netSaleProceeds >= 0 ? { level: "ok", text: "可回收" } : { level: "warn", text: "回收偏弱" }),
+      irrOk && monthlyCashFlow >= 0 ? { level: "ok", text: "待比較" } : { level: "warn", text: "需情境判讀" },
+    ];
+  }
+
+  function setOverviewValue(id, text, level) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    el.className = level || "";
+  }
+
+  function renderLiveOverview() {
+    const y1 = currentResult.rentalByYear[0];
+    const monthlyCashFlow = currentResult.firstYearCashFlow / 12;
+    const cashGap = currentResult.affordability.downPaymentGap;
+    const irrText = currentResult.irr.status === "ok" ? formatPercent(currentResult.irr.rate) : "無法計算";
+
+    setOverviewValue("liveCashGap", cashGap >= 0 ? "餘裕 " + formatMoney(cashGap) : "缺口 " + formatMoney(Math.abs(cashGap)), cashGap >= 0 ? "success" : "danger");
+    setOverviewValue("liveMonthlyPayment", formatMoney(currentResult.monthlyPayment), "");
+    setOverviewValue("liveMonthlyCashFlow", formatMoney(monthlyCashFlow), monthlyCashFlow >= 0 ? "success" : "danger");
+    setOverviewValue("liveDscr", y1 && y1.dscr !== null ? y1.dscr.toFixed(2) : "--", y1 && y1.dscr !== null && y1.dscr < 1 ? "warn" : "success");
+    setOverviewValue("liveNetSale", formatMoney(currentResult.netSaleProceeds), currentResult.netSaleProceeds >= 0 ? "success" : "danger");
+    setOverviewValue("liveIrr", irrText, currentResult.irr.status === "ok" ? "success" : "warn");
+
+    const decision = document.getElementById("overviewDecision");
+    if (!decision) return;
+    if (cashGap < 0) decision.textContent = "目前主要卡在資金門檻，需降低成交價、提高自備款或調整貸款成數。";
+    else if (y1 && y1.dscr !== null && y1.dscr < 1) decision.textContent = "資金可進場，但營運現金流偏緊，應回頭檢查租金、空置、修繕與貸款條件。";
+    else if (monthlyCashFlow < 0) decision.textContent = "持有期間仍需補貼現金流，建議用壓力測試確認可承受年限。";
+    else if (currentResult.irr.status !== "ok") decision.textContent = "現金流型態不足以計算 IRR，需回到出場假設或租金現金流重新檢查。";
+    else decision.textContent = "目前假設下資金、貸款與持有現金流可同步檢視，下一步重點是比較保守情境與壓力測試。";
+  }
+
   function renderProgress() {
+    const main = document.querySelector(".pinv-main");
+    if (main) main.dataset.currentStep = String(currentStep);
     const bar = document.getElementById("progressBar");
+    const statuses = moduleStatuses();
     bar.innerHTML = STEP_LABELS.map((label, i) => {
       const step = i + 1;
       const cls = step === currentStep ? "active" : step < currentStep ? "done" : "";
+      const status = statuses[i] || { level: "", text: "待評估" };
       return `
       <button type="button" class="pinv-step-dot ${cls}" data-step="${step}">
         <span class="pinv-circle"><span>${step}</span></span>
         <span class="pinv-step-label">${label}</span>
+        <span class="pinv-step-role">${MODULE_ROLES[i]}</span>
+        <span class="pinv-step-status ${status.level}">${status.text}</span>
       </button>`;
     }).join("");
     bar.querySelectorAll(".pinv-step-dot").forEach((btn) => {
@@ -335,6 +429,11 @@
     document.getElementById("aAcquisitionCostRate").value = a.acquisitionCostRate * 100;
     document.getElementById("aRenovationCost").value = a.renovationCost;
     document.getElementById("aMaxPurchaseBudget").value = a.maxPurchaseBudget == null ? "" : a.maxPurchaseBudget;
+    document.getElementById("aBorrowerType").value = a.borrowerType;
+    document.getElementById("aExistingMortgageCount").value = String(a.existingMortgageCount);
+    document.getElementById("aHasExistingHouse").value = a.hasExistingHouse;
+    document.getElementById("aReplacementNeed").value = a.replacementNeed;
+    document.getElementById("aHighValueResidence").value = a.highValueResidence;
 
     const r = currentResult.affordability;
     document.getElementById("sumLoanBase").textContent = formatMoney(r.loanBase);
@@ -434,6 +533,7 @@
     document.getElementById("sSaleCostRate").value = s.saleCostRate * 100;
     document.getElementById("sFixedSaleCost").value = s.fixedSaleCost;
     document.getElementById("sSaleTaxInput").value = s.saleTaxInput;
+    document.getElementById("sDiscountRate").value = s.discountRate * 100;
 
     document.getElementById("saleSummaryTitle").textContent = `第 ${s.holdingYears} 年出售摘要`;
     document.getElementById("sumSalePrice").textContent = formatMoney(currentResult.salePrice);
@@ -441,6 +541,10 @@
     document.getElementById("sumLoanBalanceAtSale").textContent = formatMoney(currentResult.loanBalanceAtSale);
     document.getElementById("sumNetSaleProceeds").textContent = formatMoney(currentResult.netSaleProceeds);
     document.getElementById("sumHomeEquity").textContent = formatMoney(currentResult.homeEquityAtSale);
+    const npvEl = document.getElementById("sumNpv");
+    const npv = npvFor(currentResult);
+    npvEl.textContent = formatMoney(npv);
+    npvEl.className = "value " + (npv >= 0 ? "success" : "danger");
   }
 
   // ── 步驟五：分析結果 ─────────────────────────────────────
@@ -468,6 +572,10 @@
     cfEl.textContent = formatMoney(monthlyCf);
     cfEl.className = "pinv-stat-value " + (monthlyCf >= 0 ? "success" : "danger");
     document.getElementById("statIrr").textContent = result.irr.status === "ok" ? formatPercent(result.irr.rate) : "無法計算";
+    const npv = npvFor(result);
+    const npvEl = document.getElementById("statNpv");
+    npvEl.textContent = formatMoney(npv);
+    npvEl.className = "pinv-stat-value " + (npv >= 0 ? "success" : "danger");
 
     // 三情境比較表
     const compareBody = document.getElementById("scenarioCompareBody");
@@ -475,13 +583,15 @@
       .map((key) => {
         const r = scenarioResults[key];
         const label = Engine.PRESET_SCENARIOS[key].label;
-        return `<tr><td>${label}</td><td>${formatMoney(r.firstYearCashFlow / 12)}</td><td>${formatMoney(r.netSaleProceeds)}</td><td>${r.irr.status === "ok" ? formatPercent(r.irr.rate) : "無法計算"}</td><td>${r.roi === null ? "—" : formatPercent(r.roi)}</td><td>${r.equityMultiple === null ? "—" : r.equityMultiple.toFixed(2) + "x"}</td></tr>`;
+        const scenarioNpv = npvFor(r);
+        return `<tr><td>${label}</td><td>${formatMoney(r.firstYearCashFlow / 12)}</td><td>${formatMoney(r.netSaleProceeds)}</td><td>${r.irr.status === "ok" ? formatPercent(r.irr.rate) : "無法計算"}</td><td>${formatMoney(scenarioNpv)}</td><td>${r.roi === null ? "—" : formatPercent(r.roi)}</td><td>${r.equityMultiple === null ? "—" : r.equityMultiple.toFixed(2) + "x"}</td></tr>`;
       })
       .join("");
 
     renderCharts(result);
     renderJudgeAndRisk(result);
     renderStressGrid();
+    renderRegulatoryTable();
     renderAlertZone("alertZoneRegulatory", computeAlerts().step2.filter((a) => a.level === "info"));
   }
 
@@ -556,19 +666,108 @@
       .join("");
   }
 
+  function regulatoryRows() {
+    const a = state.affordability;
+    const rows = [];
+    const ltvPercent = (a.ltv || 0) * 100;
+    const hasGrace = state.loan.repaymentMethod === "grace" && state.loan.graceMonths > 0;
+    const mortgageCount = parseInt(a.existingMortgageCount, 10) || 0;
+    const hasHouse = a.hasExistingHouse === "yes";
+    const replacement = a.replacementNeed === "yes";
+
+    function add(situation, note, level) {
+      rows.push({ situation, note, level: level || "" });
+    }
+
+    if (a.borrowerType === "company") {
+      add("公司法人購置住宅", "央行選擇性信用管制提示：最高貸款成數 3 成，且不得有寬限期。", "danger");
+      if (ltvPercent > 30) add("目前輸入貸款成數", `目前為 ${ltvPercent.toFixed(0)}%，高於上述 3 成提示，請確認銀行核貸條件。`, "danger");
+      if (hasGrace) add("目前輸入寬限期", "公司法人購置住宅一般不得有寬限期，請調整或與承貸銀行確認。", "danger");
+      return rows;
+    }
+
+    if (a.highValueResidence === "yes") {
+      add("自然人購置高價住宅", "央行提示：最高貸款成數 3 成，且不得有寬限期。", "danger");
+      if (ltvPercent > 30) add("目前輸入貸款成數", `目前為 ${ltvPercent.toFixed(0)}%，高於高價住宅 3 成提示。`, "danger");
+      if (hasGrace) add("目前輸入寬限期", "高價住宅貸款一般不得有寬限期。", "danger");
+      return rows;
+    }
+
+    if (mortgageCount >= 2) {
+      add("自然人第 3 戶以上購屋貸款", "央行提示：最高貸款成數 3 成，且不得有寬限期。", "danger");
+      if (ltvPercent > 30) add("目前輸入貸款成數", `目前為 ${ltvPercent.toFixed(0)}%，高於第 3 戶以上 3 成提示。`, "danger");
+      if (hasGrace) add("目前輸入寬限期", "第 3 戶以上購屋貸款一般不得有寬限期。", "danger");
+      return rows;
+    }
+
+    if (mortgageCount === 1) {
+      if (replacement) {
+        add("自然人已有 1 戶房貸且主張換屋自住", "央行問答提示：與承貸金融機構切結後，可能適用先買後賣協處；通常需於撥款後 18 個月內出售原擔保品、清償並塗銷原房貸。", "warn");
+      } else {
+        add("自然人第 2 戶購屋貸款", "2026-03-20 起央行提示：最高貸款成數 6 成，且不得有寬限期。", "warn");
+        if (ltvPercent > 60) add("目前輸入貸款成數", `目前為 ${ltvPercent.toFixed(0)}%，高於第 2 戶 6 成提示。`, "danger");
+        if (hasGrace) add("目前輸入寬限期", "第 2 戶購屋貸款一般不得有寬限期。", "danger");
+      }
+      return rows;
+    }
+
+    if (mortgageCount === 0 && hasHouse) {
+      if (replacement) {
+        add("自然人無房貸但名下有房屋，且主張換屋自住", "央行問答提示：與承貸金融機構切結後，可能不受不得有寬限期限制；通常需於撥款後 18 個月內出售原有房屋並完成移轉登記。", "warn");
+      } else {
+        add("自然人無房貸但名下有房屋", "央行提示：名下有房屋者申辦第 1 戶購屋貸款一般不得有寬限期。", "warn");
+        if (hasGrace) add("目前輸入寬限期", "此條件下一般不得有寬限期，請確認是否符合例外或協處條件。", "danger");
+      }
+      return rows;
+    }
+
+    add("自然人名下無房貸且無房屋", "目前未觸發本工具列出的央行選擇性信用管制成數/寬限期提示；仍須以銀行鑑價、聯徵與正式核貸結果為準。", "ok");
+    return rows;
+  }
+
+  function renderRegulatoryTable() {
+    const body = document.getElementById("regulatoryTableBody");
+    if (!body) return;
+    body.innerHTML = regulatoryRows()
+      .map((r) => `<tr class="${r.level ? "pinv-reg-row-" + r.level : ""}"><td>${r.situation}</td><td>${r.note}</td></tr>`)
+      .join("");
+  }
+
   // ── CSV 匯出 ─────────────────────────────────────────────
   function exportCsv() {
-    const header = ["年度", "期初貸款餘額", "當年本金", "當年利息", "當年還款", "提前還款", "期末貸款餘額", "有效租金收入", "NOI", "稅前現金流"];
+    const result = scenarioResults[activeScenario] || currentResult;
+    const scenarioLabel = Engine.PRESET_SCENARIOS[activeScenario] ? Engine.PRESET_SCENARIOS[activeScenario].label : "目前輸入";
+    const header = ["情境", "年度", "期初貸款餘額", "當年本金", "當年利息", "當年還款", "提前還款", "期末貸款餘額", "有效租金收入", "NOI", "稅前現金流", "期末出售淨回收", "折現率", "NPV", "IRR"];
     const lines = [header.join(",")];
-    currentResult.yearlySchedule.forEach((y, i) => {
-      const r = currentResult.rentalByYear[i];
-      lines.push([y.year, y.beginningBalance, y.principal, y.interest, y.payment, y.prepayment, y.endingBalance, r ? r.effectiveRent : "", r ? r.noi : "", r ? r.preTaxCashFlow : ""].map((v) => Math.round(typeof v === "number" ? v : 0) || v).join(","));
+    const npv = npvFor(result);
+    const cell = (v) => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
+    const money = (v) => (typeof v === "number" && isFinite(v) ? Math.round(v) : "");
+    result.yearlySchedule.slice(0, state.sale.holdingYears).forEach((y, i) => {
+      const r = result.rentalByYear[i];
+      const isSaleYear = i + 1 === state.sale.holdingYears;
+      lines.push([
+        scenarioLabel,
+        y.year,
+        money(y.beginningBalance),
+        money(y.principal),
+        money(y.interest),
+        money(y.payment),
+        money(y.prepayment),
+        money(y.endingBalance),
+        r ? money(r.effectiveRent) : "",
+        r ? money(r.noi) : "",
+        r ? money(r.preTaxCashFlow) : "",
+        isSaleYear ? money(result.netSaleProceeds) : "",
+        i === 0 ? (state.sale.discountRate * 100).toFixed(2) + "%" : "",
+        i === 0 ? money(npv) : "",
+        i === 0 && result.irr.status === "ok" ? (result.irr.rate * 100).toFixed(2) + "%" : "",
+      ].map(cell).join(","));
     });
     const blob = new Blob(["﻿" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "投資不動產試算.csv";
+    a.download = `投資不動產試算_${scenarioLabel}情境.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -609,6 +808,7 @@
     try {
       const result = scenarioResults[activeScenario];
       const scenarioLabel = Engine.PRESET_SCENARIOS[activeScenario].label;
+      const reportNpv = npvFor(result);
 
       document.getElementById("pdfSummaryContent").innerHTML = `
         <div class="pinv-pdf-kv">
@@ -621,6 +821,8 @@
           <div><span>持有年限</span><span>${state.sale.holdingYears} 年</span></div>
           <div><span>出售淨回收</span><span>${formatMoney(result.netSaleProceeds)}</span></div>
           <div><span>持有期間 IRR</span><span>${result.irr.status === "ok" ? formatPercent(result.irr.rate) : "無法計算"}</span></div>
+          <div><span>折現率</span><span>${formatPercent(state.sale.discountRate)}</span></div>
+          <div><span>NPV</span><span>${formatMoney(reportNpv)}</span></div>
           <div><span>ROI</span><span>${result.roi === null ? "—" : formatPercent(result.roi)}</span></div>
         </div>`;
 
@@ -628,7 +830,7 @@
         <table class="pinv-pdf-table">
           <thead><tr><th>年度</th><th>期初餘額</th><th>本金</th><th>利息</th><th>期末餘額</th><th>NOI</th><th>稅前現金流</th></tr></thead>
           <tbody>
-            ${result.yearlySchedule
+            ${result.yearlySchedule.slice(0, state.sale.holdingYears)
               .map((y, i) => {
                 const r = result.rentalByYear[i];
                 return `<tr><td style="text-align:center">第${y.year}年</td><td>${formatMoney(y.beginningBalance)}</td><td>${formatMoney(y.principal)}</td><td>${formatMoney(y.interest)}</td><td>${formatMoney(y.endingBalance)}</td><td>${r ? formatMoney(r.noi) : "—"}</td><td>${r ? formatMoney(r.preTaxCashFlow) : "—"}</td></tr>`;
@@ -664,7 +866,8 @@
           <li>貸款計算基礎：${{ purchase_price: "以成交價計算", appraisal: "以銀行鑑價計算", lower_of_two: "成交價與鑑價孰低" }[state.affordability.loanBaseMethod]}</li>
           <li>房價增值假設：${state.sale.appreciationMethod === "target_price" ? "使用者指定出售價格" : `固定年增值率 ${formatPercent(state.sale.appreciationRate)}（${scenarioLabel}情境已套用標準化假設）`}</li>
           <li>租金與空置假設：租金年成長率 ${formatPercent(state.rental.rentGrowthRate)}、空置率 ${formatPercent(state.rental.vacancyRate)}（${scenarioLabel}情境已套用標準化假設）</li>
-          <li>計算版本：1.0.0（原生 JS，延遲取整）；法規提示版本：2026-03-20</li>
+          <li>NPV 折現率：${formatPercent(state.sale.discountRate)}</li>
+          <li>計算版本：1.0.0（原生 JS，延遲取整）；法規提示版本：2026-08-08</li>
         </ul>
         <p><strong>非產品承諾：</strong>本平台不宣稱使用者一定可以取得試算中的貸款金額，試算結果不代表銀行鑑價或核貸結果，房價增值率不代表未來市場預測，試算稅費不是使用者最終稅額，IRR 亦非保證報酬。</p>
         <p>本平台提供的貸款成數、寬限期及房貸條件僅供財務規劃參考。實際適用規範、房貸戶數認定、擔保品鑑價、利率與核貸結果，應以中央銀行最新規定、承貸金融機構審核及正式貸款契約為準。</p>
@@ -693,7 +896,10 @@
   // ── 主渲染 ───────────────────────────────────────────────
   function renderAll() {
     compute();
+    const main = document.querySelector(".pinv-main");
+    if (main) main.dataset.currentStep = String(currentStep);
     renderProgress();
+    renderLiveOverview();
     document.querySelectorAll(".pinv-step-panel").forEach((panel) => {
       panel.classList.toggle("hidden", parseInt(panel.dataset.step, 10) !== currentStep);
     });
@@ -752,6 +958,15 @@
     bindNumberField("aAcquisitionCostRate", "affordability", "acquisitionCostRate", { percent: true });
     bindNumberField("aRenovationCost", "affordability", "renovationCost");
     bindNumberField("aMaxPurchaseBudget", "affordability", "maxPurchaseBudget", { nullable: true });
+    bindSelectField("aBorrowerType", "affordability", "borrowerType");
+    document.getElementById("aExistingMortgageCount").addEventListener("change", (e) => {
+      mutate(() => {
+        state.affordability.existingMortgageCount = parseInt(e.target.value, 10) || 0;
+      });
+    });
+    bindSelectField("aHasExistingHouse", "affordability", "hasExistingHouse");
+    bindSelectField("aReplacementNeed", "affordability", "replacementNeed");
+    bindSelectField("aHighValueResidence", "affordability", "highValueResidence");
   }
 
   function bindStep2() {
@@ -839,6 +1054,7 @@
     bindNumberField("sSaleCostRate", "sale", "saleCostRate", { percent: true });
     bindNumberField("sFixedSaleCost", "sale", "fixedSaleCost");
     bindNumberField("sSaleTaxInput", "sale", "saleTaxInput");
+    bindNumberField("sDiscountRate", "sale", "discountRate", { percent: true, min0: false });
   }
 
   function bindStep5() {
@@ -867,12 +1083,12 @@
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       try {
-        state = JSON.parse(raw);
+        state = normalizeState(JSON.parse(raw));
       } catch (e) {
-        state = defaultState();
+        state = normalizeState(defaultState());
       }
     } else {
-      state = defaultState();
+      state = normalizeState(defaultState());
     }
     bindStep1();
     bindStep2();

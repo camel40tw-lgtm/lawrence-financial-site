@@ -56,6 +56,22 @@ test("TC-A02：月付能力反推貸款與房價", () => {
   approx(pmtLimitedPrice, 14654218, 2, "月付限制房價");
 });
 
+test("TC-A03：月付能力須扣除既有債務並受收支餘裕限制", () => {
+  const r = Engine.calcAffordability({
+    monthlyIncome: 150000,
+    monthlyExpense: 120000,
+    otherDebtPayment: 10000,
+    mortgageBurdenRate: 0.3,
+    annualRate: 0.024,
+    termMonths: 360,
+    ltv: 0.7,
+  });
+  approx(r.burdenLimitedPayment, 35000, 0.01, "收入負擔率限制");
+  approx(r.cashflowLimitedPayment, 20000, 0.01, "收支餘裕限制");
+  approx(r.maxMonthlyPayment, 20000, 0.01, "可負擔月付應取較低者");
+  approx(r.pmtLimitedLoanAmount, 5128976, 1, "月付能力反推貸款本金");
+});
+
 // ── TC-L01：本息平均攤還月付金 ────────────────────────────
 const TC_L01_LOAN = { loanAmount: 8000000, annualRate: 0.024, termMonths: 360, repaymentMethod: "annuity" };
 test("TC-L01：本息平均攤還月付金", () => {

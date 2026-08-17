@@ -97,6 +97,42 @@
       <!-- 五步驟進度指示 -->
       <div class="pinv-progress no-print" id="progressBar"></div>
 
+      <section class="pinv-live-overview no-print" aria-label="即時投資總覽">
+        <div class="pinv-overview-head">
+          <div>
+            <span class="pinv-overview-kicker">LIVE DEAL CHECK</span>
+            <h2>即時總覽</h2>
+          </div>
+          <p id="overviewDecision">調整任一模組後，這裡會同步更新資金、貸款、現金流與出場判斷。</p>
+        </div>
+        <div class="pinv-overview-grid">
+          <button type="button" class="pinv-overview-item" data-goto="1">
+            <span>資金缺口</span>
+            <strong id="liveCashGap">--</strong>
+          </button>
+          <button type="button" class="pinv-overview-item" data-goto="2">
+            <span>每月房貸</span>
+            <strong id="liveMonthlyPayment">--</strong>
+          </button>
+          <button type="button" class="pinv-overview-item" data-goto="3">
+            <span>月現金流</span>
+            <strong id="liveMonthlyCashFlow">--</strong>
+          </button>
+          <button type="button" class="pinv-overview-item" data-goto="3">
+            <span>DSCR</span>
+            <strong id="liveDscr">--</strong>
+          </button>
+          <button type="button" class="pinv-overview-item" data-goto="4">
+            <span>出售淨回收</span>
+            <strong id="liveNetSale">--</strong>
+          </button>
+          <button type="button" class="pinv-overview-item" data-goto="5">
+            <span>IRR</span>
+            <strong id="liveIrr">--</strong>
+          </button>
+        </div>
+      </section>
+
       <!-- ══════════ Step 1：購屋能力 ══════════ -->
       <section class="pinv-step-panel" id="step1" data-step="1">
         <div class="pinv-card">
@@ -132,6 +168,47 @@
                 <div class="pinv-field"><label>購屋成本率 %（房價比例，選填）</label><input type="number" id="aAcquisitionCostRate" min="0" step="0.1" value="0"></div>
                 <div class="pinv-field"><label>裝潢家具</label><input type="number" id="aRenovationCost" min="0" value="600000"></div>
                 <div class="pinv-field"><label>最高預算上限（選填）</label><input type="number" id="aMaxPurchaseBudget" min="0" value=""></div>
+              </div>
+
+              <div class="pinv-section-title">貸款法規條件（提示用）</div>
+              <div class="pinv-field-grid">
+                <div class="pinv-field">
+                  <label>借款人身分</label>
+                  <select id="aBorrowerType">
+                    <option value="natural_person" selected>自然人</option>
+                    <option value="company">公司法人購置住宅</option>
+                  </select>
+                </div>
+                <div class="pinv-field">
+                  <label>名下既有房貸戶數</label>
+                  <select id="aExistingMortgageCount">
+                    <option value="0" selected>0 戶</option>
+                    <option value="1">1 戶</option>
+                    <option value="2">2 戶</option>
+                    <option value="3">3 戶以上</option>
+                  </select>
+                </div>
+                <div class="pinv-field">
+                  <label>無房貸但名下有房屋</label>
+                  <select id="aHasExistingHouse">
+                    <option value="no" selected>否</option>
+                    <option value="yes">是</option>
+                  </select>
+                </div>
+                <div class="pinv-field">
+                  <label>實質換屋自住需求</label>
+                  <select id="aReplacementNeed">
+                    <option value="no" selected>否</option>
+                    <option value="yes">是</option>
+                  </select>
+                </div>
+                <div class="pinv-field">
+                  <label>高價住宅</label>
+                  <select id="aHighValueResidence">
+                    <option value="no" selected>否</option>
+                    <option value="yes">是</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -297,6 +374,7 @@
                 <div class="pinv-field"><label>仲介與其他費用率 %</label><input type="number" id="sSaleCostRate" min="0" max="20" step="0.1" value="4"></div>
                 <div class="pinv-field"><label>固定出售費用</label><input type="number" id="sFixedSaleCost" min="0" value="0"></div>
                 <div class="pinv-field"><label>稅費估算（選填，使用者自行輸入）</label><input type="number" id="sSaleTaxInput" min="0" value="0"></div>
+                <div class="pinv-field"><label>要求報酬率 / 折現率 %</label><input type="number" id="sDiscountRate" min="-50" max="100" step="0.1" value="4"></div>
               </div>
             </div>
 
@@ -308,6 +386,7 @@
               <div class="pinv-kv"><span class="label">當時貸款餘額</span><span class="value" id="sumLoanBalanceAtSale">—</span></div>
               <div class="pinv-kv"><span class="label">出售淨回收</span><span class="value lg success" id="sumNetSaleProceeds">—</span></div>
               <div class="pinv-kv"><span class="label">房屋淨值</span><span class="value" id="sumHomeEquity">—</span></div>
+              <div class="pinv-kv"><span class="label">NPV（依折現率）</span><span class="value" id="sumNpv">—</span></div>
             </div>
           </div>
 
@@ -334,12 +413,13 @@
             <div class="pinv-stat"><div class="pinv-stat-label">每月房貸</div><div class="pinv-stat-value" id="statMonthlyPayment">—</div></div>
             <div class="pinv-stat"><div class="pinv-stat-label">每月出租現金流</div><div class="pinv-stat-value" id="statMonthlyCashFlow">—</div></div>
             <div class="pinv-stat"><div class="pinv-stat-label">持有期間 IRR</div><div class="pinv-stat-value" id="statIrr">—</div></div>
+            <div class="pinv-stat"><div class="pinv-stat-label">NPV</div><div class="pinv-stat-value" id="statNpv">—</div></div>
           </div>
 
           <div class="pinv-section-title">三情境比較</div>
           <div class="pinv-table-wrap">
             <table class="pinv-table" style="min-width:0">
-              <thead><tr><th>情境</th><th>每月現金流</th><th>出售淨回收</th><th>IRR</th><th>ROI</th><th>權益倍數</th></tr></thead>
+              <thead><tr><th>情境</th><th>每月現金流</th><th>出售淨回收</th><th>IRR</th><th>NPV</th><th>ROI</th><th>權益倍數</th></tr></thead>
               <tbody id="scenarioCompareBody"></tbody>
             </table>
           </div>
@@ -375,16 +455,10 @@
 
         <div class="pinv-card">
           <div class="pinv-card-title">法規提示</div>
-          <div class="pinv-card-desc">資料更新日期：2026-08-02。以下僅為一般性提示，實際核貸條件以金融機構審核與正式契約為準。</div>
+          <div class="pinv-card-desc">資料更新日期：2026-08-08。以下依您在「貸款法規條件」輸入的身分與戶數顯示一般性提示，實際核貸條件以金融機構審核與正式契約為準。</div>
           <table class="pinv-reg-table">
             <thead><tr><th>情況</th><th>一般性限制提示</th></tr></thead>
-            <tbody>
-              <tr><td>公司法人購置住宅</td><td>不得有寬限期，最高貸款成數三成</td></tr>
-              <tr><td>自然人購置高價住宅</td><td>原則上比照公司法人限制</td></tr>
-              <tr><td>自然人無房貸但已有房屋</td><td>不得有寬限期</td></tr>
-              <tr><td>自然人已有一戶房貸</td><td>不得有寬限期，最高貸款成數六成</td></tr>
-              <tr><td>自然人已有二戶以上房貸</td><td>不得有寬限期，最高貸款成數三成</td></tr>
-            </tbody>
+            <tbody id="regulatoryTableBody"></tbody>
           </table>
           <div id="alertZoneRegulatory" style="margin-top:14px"></div>
         </div>

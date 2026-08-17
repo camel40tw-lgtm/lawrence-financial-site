@@ -49,6 +49,92 @@
 .pinv-step-dot.active .pinv-step-label{ color:var(--pinv-ink); }
 @media (max-width:640px){ .pinv-step-label{ font-size:.62rem; } .pinv-circle{ width:30px; height:30px; font-size:.8rem; } }
 
+/* ── 五個評估模組＋即時總覽 ──────────────────────────── */
+.pinv-progress{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin:0 auto 16px; max-width:none; }
+.pinv-step-dot{
+  align-items:flex-start; min-height:104px; background:var(--white); border:1px solid var(--line);
+  border-radius:var(--radius-sm); padding:12px 12px 11px; box-shadow:var(--shadow-sm);
+  transition:transform var(--ease-ui), border-color var(--ease-ui), box-shadow var(--ease-ui);
+}
+.pinv-step-dot:not(:last-child)::after{ top:22px; left:calc(100% - 4px); right:auto; width:18px; z-index:2; }
+.pinv-step-dot:hover{ transform:translateY(-1px); border-color:var(--navy-700); box-shadow:var(--shadow-md); }
+.pinv-circle{ width:34px; height:34px; }
+.pinv-step-dot.done .pinv-circle::before{ content:"✓"; }
+.pinv-step-label{ margin-top:9px; font-size:.82rem; color:var(--pinv-ink); text-align:left; white-space:normal; }
+.pinv-step-role{ display:block; margin-top:4px; font-size:.68rem; font-weight:700; line-height:1.4; color:var(--slate-500); text-align:left; }
+.pinv-step-status{ margin-top:auto; display:inline-flex; align-items:center; min-height:22px; border-radius:999px; padding:3px 9px; font-size:.68rem; font-weight:900; background:var(--bg-soft); color:var(--slate-700); }
+.pinv-step-status.ok{ background:rgba(13,139,103,.12); color:var(--success); }
+.pinv-step-status.warn{ background:var(--amber-100); color:var(--warning); }
+.pinv-step-status.danger{ background:rgba(220,38,38,.08); color:var(--danger); }
+@media (max-width:900px){ .pinv-progress{ grid-template-columns:repeat(2,minmax(0,1fr)); } .pinv-step-dot:not(:last-child)::after{ display:none; } }
+@media (max-width:560px){ .pinv-progress{ grid-template-columns:1fr; } .pinv-step-dot{ min-height:auto; } }
+
+.pinv-live-overview{
+  position:sticky; top:76px; z-index:3; background:linear-gradient(180deg,var(--bg-card-grad-start),var(--bg-card-grad-end));
+  border:1px solid var(--line); border-radius:var(--radius-md); box-shadow:var(--shadow-sm);
+  padding:18px 20px; margin-bottom:22px;
+}
+.pinv-overview-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:14px; }
+.pinv-overview-kicker{ display:block; font-size:.68rem; letter-spacing:.12em; font-weight:900; color:var(--pinv-accent); margin-bottom:4px; }
+.pinv-overview-head h2{ font-family:var(--font-display); font-size:1.02rem; line-height:1.2; color:var(--pinv-ink); margin:0; }
+.pinv-overview-head p{ max-width:520px; margin:0; color:var(--slate-700); font-size:.82rem; line-height:1.65; text-align:right; }
+.pinv-overview-grid{ display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; }
+.pinv-overview-item{
+  min-width:0; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--white);
+  padding:10px 12px; cursor:pointer; text-align:left; transition:border-color var(--ease-ui), transform var(--ease-ui), background var(--ease-ui);
+}
+.pinv-overview-item:hover{ border-color:var(--navy-700); background:var(--surface-accent); transform:translateY(-1px); }
+.pinv-overview-item span{ display:block; font-size:.7rem; font-weight:800; color:var(--slate-500); margin-bottom:5px; }
+.pinv-overview-item strong{ display:block; font-family:var(--font-mono); font-size:.98rem; line-height:1.25; color:var(--pinv-ink); overflow-wrap:anywhere; }
+.pinv-overview-item strong.success{ color:var(--success); }
+.pinv-overview-item strong.danger{ color:var(--danger); }
+.pinv-overview-item strong.warn{ color:var(--warning); }
+@media (max-width:1080px){ .pinv-overview-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:760px){
+  .pinv-live-overview{ position:static; padding:16px; }
+  .pinv-overview-head{ display:block; }
+  .pinv-overview-head p{ text-align:left; margin-top:8px; }
+  .pinv-overview-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:460px){ .pinv-overview-grid{ grid-template-columns:1fr; } }
+
+/* ── 工作區色彩提示：依目前評估模組切換 ─────────────── */
+.pinv-main{
+  --pinv-work-accent:#244f83;
+  --pinv-work-soft:rgba(36,79,131,.08);
+  --pinv-work-line:rgba(36,79,131,.26);
+}
+.pinv-main[data-current-step="1"]{ --pinv-work-accent:#0f766e; --pinv-work-soft:rgba(15,118,110,.09); --pinv-work-line:rgba(15,118,110,.28); }
+.pinv-main[data-current-step="2"]{ --pinv-work-accent:#2563eb; --pinv-work-soft:rgba(37,99,235,.08); --pinv-work-line:rgba(37,99,235,.28); }
+.pinv-main[data-current-step="3"]{ --pinv-work-accent:#16a34a; --pinv-work-soft:rgba(22,163,74,.09); --pinv-work-line:rgba(22,163,74,.28); }
+.pinv-main[data-current-step="4"]{ --pinv-work-accent:#d97706; --pinv-work-soft:rgba(217,119,6,.10); --pinv-work-line:rgba(217,119,6,.30); }
+.pinv-main[data-current-step="5"]{ --pinv-work-accent:#7c3aed; --pinv-work-soft:rgba(124,58,237,.09); --pinv-work-line:rgba(124,58,237,.28); }
+.pinv-step-dot.active{
+  border-color:var(--pinv-work-accent);
+  background:linear-gradient(180deg,var(--pinv-work-soft),var(--white));
+  box-shadow:0 10px 26px rgba(15,23,42,.08), inset 0 4px 0 var(--pinv-work-accent);
+}
+.pinv-step-dot.active .pinv-circle{ border-color:var(--pinv-work-accent); background:var(--pinv-work-accent); box-shadow:0 0 0 5px var(--pinv-work-soft); }
+.pinv-step-dot.active .pinv-step-status{ background:var(--pinv-work-soft); color:var(--pinv-work-accent); }
+.pinv-live-overview{
+  border-color:var(--pinv-work-line);
+  background:linear-gradient(180deg,var(--pinv-work-soft),var(--bg-card-grad-end));
+  box-shadow:var(--shadow-sm), inset 0 4px 0 var(--pinv-work-accent);
+}
+.pinv-overview-kicker{ color:var(--pinv-work-accent); }
+.pinv-overview-item:hover{ border-color:var(--pinv-work-accent); }
+.pinv-step-panel:not(.hidden) > .pinv-card:first-child{
+  border-color:var(--pinv-work-line);
+  background:linear-gradient(180deg,var(--pinv-work-soft),var(--bg-card-grad-end) 34%,var(--bg-card-grad-end));
+  box-shadow:var(--shadow-sm), inset 0 5px 0 var(--pinv-work-accent);
+}
+.pinv-step-panel:not(.hidden) > .pinv-card:first-child .pinv-card-title{ color:var(--pinv-work-accent); }
+.pinv-step-panel:not(.hidden) .pinv-section-title{ border-bottom-color:var(--pinv-work-line); }
+[data-theme="dark"] .pinv-main{
+  --pinv-work-soft:color-mix(in srgb, var(--pinv-work-accent) 20%, transparent);
+  --pinv-work-line:color-mix(in srgb, var(--pinv-work-accent) 45%, transparent);
+}
+
 /* ── 卡片 ─────────────────────────────────── */
 .pinv-card{
   background:linear-gradient(180deg,var(--bg-card-grad-start),var(--bg-card-grad-end));
@@ -140,8 +226,9 @@
 .pinv-list-row .pinv-icon-btn:hover{ background:rgba(220,38,38,.08); color:var(--danger); }
 
 /* ── 結果指標卡（步驟五） ─────────────────── */
-.pinv-stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
-@media (max-width:960px){ .pinv-stat-grid{ grid-template-columns:repeat(2,1fr); } }
+.pinv-stat-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+@media (max-width:1100px){ .pinv-stat-grid{ grid-template-columns:repeat(3,1fr); } }
+@media (max-width:760px){ .pinv-stat-grid{ grid-template-columns:repeat(2,1fr); } }
 .pinv-stat{ border:1px solid var(--line); border-radius:var(--radius-sm); padding:16px 18px; background:var(--white); }
 .pinv-stat-label{ font-size:.74rem; color:var(--slate-500); font-weight:700; margin-bottom:6px; }
 .pinv-stat-value{ font-family:var(--font-mono); font-size:1.28rem; font-weight:700; color:var(--pinv-ink); }
@@ -198,6 +285,9 @@
 .pinv-reg-table{ width:100%; border-collapse:collapse; font-size:.78rem; margin-top:10px; }
 .pinv-reg-table th, .pinv-reg-table td{ border:1px solid var(--line); padding:8px 10px; text-align:left; }
 .pinv-reg-table th{ background:var(--bg-soft); color:var(--pinv-ink); }
+.pinv-reg-row-ok td{ background:rgba(13,139,103,.06); }
+.pinv-reg-row-warn td{ background:rgba(245,158,11,.08); }
+.pinv-reg-row-danger td{ background:rgba(220,38,38,.06); }
 
 .hidden{ display:none !important; }
 .break-inside-avoid{ break-inside:avoid; }

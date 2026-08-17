@@ -66,9 +66,12 @@
     const priceDenominator = 1 - ltv + acquisitionCostRate;
     const cashLimitedPrice = priceDenominator > 0 ? availableInitialFunds / priceDenominator : Infinity;
 
-    // FR-A06：月付限制可負擔貸款／房價
+    // FR-A06：月付限制可負擔貸款／房價。取「收入負擔率扣既有債務」與
+    // 「收支餘裕扣既有債務」兩者較低值，避免高估可負擔房貸月付。
     const monthlyRate = annualRate / 12;
-    const maxMonthlyPayment = Math.max(0, monthlyIncome * mortgageBurdenRate);
+    const burdenLimitedPayment = Math.max(0, monthlyIncome * mortgageBurdenRate - otherDebtPayment);
+    const cashflowLimitedPayment = Math.max(0, monthlyIncome - monthlyExpense - otherDebtPayment);
+    const maxMonthlyPayment = Math.min(burdenLimitedPayment, cashflowLimitedPayment);
     const pmtLimitedLoanAmount = pvOfAnnuity(maxMonthlyPayment, monthlyRate, termMonths);
     const pmtLimitedPrice = ltv > 0 ? pmtLimitedLoanAmount / ltv : Infinity;
 
@@ -92,6 +95,8 @@
       availableInitialFunds,
       cashLimitedPrice,
       maxMonthlyPayment,
+      burdenLimitedPayment,
+      cashflowLimitedPayment,
       pmtLimitedLoanAmount,
       pmtLimitedPrice,
       affordablePrice,
