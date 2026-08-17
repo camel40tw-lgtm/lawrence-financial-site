@@ -33,6 +33,45 @@
     } catch (error) {}
   </script>
   <link rel="stylesheet" href="../assets/styles.css?v=20260412b" />
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "@id":"https://lawrence.money/estate-tax/#webpage",
+    "name":"台灣遺產稅試算",
+    "url":"https://lawrence.money/estate-tax/",
+    "image":"https://lawrence.money/images/site-social-share.png",
+    "description":"免費台灣遺產稅試算工具：依 115 年度免稅額、扣除額與遺產及贈與稅法第 13 條稅率，初步估算課稅遺產淨額與應納遺產稅。",
+    "inLanguage":"zh-Hant",
+    "author":{"@type":"Person","name":"駱潤生 Lawrence"},
+    "publisher":{"@type":"Person","name":"駱潤生 Lawrence"}
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"遺產總額和不計入遺產總額有什麼不同？",
+        "acceptedAnswer":{"@type":"Answer","text":"遺產總額是全部應計入遺產之財產合計；不計入遺產總額則是依法有法定上限可扣除的項目，例如日常生活器具及用具最高100萬元、職業上工具最高56萬元，系統會自動以法定上限截斷輸入的實際價值。"}
+      },
+      {
+        "@type":"Question",
+        "name":"課稅遺產淨額怎麼計算？",
+        "acceptedAnswer":{"@type":"Answer","text":"核心公式為：課稅遺產淨額 = max(0, 遺產總額 − 不計入遺產總額合計 − 扣除額合計 − 免稅額)，應納遺產稅額則依《遺產及贈與稅法》第 13 條三段級距計算。"}
+      },
+      {
+        "@type":"Question",
+        "name":"未成年卑親屬的扣除額怎麼填？",
+        "acceptedAnswer":{"@type":"Answer","text":"未成年加扣要填「距屆滿成年之年數合計」，適用對象包含直系血親卑親屬與受扶養兄弟姊妹。此外還可依配偶、父母人數、重度以上身心障礙特別扣除人數、受扶養兄弟姊妹及祖父母人數，加上喪葬費扣除額一併計算。"}
+      }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -194,6 +233,24 @@
           <button type="button" class="etax-btn etax-btn-primary" id="copySummary">複製試算摘要</button>
           <button type="button" class="etax-btn" id="printResult">列印結果</button>
           <button type="button" class="etax-btn etax-btn-danger" id="resetForm">重新試算</button>
+        </div>
+      </section>
+
+      <section class="etax-card faq-section" aria-label="常見問題">
+        <div class="etax-card-title">常見問題</div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>遺產總額和不計入遺產總額有什麼不同？</summary>
+            <p>遺產總額是全部應計入遺產之財產合計；不計入遺產總額則是依法有法定上限可扣除的項目，例如日常生活器具及用具最高100萬元、職業上工具最高56萬元，系統會自動以法定上限截斷輸入的實際價值。</p>
+          </details>
+          <details class="faq-item">
+            <summary>課稅遺產淨額怎麼計算？</summary>
+            <p>核心公式為：課稅遺產淨額 = max(0, 遺產總額 − 不計入遺產總額合計 − 扣除額合計 − 免稅額)，應納遺產稅額則依《遺產及贈與稅法》第 13 條三段級距計算。</p>
+          </details>
+          <details class="faq-item">
+            <summary>未成年卑親屬的扣除額怎麼填？</summary>
+            <p>未成年加扣要填「距屆滿成年之年數合計」，適用對象包含直系血親卑親屬與受扶養兄弟姊妹。此外還可依配偶、父母人數、重度以上身心障礙特別扣除人數、受扶養兄弟姊妹及祖父母人數，加上喪葬費扣除額一併計算。</p>
+          </details>
         </div>
       </section>
 

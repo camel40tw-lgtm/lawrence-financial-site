@@ -17,6 +17,46 @@
   <meta property="og:url" content="https://lawrence.money/calculator-v2/">
   <meta property="og:site_name" content="駱潤生 Lawrence">
   <link rel="stylesheet" href="style_v3_abc_fusion.css">
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "@id":"https://lawrence.money/calculator-v2/#webpage",
+    "name":"退休規劃顧問版試算器V2",
+    "url":"https://lawrence.money/calculator-v2/",
+    "image":"https://lawrence.money/images/site-social-share.png",
+    "description":"退休規劃顧問版試算器 V2：客戶填寫、顧問版精算、客戶版報表三段式流程，支援固定提領率（Bengen 4% 法則）、Guardrail（Guyton-Klinger 護欄策略）、三桶金（Bucket Portfolios）等多種提領策略與 Monte Carlo 壓力測試。",
+    "inLanguage":"zh-Hant",
+    "author":{"@type":"Person","name":"駱潤生 Lawrence"},
+    "publisher":{"@type":"Person","name":"駱潤生 Lawrence"}
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"這個退休規劃試算器要怎麼開始使用？",
+        "acceptedAnswer":{"@type":"Answer","text":"建議流程是先進「客戶填寫」頁輸入家庭基本資料、資產負債表與收入支出表，送交後由同一套數學引擎在顧問版計算現況、方案比較與年度模擬結果，最後再切到客戶版檢視與列印。"}
+      },
+      {
+        "@type":"Question",
+        "name":"「顧問版」和「客戶版」有什麼不同？",
+        "acceptedAnswer":{"@type":"Answer","text":"顧問版先依同一份資料計算現況、方案比較與年度模擬結果，功能較完整；客戶版是從顧問版快照切出，保留最容易理解的結論與建議，適合直接呈現給客戶檢視或列印。"}
+      },
+      {
+        "@type":"Question",
+        "name":"可以直接跳過填寫資料，直接進顧問版嗎？",
+        "acceptedAnswer":{"@type":"Answer","text":"可以，頁面也提供「直接進顧問版」與「查看客戶版」的入口，但建議的完整流程仍是先填寫資料，讓計算結果完整而一致。"}
+      }
+    ]
+  }
+  </script>
+
   <style>
     .back-to-site{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--sumi-light);margin-bottom:14px;}
     .back-to-site a{color:var(--kaki);font-weight:700;text-decoration:none;}
@@ -35,6 +75,13 @@
     .entry-step{padding:16px 18px;border:1px solid var(--parchment);border-radius:var(--radius-md);background:rgba(250,246,239,.9);}
     .entry-step h2{font-family:var(--font-serif);font-size:15px;color:var(--sumi);letter-spacing:.08em;margin-bottom:6px;}
     .entry-step p{font-size:13px;line-height:1.8;color:var(--sumi-light);}
+    .faq-list{display:flex;flex-direction:column;gap:12px;margin-top:26px;}
+    .faq-item{padding:16px 18px;border:1px solid var(--parchment);border-radius:var(--radius-md);background:rgba(250,246,239,.9);}
+    .faq-item summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:700;color:var(--sumi);font-family:var(--font-serif);font-size:14px;letter-spacing:.04em;}
+    .faq-item summary::-webkit-details-marker{display:none;}
+    .faq-item summary::after{content:"+";color:var(--kaki);font-size:1.2rem;font-weight:700;flex-shrink:0;transition:transform .2s ease;}
+    .faq-item[open] summary::after{transform:rotate(45deg);}
+    .faq-item p{margin:12px 0 0;color:var(--sumi-light);font-size:13px;line-height:1.8;}
     @media (max-width: 860px){
       .entry-panel{padding:24px 18px;}
       .entry-grid{grid-template-columns:1fr;}
@@ -76,6 +123,21 @@
 
           <div class="entry-meta">
             建議流程：先填資料，再送交顧問版產出報表，最後切到客戶版檢視與列印。
+          </div>
+
+          <div class="faq-list" aria-label="常見問題">
+            <details class="faq-item">
+              <summary>這個退休規劃試算器要怎麼開始使用？</summary>
+              <p>建議流程是先進「客戶填寫」頁輸入家庭基本資料、資產負債表與收入支出表，送交後由同一套數學引擎在顧問版計算現況、方案比較與年度模擬結果，最後再切到客戶版檢視與列印。</p>
+            </details>
+            <details class="faq-item">
+              <summary>「顧問版」和「客戶版」有什麼不同？</summary>
+              <p>顧問版先依同一份資料計算現況、方案比較與年度模擬結果，功能較完整；客戶版是從顧問版快照切出，保留最容易理解的結論與建議，適合直接呈現給客戶檢視或列印。</p>
+            </details>
+            <details class="faq-item">
+              <summary>可以直接跳過填寫資料，直接進顧問版嗎？</summary>
+              <p>可以，頁面也提供「直接進顧問版」與「查看客戶版」的入口，但建議的完整流程仍是先填寫資料，讓計算結果完整而一致。</p>
+            </details>
           </div>
         </section>
       </main>

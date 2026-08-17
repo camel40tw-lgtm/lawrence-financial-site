@@ -56,6 +56,30 @@
   }
   </script>
 
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"這個工具的年化報酬率（IRR）是怎麼計算的？",
+        "acceptedAnswer":{"@type":"Answer","text":"依使用者輸入的保費、生存還本金與解約金整理成完整現金流，反推出隱含的年化報酬率（IRR／XIRR），同時分開呈現「保證」與「含非保證利益」兩種結果，避免把假設利益誤認為保證收益。"}
+      },
+      {
+        "@type":"Question",
+        "name":"可以同時試算多張保單嗎？",
+        "acceptedAnswer":{"@type":"Answer","text":"可以，多保單工作區可以新增、切換、重新命名與刪除保單，各自輸入年度現金流與解約年度；「組合總覽」會把所有保單依保單年度加總，同幣別直接以原幣加總，不同幣別則依匯率換算為 TWD 後再計算整體保證與含非保證利益 IRR。"}
+      },
+      {
+        "@type":"Question",
+        "name":"試算結果代表保險公司保證的給付金額嗎？",
+        "acceptedAnswer":{"@type":"Answer","text":"不代表。本工具僅依輸入的保費、領回金額及解約金進行現金流與內部報酬率試算，不代表保險公司之保證給付、宣告利率、投資績效或實際解約金；實際權利義務及給付金額仍應以保險契約、保單條款、保險公司正式文件及實際辦理結果為準。"}
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -361,6 +385,24 @@
         <button class="pirr-btn" id="btnPrint" type="button">瀏覽器列印</button>
         <button class="pirr-btn pirr-btn-primary" id="btnGeneratePdf" type="button">📄 產出 PDF 報告</button>
         <button class="pirr-btn pirr-btn-danger" id="btnClearSaved" type="button">清除本機儲存</button>
+      </div>
+
+      <div class="pirr-card faq-section" aria-label="常見問題">
+        <div class="pirr-card-title">常見問題</div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>這個工具的年化報酬率（IRR）是怎麼計算的？</summary>
+            <p>依使用者輸入的保費、生存還本金與解約金整理成完整現金流，反推出隱含的年化報酬率（IRR／XIRR），同時分開呈現「保證」與「含非保證利益」兩種結果，避免把假設利益誤認為保證收益。</p>
+          </details>
+          <details class="faq-item">
+            <summary>可以同時試算多張保單嗎？</summary>
+            <p>可以，多保單工作區可以新增、切換、重新命名與刪除保單，各自輸入年度現金流與解約年度；「組合總覽」會把所有保單依保單年度加總，同幣別直接以原幣加總，不同幣別則依匯率換算為 TWD 後再計算整體保證與含非保證利益 IRR。</p>
+          </details>
+          <details class="faq-item">
+            <summary>試算結果代表保險公司保證的給付金額嗎？</summary>
+            <p>不代表。本工具僅依輸入的保費、領回金額及解約金進行現金流與內部報酬率試算，不代表保險公司之保證給付、宣告利率、投資績效或實際解約金；實際權利義務及給付金額仍應以保險契約、保單條款、保險公司正式文件及實際辦理結果為準。</p>
+          </details>
+        </div>
       </div>
 
       <div class="pirr-disclaimer">

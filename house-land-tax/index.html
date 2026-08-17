@@ -33,6 +33,45 @@
     } catch (error) {}
   </script>
   <link rel="stylesheet" href="../assets/styles.css?v=20260412b" />
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "@id":"https://lawrence.money/house-land-tax/#webpage",
+    "name":"房地合一 2.0 稅額試算",
+    "url":"https://lawrence.money/house-land-tax/",
+    "image":"https://lawrence.money/images/site-social-share.png",
+    "description":"免費房地合一 2.0 稅額試算工具：輸入取得日、出售日、成交價、成本費用與土地漲價總數額，初步估算個人房地交易所得稅。",
+    "inLanguage":"zh-Hant",
+    "author":{"@type":"Person","name":"駱潤生 Lawrence"},
+    "publisher":{"@type":"Person","name":"駱潤生 Lawrence"}
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"房地合一稅的取得日和交易日怎麼認定？",
+        "acceptedAnswer":{"@type":"Answer","text":"一般已登記房屋、土地原則上以所有權移轉登記日判斷取得日與交易日。"}
+      },
+      {
+        "@type":"Question",
+        "name":"成本費用可以用概算還是要用實際憑證？",
+        "acceptedAnswer":{"@type":"Answer","text":"可提示憑證者採實際費用（取得附帶成本、改良增置成本、移轉費用等）；無法提示憑證者則採 3% 概算，概算費用與實際憑證費用不能重複加總。持有期間的房屋稅、地價稅、管理費通常不列入本欄。"}
+      },
+      {
+        "@type":"Question",
+        "name":"自住房地優惠的適用條件是什麼？",
+        "acceptedAnswer":{"@type":"Answer","text":"全部條件均符合時才試算自住優惠：已辦竣戶籍登記、持有並居住連續滿 6 年、交易前 6 年內無出租、交易前 6 年內無營業或執業使用、交易前 6 年內未曾適用本優惠。符合時可試算自住 400 萬元免稅、超過部分 10% 稅率。"}
+      }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -238,6 +277,24 @@
           <button type="button" class="hlt-btn hlt-btn-primary" id="copySummary">複製試算摘要</button>
           <button type="button" class="hlt-btn" id="printResult">列印結果</button>
           <button type="button" class="hlt-btn hlt-btn-danger" id="resetForm">重新試算</button>
+        </div>
+      </section>
+
+      <section class="hlt-card faq-section" aria-label="常見問題">
+        <div class="hlt-card-title">常見問題</div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>房地合一稅的取得日和交易日怎麼認定？</summary>
+            <p>一般已登記房屋、土地原則上以所有權移轉登記日判斷取得日與交易日。</p>
+          </details>
+          <details class="faq-item">
+            <summary>成本費用可以用概算還是要用實際憑證？</summary>
+            <p>可提示憑證者採實際費用（取得附帶成本、改良增置成本、移轉費用等）；無法提示憑證者則採 3% 概算，概算費用與實際憑證費用不能重複加總。持有期間的房屋稅、地價稅、管理費通常不列入本欄。</p>
+          </details>
+          <details class="faq-item">
+            <summary>自住房地優惠的適用條件是什麼？</summary>
+            <p>全部條件均符合時才試算自住優惠：已辦竣戶籍登記、持有並居住連續滿 6 年、交易前 6 年內無出租、交易前 6 年內無營業或執業使用、交易前 6 年內未曾適用本優惠。符合時可試算自住 400 萬元免稅、超過部分 10% 稅率。</p>
+          </details>
         </div>
       </section>
 

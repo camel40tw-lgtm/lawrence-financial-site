@@ -56,6 +56,30 @@
   }
   </script>
 
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"可負擔房貸月付是怎麼估算的？",
+        "acceptedAnswer":{"@type":"Answer","text":"取「收入負擔率扣除既有債務」與「收支餘裕扣除既有債務」兩者較低值，避免高估可負擔房貸月付，並依此反推可負擔房價。"}
+      },
+      {
+        "@type":"Question",
+        "name":"「法規提示」表格會依照什麼條件變化？",
+        "acceptedAnswer":{"@type":"Answer","text":"依使用者在「貸款法規條件」輸入的借款人身分（自然人／公司法人）、名下既有房貸戶數、是否無房貸但有房屋、是否有實質換屋自住需求、是否為高價住宅，顯示相對應的一般性限制提示；實際核貸條件仍以金融機構審核與正式契約為準。"}
+      },
+      {
+        "@type":"Question",
+        "name":"試算結果代表銀行一定會核貸這個金額嗎？",
+        "acceptedAnswer":{"@type":"Answer","text":"不代表。本平台不宣稱使用者一定可以取得試算中的貸款金額，試算結果不代表銀行鑑價或核貸結果，房價增值率不代表未來市場預測，試算稅費不是使用者最終稅額，IRR 亦非保證報酬。"}
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -461,6 +485,24 @@
             <tbody id="regulatoryTableBody"></tbody>
           </table>
           <div id="alertZoneRegulatory" style="margin-top:14px"></div>
+        </div>
+
+        <div class="pinv-card faq-section" aria-label="常見問題">
+          <div class="pinv-card-title">常見問題</div>
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary>可負擔房貸月付是怎麼估算的？</summary>
+              <p>取「收入負擔率扣除既有債務」與「收支餘裕扣除既有債務」兩者較低值，避免高估可負擔房貸月付，並依此反推可負擔房價。</p>
+            </details>
+            <details class="faq-item">
+              <summary>「法規提示」表格會依照什麼條件變化？</summary>
+              <p>依使用者在「貸款法規條件」輸入的借款人身分（自然人／公司法人）、名下既有房貸戶數、是否無房貸但有房屋、是否有實質換屋自住需求、是否為高價住宅，顯示相對應的一般性限制提示；實際核貸條件仍以金融機構審核與正式契約為準。</p>
+            </details>
+            <details class="faq-item">
+              <summary>試算結果代表銀行一定會核貸這個金額嗎？</summary>
+              <p>不代表。本平台不宣稱使用者一定可以取得試算中的貸款金額，試算結果不代表銀行鑑價或核貸結果，房價增值率不代表未來市場預測，試算稅費不是使用者最終稅額，IRR 亦非保證報酬。</p>
+            </details>
+          </div>
         </div>
 
         <div class="pinv-toolbar no-print">
