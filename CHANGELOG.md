@@ -9,6 +9,7 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| — | 2026-08-24 | article-inclusive-family-office.html 補強 AEO/GEO 結構（開頭摘要／3 個標題問句化／作者連結） |
 | `e1cd360` | 2026-08-24 | article-retirement-cashflow.html 補強 AEO/GEO 結構（開頭摘要／標題問句化／試算器內連／作者連結）；Cloudflare AI 爬蟲存取權放開（GPTBot／ClaudeBot／Google-Extended 等） |
 | — | 2026-08-20 | articles.html「受訪與專家引用」新增聯合新聞網（udn.com）受訪文章連結 |
 | — | 2026-08-17 | 全站 AEO/GEO 優化：11 個頁面（首頁/about/services/文章總覽/6篇文章/5個試算工具）加 FAQPage schema＋可見 FAQ 區塊，新增 llms.txt |
@@ -35,6 +36,18 @@
 ## 詳細記錄
 
 ---
+
+### [變更] article-inclusive-family-office.html AEO/GEO 結構補強 — 2026-08-24
+
+**類型**：SEO
+
+**來源**：延續同日稍早的 AEO/GEO 補強工作，用 `content-aeo-optimizer` 的回頭優化模式檢查第二篇文章。這篇本身底子已經很好（已有 FAQ schema、金管會統計數據、明確時間標記），六項檢查裡只有開頭摘要、部分標題問句化、作者連結三項缺口，比第一篇要改的少。
+
+**執行內容**：新增開頭「重點快覽」條列摘要（4 點）；三個論述型標題改問句化（「家族辦公室解決的不是『錢多』，是『複雜』」→「家族辦公室是不是一定要很有錢才能用？」等），資料揭示段與結論段標題保留原樣不強改，避免破壞這篇敘事文的節奏；作者署名加連結到 `/about` 並補 CFP® 頭銜。`sitemap.xml` 同步更新該頁 `lastmod`。
+
+**驗證**：`git diff --stat` 核對改動範圍（14 行新增／4 行刪除），確認沒有動到 FAQ 區塊、schema 或其餘段落。
+
+**明確跳過／待辦**：仍有 5 篇文章（`article-aging-asset-risk`／`article-inheritance-planning`／`article-insurance-role`／`article-asset-protection`／`article-advisor-value`）與 5 個試算工具頁尚未套用 AEO/GEO 結構補強。
 
 ### [變更] Cloudflare AI 爬蟲存取放開＋article-retirement-cashflow.html AEO/GEO 結構補強 — 2026-08-24
 
