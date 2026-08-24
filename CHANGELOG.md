@@ -9,6 +9,7 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| — | 2026-08-24 | 全站 18 個頁面修正 LINE 浮動按鈕圖示：拿掉在 28px 小尺寸下糊成一團的手繪「LINE」字母子路徑，只留對話框外框 |
 | — | 2026-08-24 | 剩餘 5 篇文章（高齡風險／傳承／保險／資產保護／顧問價值）補強 AEO/GEO 結構；5 個試算工具頁盤點後判定已符合現況，不強改 |
 | — | 2026-08-24 | article-inclusive-family-office.html 補強 AEO/GEO 結構（開頭摘要／3 個標題問句化／作者連結） |
 | `e1cd360` | 2026-08-24 | article-retirement-cashflow.html 補強 AEO/GEO 結構（開頭摘要／標題問句化／試算器內連／作者連結）；Cloudflare AI 爬蟲存取權放開（GPTBot／ClaudeBot／Google-Extended 等） |
@@ -37,6 +38,18 @@
 ## 詳細記錄
 
 ---
+
+### [修正] 全站 LINE 浮動按鈕圖示簡化 — 2026-08-24
+
+**類型**：Bug fix / UI
+
+**來源**：使用者回報右下角浮動「加入 LINE」按鈕的圖示文字看不清楚。檢查後發現同一段 inline SVG（`.fab-line`）在 18 個頁面裡重複出現，`d` 屬性用 5 個子路徑在 24×24 的 viewBox 裡同時畫出對話框外框＋「LINE」四個字母，實際渲染只有 28×28px（`.fab svg{width:28px;height:28px}`），字母細節在這個尺寸下必然糊掉，屬於設計層面的先天限制，不是顯示或裝置問題。使用者曾提議用一張帶「LINE」字樣的圖檔取代，經檢視該圖有浮水印（疑似圖庫預覽縮圖，授權不明），且改用點陣圖會破壞全站圖示統一用 `currentColor` inline SVG 的作法，改為建議直接簡化圖示本身。
+
+**執行內容**：拿掉 SVG `d` 屬性裡畫「LINE」四個字母的 4 個子路徑，只保留畫對話框外框的第一個子路徑，其餘完全不動（顏色、按鈕大小、hover 提示文字「加入 LINE」都維持原樣）。同一段修改套用到全站 18 個頁面：7 篇文章、`articles.html`、`index.html`、`about.html`、`services.html`、`tools.html`、`contact.html`、`mbti-quiz.html`、`thanks.html`、`404.html`、`policy-irr/index.html`、`property-invest/index.html`。
+
+**驗證**：`grep` 確認全站（排除 gitignore 的 `output/` 舊建置產物）不再有殘留的舊版路徑字串，且 18 個檔案都命中新版純外框路徑；`git diff --stat` 確認每個檔案剛好 1 行變更（18 檔共 18 行新增 18 行刪除），沒有動到其他內容。
+
+**明確跳過／待辦**：無。
 
 ### [變更] 剩餘 5 篇文章 AEO/GEO 結構補強＋5 個試算工具頁盤點 — 2026-08-24
 
