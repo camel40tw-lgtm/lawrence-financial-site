@@ -9,6 +9,7 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| `e1cd360` | 2026-08-24 | article-retirement-cashflow.html 補強 AEO/GEO 結構（開頭摘要／標題問句化／試算器內連／作者連結）；Cloudflare AI 爬蟲存取權放開（GPTBot／ClaudeBot／Google-Extended 等） |
 | — | 2026-08-20 | articles.html「受訪與專家引用」新增聯合新聞網（udn.com）受訪文章連結 |
 | — | 2026-08-17 | 全站 AEO/GEO 優化：11 個頁面（首頁/about/services/文章總覽/6篇文章/5個試算工具）加 FAQPage schema＋可見 FAQ 區塊，新增 llms.txt |
 | — | 2026-08-17 | policy-irr 新增多保單投資組合功能（新增／切換／改名／刪除保單，跨幣別加總） |
@@ -34,6 +35,21 @@
 ## 詳細記錄
 
 ---
+
+### [變更] Cloudflare AI 爬蟲存取放開＋article-retirement-cashflow.html AEO/GEO 結構補強 — 2026-08-24
+
+**類型**：Infrastructure / SEO
+
+**來源**：使用者收到 Google Search Console「部分網頁未編入索引」通知，順勢檢查全站 AEO/GEO 現況。發現正式站 `robots.txt` 被 Cloudflare 邊緣節點自動注入的「Managed Content」區塊，加上帳號層級「Block AI Bots」規則與 AI Crawl Control 個別爬蟲設定，實際上把 `GPTBot`／`ClaudeBot`／`Claude-User`／`Google-Extended`／`Applebot-Extended`／`Meta-ExternalAgent`／`Amazonbot` 全部擋在外面——這件事跟本機 repo 裡的 `robots.txt`（乾淨、無阻擋）無關，是 Cloudflare 帳號設定另外疊加的一層，純看 repo 檔案不會發現。使用者確認目標是「想被看見被引用」，決定放開。
+
+**執行內容**：
+- Cloudflare Dashboard：`Security → AI Crawl Control → Signals` 關閉「Managed robots.txt」（移除自動宣告的 `Content-Signal: ai-train=no` 與 `Google-Extended`／`Applebot-Extended` 封鎖）；`Overview → Manage AI bot access → Block AI training bots` 從「Block only on pages with ads」改為「Do not block (allow crawlers)」；`AI Crawl Control → Security` 逐一解除 `ClaudeBot`／`Claude-User`／`GPTBot`／`Meta-ExternalAgent`／`Amazonbot` 五個爬蟲的封鎖。`Bytespider`／`CCBot` 等偏訓練用途、跟即時引用關聯較低的爬蟲維持原本封鎖，使用者知情選擇保留。
+- 新增全域 slash command `content-aeo-optimizer`（放在 `~/.claude/commands/`，非本 repo 內），做為既有 `content-pipeline` 六階段流水線的新增第 5 站（內容精修→**AEO/GEO優化**→多平臺分發），並同步微調 `article-writer.md`（標題問句化打底）、`content-refiner.md`／`content-distributor.md`（銜接與保留結構的提醒）。這是全域內容產出工具，不屬於本站程式碼，但直接影響本站文章之後怎麼寫。
+- 用該 skill 的「回頭優化模式」示範改寫 `article-retirement-cashflow.html`：新增開頭「重點快覽」條列摘要；三個論述段落標題改問句化（例如「退休規劃的核心，不只是總資產」→「退休準備夠不夠，看存款總額就知道了嗎？」）；第一段補一句連結 `/calculator-v2/` 試算器，把抽象建議變可操作；作者署名加連結到 `/about` 並補上 CFP® 頭銜。這篇本來就有 `FAQPage` schema 與頁面 FAQ（2026-08-17 那批做的），這次沒有重複加。
+
+**驗證**：Cloudflare 設定變更後用 `curl https://lawrence.money/robots.txt` 確認 managed content 區塊消失；AI Crawl Control 頁面用瀏覽器自動化操作時多次遇到畫面卡頓／CDP 截圖逾時、react-select 下拉選單無法用一般點擊觸發等自動化障礙，改用 `element.click()` 直接觸發 DOM click 事件才成功，並在強制重新整理頁面後用 `aria-checked` 屬性逐一確認五個爬蟲狀態真的持久化（不是只有畫面暫時樣子）。`article-retirement-cashflow.html` 改動用 `git diff` 核對逐字跟提議一致；發現使用者一度誤以為變更已生效，實際核對本機 diff＋正式站文字內容後確認尚未套用，釐清後才動手改。
+
+**明確跳過／待辦**：其餘 6 篇文章（`article-aging-asset-risk`／`article-inheritance-planning`／`article-insurance-role`／`article-asset-protection`／`article-advisor-value`／`article-inclusive-family-office`）跟 5 個試算工具頁尚未套用這次的 AEO/GEO 結構補強（開頭摘要／問句化標題），可用 `/content-aeo-optimizer` 的回頭優化模式逐篇處理。`Bytespider`／`CCBot` 等訓練型爬蟲是否要一併放開，留給使用者之後再決定。
 
 ### [新增] 全站 AEO／GEO 優化 — 2026-08-17
 
