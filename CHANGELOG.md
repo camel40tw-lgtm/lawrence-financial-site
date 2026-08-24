@@ -9,6 +9,7 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| — | 2026-08-24 | 修正聯絡表單兩個獨立 bug：Turnstile 網域未授權（110200）導致無法驗證；CSP 未放行 Google Apps Script 回應轉址網域，導致表單其實送達卻誤報失敗 |
 | — | 2026-08-24 | 全站 18 個頁面修正 LINE 浮動按鈕圖示：拿掉在 28px 小尺寸下糊成一團的手繪「LINE」字母子路徑，只留對話框外框 |
 | — | 2026-08-24 | 剩餘 5 篇文章（高齡風險／傳承／保險／資產保護／顧問價值）補強 AEO/GEO 結構；5 個試算工具頁盤點後判定已符合現況，不強改 |
 | — | 2026-08-24 | article-inclusive-family-office.html 補強 AEO/GEO 結構（開頭摘要／3 個標題問句化／作者連結） |
@@ -38,6 +39,24 @@
 ## 詳細記錄
 
 ---
+
+### [修正] 聯絡表單無法送出：Turnstile 網域未授權＋CSP 未放行 Apps Script 轉址網域 — 2026-08-24
+
+**類型**：Bug fix
+
+**來源**：使用者回報聯絡表單「信寄不出去」，並附上截圖顯示 Cloudflare Turnstile 元件出現「無法連線至網站」錯誤。分兩階段排查，發現是兩個獨立、疊加在一起的 bug。
+
+**問題一：Turnstile 網域未授權（錯誤代碼 110200）**
+在正式站直接打開瀏覽器主控台，看到 `Uncaught TurnstileError: [Cloudflare Turnstile] Error: 110200`。查證 Cloudflare 官方文件，110200 的定義是「Domain not authorized」。追查發現這個 Turnstile 小工具（sitekey `0x4AAAAAAD0MokIVGy1j2OPt`，命名為 `lawrence-financial-site-contact`，連命名都還留著舊網域）的 Hostname Management 允許清單裡只登記了舊網域 `lawrence-financial-site.pages.dev`，8/17 遷移到 `lawrence.money` 時這個 Cloudflare 帳號層級設定沒有同步更新——這類設定不在 repo 程式碼裡，純看程式碼不會發現。使用者自行到 Cloudflare Dashboard 補上 `lawrence.money` 與 `www.lawrence.money` 後，Turnstile 恢復正常驗證（實測拿到有效的 `cf-turnstile-response` token）。
+
+**問題二：CSP 未放行 Google Apps Script 回應轉址網域**
+Turnstile 修好後，使用者測試表單，發現訊息其實有送達（Google 那邊收到），但畫面卻顯示「目前無法完成送出，請稍後再試」的錯誤提示，兩者矛盾。追查 [assets/main.js](../assets/main.js) 送出表單的邏輯：`fetch(action, {mode:'no-cors', ...})` 送到 `https://script.google.com/macros/s/.../exec`；Google Apps Script 會先完整執行 `doPost()`（此時信已經寄出、資料已經寫入），才用 302 轉址把回應內容導到 `script.googleusercontent.com`。[_headers](../_headers) 的 CSP `connect-src` 只列了 `https://script.google.com`，沒有把轉址目標 `script.googleusercontent.com` 一併列入，瀏覽器判定轉址網域不在允許清單、擋下轉址，導致 `fetch()` 這次呼叫回報失敗——但這時候 Apps Script 該做的事早就做完了，所以才會「訊息送達」跟「顯示失敗」同時發生。
+
+**執行內容**：`_headers` 的 `connect-src` 加入 `https://script.googleusercontent.com`。
+
+**驗證**：`git diff` 確認只改動這一個網域、其餘 CSP 規則不動；部署後計畫由使用者實測整個表單流程（含畫面上的成功／失敗提示），確認錯誤訊息不再出現。
+
+**明確跳過／待辦**：無。
 
 ### [修正] 全站 LINE 浮動按鈕圖示簡化 — 2026-08-24
 
