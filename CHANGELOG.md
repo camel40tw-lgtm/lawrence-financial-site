@@ -9,6 +9,7 @@
 
 | 版本 / Commit | 日期 | 主要內容 |
 |---|---|---|
+| — | 2026-08-24 | 剩餘 5 篇文章（高齡風險／傳承／保險／資產保護／顧問價值）補強 AEO/GEO 結構；5 個試算工具頁盤點後判定已符合現況，不強改 |
 | — | 2026-08-24 | article-inclusive-family-office.html 補強 AEO/GEO 結構（開頭摘要／3 個標題問句化／作者連結） |
 | `e1cd360` | 2026-08-24 | article-retirement-cashflow.html 補強 AEO/GEO 結構（開頭摘要／標題問句化／試算器內連／作者連結）；Cloudflare AI 爬蟲存取權放開（GPTBot／ClaudeBot／Google-Extended 等） |
 | — | 2026-08-20 | articles.html「受訪與專家引用」新增聯合新聞網（udn.com）受訪文章連結 |
@@ -36,6 +37,20 @@
 ## 詳細記錄
 
 ---
+
+### [變更] 剩餘 5 篇文章 AEO/GEO 結構補強＋5 個試算工具頁盤點 — 2026-08-24
+
+**類型**：SEO
+
+**來源**：延續同日前兩篇（article-retirement-cashflow、article-inclusive-family-office）的補強工作，依使用者指示依序完成剩餘 5 篇文章（高齡資產風險、傳承規劃、保險角色、資產保護、顧問價值）與 5 個試算工具頁（calculator-v2、policy-irr、property-invest、house-land-tax、estate-tax）。
+
+**執行內容（5 篇文章）**：這 5 篇結構高度一致（同樣的 `article-block` 元件、四段編號標題、既有 FAQ schema），逐篇套用同一套改法：開頭插入 4 點「重點快覽」（內容取自各篇既有的 FAQ 答案與段落，沒有新增站上原本沒有的論述）；4 個編號標題裡，跟 FAQ 問題重疊的 2～3 個改寫成該 FAQ 的問句本身（例如「一、高齡金融風險的本質：不是報酬，是管理秩序」→「高齡金融風險的本質是什麼？」），結論收尾段落保留原標題不強改；作者署名加連結到 `/about` 並補 CFP® 頭銜。`sitemap.xml` 同步更新 5 個網址的 `lastmod`。
+
+**執行內容（5 個試算工具頁，僅盤點未改動）**：讀取後發現這 5 頁已經在 8/17 那批工作裡做過 `WebPage`／`FAQPage` schema 與頁面可見 FAQ，且各頁 hero 區塊本來就有一段濃縮、可直接回答「這個工具在幹嘛」的介紹文字，功能上等同文章版的開頭摘要；`house-land-tax`／`estate-tax`／`property-invest` 三個跟法規相關的頁面已有「規則版本／資料更新日期」時間戳，`policy-irr`／`calculator-v2` 是純數學試算（IRR 公式、Bengen/Guyton-Klinger 提領策略），本來就不隨年度法規變動，沒有時間戳不是缺漏。文章版「標題問句化」這項技巧對工具頁不適用——這 5 頁的標題是「步驟 1／4」這類功能性 UI 標籤，硬改成問句只會破壞操作介面，不是內容問題。**結論：這 5 頁維持現況，沒有值得改的缺口，沒有進行任何編輯。**
+
+**驗證**：5 篇文章逐一用 `git diff --stat` 核對改動範圍（71 行新增／21 行刪除，5 個檔案），確認沒有動到 FAQ 區塊、schema 或未提及的段落。
+
+**明確跳過／待辦**：至此站上全部 7 篇文章都已完成 AEO/GEO 結構補強；試算工具頁本輪判定不需改動，未來若新增法規類工具，記得比照 house-land-tax／estate-tax 補「規則版本／資料更新日期」時間戳。
 
 ### [變更] article-inclusive-family-office.html AEO/GEO 結構補強 — 2026-08-24
 
